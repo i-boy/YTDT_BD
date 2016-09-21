@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="BA02_BaoCaoBenhTruyenNhiem_Tinh_subreport3_subreport0"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="340"
+		 pageHeight="802"
+		 columnWidth="340"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="0"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<reportFont name="Times New Roman" isDefault="true" fontName="Times New Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<parameter name="MATINH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["711"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TUNGAY" isForPrompting="true" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DENNGAY" isForPrompting="true" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[Select *
+FROM
+(Select v_btn.MAICD AS MAICD_1,
+ v_btn.BENHTN,
+ -- v_btn.MATINH,
+ COUNT(v_btn.MA_BN) AS TONGSO_BN
+ FROM
+(SELECT
+ icd.DMBENHICD_MA AS MAICD,
+ hsba.BENHNHAN_MA AS MA_BN,
+ dmtinh.DMTINH_MA AS MATINH,
+ icd.DMBENHICD_TEN AS BENHTN
+
+FROM hsba
+ LEFT JOIN dm_benh_icd icd ON hsba.HSBA_MACHDRAVIEN=icd.DMBENHICD_MASO
+ LEFT JOIN benh_nhan bn ON hsba.BENHNHAN_MA=bn.BENHNHAN_MA
+ LEFT JOIN dm_tinh dmtinh ON bn.TINH_MA=dmtinh.DMTINH_MASO
+WHERE hsba.HSBA_NGAYGIORAV Is Not Null AND
+ to_date(hsba.HSBA_NGAYGIORAV) >=$P{TUNGAY} AND
+ to_date(hsba.HSBA_NGAYGIORAV) <=$P{DENNGAY} AND
+(
+icd.DMBENHICD_MA  =  'A00' -- Ta
+ OR icd.DMBENHICD_MA  =  'A01' -- Thuong han
+ OR icd.DMBENHICD_MA  =  'A03' -- Ly TT
+ OR icd.DMBENHICD_MA  =  'A06' -- Ly amip
+ OR icd.DMBENHICD_MA  =  'A09' -- Tieu chay
+ OR icd.DMBENHICD_MA  =  'A83' -- Vnao virus
+ OR icd.DMBENHICD_MA  =  'A90' -- Sot Dengue
+ OR icd.DMBENHICD_MA  =  'A91' -- Sot XH Dengue
+ OR icd.DMBENHICD_MA  =  'B50' -- Sot ret
+ OR icd.DMBENHICD_MA  =  'B51' -- Sot ret
+ OR icd.DMBENHICD_MA  =  'B54' -- Sot ret
+ OR icd.DMBENHICD_MA  =  'B15' -- Vgan virus
+ OR icd.DMBENHICD_MA  =  'B16' -- Vgan virus
+ OR icd.DMBENHICD_MA  =  'B17' -- Vgan virus
+ OR icd.DMBENHICD_MA  =  'B18' -- Vgan virus
+ OR icd.DMBENHICD_MA  =  'B19' -- Vgan virus
+ OR icd.DMBENHICD_MA  =  'A82' -- Benh dai
+ OR icd.DMBENHICD_MA  =  'A39' -- VMN mo cau
+ OR icd.DMBENHICD_MA  =  'B01' -- Thuy dau
+ OR icd.DMBENHICD_MA  =  'A36' -- Bach hau
+ OR icd.DMBENHICD_MA  =  'A37' -- Ho ga
+ OR icd.DMBENHICD_MA  =  'A33' -- Uon van SS
+ OR icd.DMBENHICD_MA  =  'A35' -- Uon van khac
+ OR icd.DMBENHICD_MA  =  'A80' -- Liet mem cap va nghi bai liet
+ OR icd.DMBENHICD_MA  =  'B05' -- Soi
+ OR icd.DMBENHICD_MA  =  'B26' -- Quai bi
+ OR icd.DMBENHICD_MA  =  'B06' -- Rubella(Rubeon)
+ OR icd.DMBENHICD_MA  =  'J10' -- Cum
+ OR icd.DMBENHICD_MA  =  'J11' -- Cum
+ OR icd.DMBENHICD_MA  =  'J09' -- Cum A(H5N1)
+ OR icd.DMBENHICD_MA  =  'B30' -- APC(benh do virus Adeno)
+ OR icd.DMBENHICD_MA  =  'A20' -- Dich hach
+ OR icd.DMBENHICD_MA  =  'A22' -- Than
+ OR icd.DMBENHICD_MA  =  'A27' -- Leptospira
+ OR icd.DMBENHICD_MA  =  'B08.8' -- Tay chan mieng
+ OR icd.DMBENHICD_MA  =  'B95' -- Benh do lien cau lon o nguoi
+)
+ORDER BY icd.DMBENHICD_MA
+) v_btn
+GROUP BY v_btn.MAICD,v_btn.BENHTN) v_solieutong
+ LEFT JOIN
+(Select v_btn.MAICD AS MAICD_2,
+ COUNT(v_btn.MA_BN) AS SOBN_TRONGTINH
+ FROM
+(SELECT
+ icd.DMBENHICD_MA AS MAICD,
+ hsba.BENHNHAN_MA AS MA_BN,
+ dmtinh.DMTINH_MA AS MATINH,
+ icd.DMBENHICD_TEN AS BENHTN
+
+FROM hsba
+ LEFT JOIN dm_benh_icd icd ON hsba.HSBA_MACHDRAVIEN =icd.DMBENHICD_MASO
+ LEFT JOIN benh_nhan bn ON hsba.BENHNHAN_MA=bn.BENHNHAN_MA
+ LEFT JOIN dm_tinh dmtinh ON bn.TINH_MA=dmtinh.DMTINH_MASO
+
+WHERE  hsba.HSBA_NGAYGIORAV Is Not Null AND
+ to_date(hsba.HSBA_NGAYGIORAV) >=$P{TUNGAY} AND
+ to_date(hsba.HSBA_NGAYGIORAV) <=$P{DENNGAY} AND
+(
+icd.DMBENHICD_MA  =  'A00' -- Ta
+ OR icd.DMBENHICD_MA  =  'A01' -- Thuong han
+ OR icd.DMBENHICD_MA  =  'A03' -- Ly TT
+ OR icd.DMBENHICD_MA  =  'A06' -- Ly amip
+ OR icd.DMBENHICD_MA  =  'A09' -- Tieu chay
+ OR icd.DMBENHICD_MA  =  'A83' -- Vnao virus
+ OR icd.DMBENHICD_MA  =  'A90' -- Sot Dengue
+ OR icd.DMBENHICD_MA  =  'A91' -- Sot XH Dengue
+ OR icd.DMBENHICD_MA  =  'B50' -- Sot ret
+ OR icd.DMBENHICD_MA  =  'B51' -- Sot ret
+ OR icd.DMBENHICD_MA  =  'B54' -- Sot ret
+ OR icd.DMBENHICD_MA  =  'B15' -- Vgan virus
+ OR icd.DMBENHICD_MA  =  'B16' -- Vgan virus
+ OR icd.DMBENHICD_MA  =  'B17' -- Vgan virus
+ OR icd.DMBENHICD_MA  =  'B18' -- Vgan virus
+ OR icd.DMBENHICD_MA  =  'B19' -- Vgan virus
+ OR icd.DMBENHICD_MA  =  'A82' -- Benh dai
+ OR icd.DMBENHICD_MA  =  'A39' -- VMN mo cau
+ OR icd.DMBENHICD_MA  =  'B01' -- Thuy dau
+ OR icd.DMBENHICD_MA  =  'A36' -- Bach hau
+ OR icd.DMBENHICD_MA  =  'A37' -- Ho ga
+ OR icd.DMBENHICD_MA  =  'A33' -- Uon van SS
+ OR icd.DMBENHICD_MA  =  'A35' -- Uon van khac
+ OR icd.DMBENHICD_MA  =  'A80' -- Liet mem cap va nghi bai liet
+ OR icd.DMBENHICD_MA  =  'B05' -- Soi
+ OR icd.DMBENHICD_MA  =  'B26' -- Quai bi
+ OR icd.DMBENHICD_MA  =  'B06' -- Rubella(Rubeon)
+ OR icd.DMBENHICD_MA  =  'J10' -- Cum
+ OR icd.DMBENHICD_MA  =  'J11' -- Cum
+ OR icd.DMBENHICD_MA  =  'J09' -- Cum A(H5N1)
+ OR icd.DMBENHICD_MA  =  'B30' -- APC(benh do virus Adeno)
+ OR icd.DMBENHICD_MA  =  'A20' -- Dich hach
+ OR icd.DMBENHICD_MA  =  'A22' -- Than
+ OR icd.DMBENHICD_MA  =  'A27' -- Leptospira
+ OR icd.DMBENHICD_MA  =  'B08.8' -- Tay chan mieng
+ OR icd.DMBENHICD_MA  =  'B95' -- Benh do lien cau lon o nguoi
+)
+ORDER BY icd.DMBENHICD_MA
+) v_btn
+WHERE v_btn.MATINH=$P{MATINH}
+GROUP BY v_btn.MAICD
+) v_solieutrongtinh ON v_solieutong.MAICD_1=v_solieutrongtinh.MAICD_2
+ORDER BY v_solieutong.MAICD_1 ASC]]></queryString>
+
+	<field name="MAICD_1" class="java.lang.String"/>
+	<field name="BENHTN" class="java.lang.String"/>
+	<field name="TONGSO_BN" class="java.math.BigDecimal"/>
+	<field name="MAICD_2" class="java.lang.String"/>
+	<field name="SOBN_TRONGTINH" class="java.math.BigDecimal"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="100"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="0"
+						y="0"
+						width="40"
+						height="100"
+						forecolor="#000000"
+						key="staticText-1"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[MÃ
+ICD]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="40"
+						y="0"
+						width="240"
+						height="100"
+						forecolor="#000000"
+						key="staticText-2"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TÊN BỆNH]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="280"
+						y="0"
+						width="25"
+						height="100"
+						forecolor="#000000"
+						key="staticText-3"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000" bottomPadding="2"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TỔNG CỘNG]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="305"
+						y="0"
+						width="25"
+						height="100"
+						forecolor="#000000"
+						key="staticText-4"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000" bottomPadding="2"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TS TRONG TỈNH]]></text>
+				</staticText>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="15"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="40"
+						height="15"
+						key="textField-1"/>
+					<box topBorder="None" topBorderColor="#000000" topPadding="1" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000" bottomPadding="1"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{MAICD_1}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="40"
+						y="0"
+						width="240"
+						height="15"
+						key="textField-2"/>
+					<box topBorder="None" topBorderColor="#000000" topPadding="1" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000" bottomPadding="1"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="9"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{BENHTN}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="280"
+						y="0"
+						width="25"
+						height="15"
+						key="textField-3"/>
+					<box topBorder="None" topBorderColor="#000000" topPadding="1" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000" bottomPadding="1"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="9"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TONGSO_BN}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="305"
+						y="0"
+						width="25"
+						height="15"
+						key="textField-4"/>
+					<box topBorder="None" topBorderColor="#000000" topPadding="1" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000" bottomPadding="1"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="9"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SOBN_TRONGTINH}]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

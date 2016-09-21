@@ -1,0 +1,1049 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="SoSanhTinhHinhMacBenhTheoNam"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="595"
+		 pageHeight="842"
+		 columnWidth="567"
+		 columnSpacing="0"
+		 leftMargin="14"
+		 rightMargin="14"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<reportFont name="Times New Roman (times.ttf)" isDefault="true" fontName="Times New Roman" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<parameter name="TuNam" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer("2000")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DenNam" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer("2011")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="KHOA_MASO" isForPrompting="false" class="java.lang.Integer"/>
+	<queryString><![CDATA[SELECT Nam, MaBenh, TenBenh,
+ SUM(TONG_CONG) AS TONG_CONG,
+ SUM(THANG_01) AS THANG_01,
+ SUM(THANG_02) AS THANG_02,
+ SUM(THANG_03) AS THANG_03,
+ SUM(THANG_04) AS THANG_04,
+ SUM(THANG_05) AS THANG_05,
+ SUM(THANG_06) AS THANG_06,
+ SUM(THANG_07) AS THANG_07,
+ SUM(THANG_08) AS THANG_08,
+ SUM(THANG_09) AS THANG_09,
+ SUM(THANG_10) AS THANG_10,
+ SUM(THANG_11) AS THANG_11,
+ SUM(THANG_12) AS THANG_12
+FROM
+( -- Tinh so luong Tong cong
+SELECT extract(year from hsba_ngaygiorav) AS Nam,
+ benhicd.DMBENHICD_MA AS MaBenh,
+ benhicd.DMBENHICD_TEN AS TenBenh,
+ COUNT(hsba_sovaovien) AS TONG_CONG,
+ 0 AS THANG_01,
+ 0 AS THANG_02,
+ 0 AS THANG_03,
+ 0 AS THANG_04,
+ 0 AS THANG_05,
+ 0 AS THANG_06,
+ 0 AS THANG_07,
+ 0 AS THANG_08,
+ 0 AS THANG_09,
+ 0 AS THANG_10,
+ 0 AS THANG_11,
+ 0 AS THANG_12
+FROM hsba h, dm_benh_icd benhicd
+where hsba_machdravien is not null
+ AND hsba_ngaygiorav is not null
+ AND extract(year from hsba_ngaygiorav) >=$P{TuNam}
+ AND extract(year from hsba_ngaygiorav) <=$P{DenNam}
+ AND hsba_machdravien=benhicd.DMBENHICD_MASO
+ AND($P{KHOA_MASO} Is Null OR hsba_khoarav=$P{KHOA_MASO})
+GROUP BY extract(year from hsba_ngaygiorav), hsba_machdravien,benhicd.DMBENHICD_MA,benhicd.DMBENHICD_TEN
+
+UNION ALL
+-- Tinh so luong Thang 1
+SELECT extract(year from hsba_ngaygiorav) AS Nam,
+ benhicd.DMBENHICD_MA AS MaBenh,
+ benhicd.DMBENHICD_TEN AS TenBenh,
+ 0 AS TONG_CONG,
+ COUNT(hsba_sovaovien) AS THANG_01,
+ 0 AS THANG_02,
+ 0 AS THANG_03,
+ 0 AS THANG_04,
+ 0 AS THANG_05,
+ 0 AS THANG_06,
+ 0 AS THANG_07,
+ 0 AS THANG_08,
+ 0 AS THANG_09,
+ 0 AS THANG_10,
+ 0 AS THANG_11,
+ 0 AS THANG_12
+FROM hsba h, dm_benh_icd benhicd
+where hsba_machdravien is not null
+ AND hsba_ngaygiorav is not null
+ AND extract(year from hsba_ngaygiorav) >=$P{TuNam}
+ AND extract(year from hsba_ngaygiorav) <=$P{DenNam}
+ AND extract(month from hsba_ngaygiorav)=1
+ AND hsba_machdravien=benhicd.DMBENHICD_MASO
+ AND($P{KHOA_MASO} Is Null OR hsba_khoarav=$P{KHOA_MASO})
+GROUP BY extract(year from hsba_ngaygiorav), hsba_machdravien,benhicd.DMBENHICD_MA,benhicd.DMBENHICD_TEN
+UNION ALL
+-- Tinh so luong Thang 2
+SELECT extract(year from hsba_ngaygiorav) AS Nam,
+ benhicd.DMBENHICD_MA AS MaBenh,
+ benhicd.DMBENHICD_TEN AS TenBenh,
+ 0 AS TONG_CONG,
+ 0 AS THANG_01,
+ COUNT(hsba_sovaovien) AS THANG_02,
+ 0 AS THANG_03,
+ 0 AS THANG_04,
+ 0 AS THANG_05,
+ 0 AS THANG_06,
+ 0 AS THANG_07,
+ 0 AS THANG_08,
+ 0 AS THANG_09,
+ 0 AS THANG_10,
+ 0 AS THANG_11,
+ 0 AS THANG_12
+FROM hsba h, dm_benh_icd benhicd
+where hsba_machdravien is not null
+ AND hsba_ngaygiorav is not null
+ AND extract(year from hsba_ngaygiorav) >=$P{TuNam}
+ AND extract(year from hsba_ngaygiorav) <=$P{DenNam}
+ AND extract(month from hsba_ngaygiorav)=2
+ AND hsba_machdravien=benhicd.DMBENHICD_MASO
+ AND($P{KHOA_MASO} Is Null OR hsba_khoarav=$P{KHOA_MASO})
+GROUP BY extract(year from hsba_ngaygiorav), hsba_machdravien,benhicd.DMBENHICD_MA,benhicd.DMBENHICD_TEN
+UNION ALL
+-- Tinh so luong Thang 3
+SELECT extract(year from hsba_ngaygiorav) AS Nam,
+ benhicd.DMBENHICD_MA AS MaBenh,
+ benhicd.DMBENHICD_TEN AS TenBenh,
+ 0 AS TONG_CONG,
+ 0 AS THANG_01,
+ 0 AS THANG_02,
+ COUNT(hsba_sovaovien) AS THANG_03,
+ 0 AS THANG_04,
+ 0 AS THANG_05,
+ 0 AS THANG_06,
+ 0 AS THANG_07,
+ 0 AS THANG_08,
+ 0 AS THANG_09,
+ 0 AS THANG_10,
+ 0 AS THANG_11,
+ 0 AS THANG_12
+FROM hsba h, dm_benh_icd benhicd
+where hsba_machdravien is not null
+ AND hsba_ngaygiorav is not null
+ AND extract(year from hsba_ngaygiorav) >=$P{TuNam}
+ AND extract(year from hsba_ngaygiorav) <=$P{DenNam}
+ AND extract(month from hsba_ngaygiorav)=3
+ AND hsba_machdravien=benhicd.DMBENHICD_MASO
+ AND($P{KHOA_MASO} Is Null OR hsba_khoarav=$P{KHOA_MASO})
+GROUP BY extract(year from hsba_ngaygiorav), hsba_machdravien,benhicd.DMBENHICD_MA,benhicd.DMBENHICD_TEN
+UNION ALL
+-- Tinh so luong Thang 4
+SELECT extract(year from hsba_ngaygiorav) AS Nam,
+ benhicd.DMBENHICD_MA AS MaBenh,
+ benhicd.DMBENHICD_TEN AS TenBenh,
+ 0 AS TONG_CONG,
+ 0 AS THANG_01,
+ 0 AS THANG_02,
+ 0 AS THANG_03,
+ COUNT(hsba_sovaovien) AS THANG_04,
+ 0 AS THANG_05,
+ 0 AS THANG_06,
+ 0 AS THANG_07,
+ 0 AS THANG_08,
+ 0 AS THANG_09,
+ 0 AS THANG_10,
+ 0 AS THANG_11,
+ 0 AS THANG_12
+FROM hsba h, dm_benh_icd benhicd
+where hsba_machdravien is not null
+ AND hsba_ngaygiorav is not null
+ AND extract(year from hsba_ngaygiorav) >=$P{TuNam}
+ AND extract(year from hsba_ngaygiorav) <=$P{DenNam}
+ AND extract(month from hsba_ngaygiorav)=4
+ AND hsba_machdravien=benhicd.DMBENHICD_MASO
+ AND($P{KHOA_MASO} Is Null OR hsba_khoarav=$P{KHOA_MASO})
+GROUP BY extract(year from hsba_ngaygiorav), hsba_machdravien,benhicd.DMBENHICD_MA,benhicd.DMBENHICD_TEN
+UNION ALL
+-- Tinh so luong Thang 5
+SELECT extract(year from hsba_ngaygiorav) AS Nam,
+ benhicd.DMBENHICD_MA AS MaBenh,
+ benhicd.DMBENHICD_TEN AS TenBenh,
+ 0 AS TONG_CONG,
+ 0 AS THANG_01,
+ 0 AS THANG_02,
+ 0 AS THANG_03,
+ 0 AS THANG_04,
+ COUNT(hsba_sovaovien) AS THANG_05,
+ 0 AS THANG_06,
+ 0 AS THANG_07,
+ 0 AS THANG_08,
+ 0 AS THANG_09,
+ 0 AS THANG_10,
+ 0 AS THANG_11,
+ 0 AS THANG_12
+FROM hsba h, dm_benh_icd benhicd
+where hsba_machdravien is not null
+ AND hsba_ngaygiorav is not null
+ AND extract(year from hsba_ngaygiorav) >=$P{TuNam}
+ AND extract(year from hsba_ngaygiorav) <=$P{DenNam}
+ AND extract(month from hsba_ngaygiorav)=5
+ AND hsba_machdravien=benhicd.DMBENHICD_MASO
+ AND($P{KHOA_MASO} Is Null OR hsba_khoarav=$P{KHOA_MASO})
+GROUP BY extract(year from hsba_ngaygiorav), hsba_machdravien,benhicd.DMBENHICD_MA,benhicd.DMBENHICD_TEN
+UNION ALL
+-- Tinh so luong Thang 6
+SELECT extract(year from hsba_ngaygiorav) AS Nam,
+ benhicd.DMBENHICD_MA AS MaBenh,
+ benhicd.DMBENHICD_TEN AS TenBenh,
+ 0 AS TONG_CONG,
+ 0 AS THANG_01,
+ 0 AS THANG_02,
+ 0 AS THANG_03,
+ 0 AS THANG_04,
+ 0 AS THANG_05,
+ COUNT(hsba_sovaovien) AS THANG_06,
+ 0 AS THANG_07,
+ 0 AS THANG_08,
+ 0 AS THANG_09,
+ 0 AS THANG_10,
+ 0 AS THANG_11,
+ 0 AS THANG_12
+FROM hsba h, dm_benh_icd benhicd
+where hsba_machdravien is not null
+ AND hsba_ngaygiorav is not null
+ AND extract(year from hsba_ngaygiorav) >=$P{TuNam}
+ AND extract(year from hsba_ngaygiorav) <=$P{DenNam}
+ AND extract(month from hsba_ngaygiorav)=6
+ AND hsba_machdravien=benhicd.DMBENHICD_MASO
+ AND($P{KHOA_MASO} Is Null OR hsba_khoarav=$P{KHOA_MASO})
+GROUP BY extract(year from hsba_ngaygiorav), hsba_machdravien,benhicd.DMBENHICD_MA,benhicd.DMBENHICD_TEN
+UNION ALL
+-- Tinh so luong Thang 7
+SELECT extract(year from hsba_ngaygiorav) AS Nam,
+ benhicd.DMBENHICD_MA AS MaBenh,
+ benhicd.DMBENHICD_TEN AS TenBenh,
+ 0 AS TONG_CONG,
+ 0 AS THANG_01,
+ 0 AS THANG_02,
+ 0 AS THANG_03,
+ 0 AS THANG_04,
+ 0 AS THANG_05,
+ 0 AS THANG_06,
+ COUNT(hsba_sovaovien) AS THANG_07,
+ 0 AS THANG_08,
+ 0 AS THANG_09,
+ 0 AS THANG_10,
+ 0 AS THANG_11,
+ 0 AS THANG_12
+FROM hsba h, dm_benh_icd benhicd
+where hsba_machdravien is not null
+ AND hsba_ngaygiorav is not null
+ AND extract(year from hsba_ngaygiorav) >=$P{TuNam}
+ AND extract(year from hsba_ngaygiorav) <=$P{DenNam}
+ AND extract(month from hsba_ngaygiorav)=7
+ AND hsba_machdravien=benhicd.DMBENHICD_MASO
+ AND($P{KHOA_MASO} Is Null OR hsba_khoarav=$P{KHOA_MASO})
+GROUP BY extract(year from hsba_ngaygiorav), hsba_machdravien,benhicd.DMBENHICD_MA,benhicd.DMBENHICD_TEN
+UNION ALL
+-- Tinh so luong Thang 8
+SELECT extract(year from hsba_ngaygiorav) AS Nam,
+ benhicd.DMBENHICD_MA AS MaBenh,
+ benhicd.DMBENHICD_TEN AS TenBenh,
+ 0 AS TONG_CONG,
+ 0 AS THANG_01,
+ 0 AS THANG_02,
+ 0 AS THANG_03,
+ 0 AS THANG_04,
+ 0 AS THANG_05,
+ 0 AS THANG_06,
+ 0 AS THANG_07,
+ COUNT(hsba_sovaovien) AS THANG_08,
+ 0 AS THANG_09,
+ 0 AS THANG_10,
+ 0 AS THANG_11,
+ 0 AS THANG_12
+FROM hsba h, dm_benh_icd benhicd
+where hsba_machdravien is not null
+ AND hsba_ngaygiorav is not null
+ AND extract(year from hsba_ngaygiorav) >=$P{TuNam}
+ AND extract(year from hsba_ngaygiorav) <=$P{DenNam}
+ AND extract(month from hsba_ngaygiorav)=8
+ AND hsba_machdravien=benhicd.DMBENHICD_MASO
+ AND($P{KHOA_MASO} Is Null OR hsba_khoarav=$P{KHOA_MASO})
+GROUP BY extract(year from hsba_ngaygiorav), hsba_machdravien,benhicd.DMBENHICD_MA,benhicd.DMBENHICD_TEN
+UNION ALL
+-- Tinh so luong Thang 9
+SELECT extract(year from hsba_ngaygiorav) AS Nam,
+ benhicd.DMBENHICD_MA AS MaBenh,
+ benhicd.DMBENHICD_TEN AS TenBenh,
+ 0 AS TONG_CONG,
+ 0 AS THANG_01,
+ 0 AS THANG_02,
+ 0 AS THANG_03,
+ 0 AS THANG_04,
+ 0 AS THANG_05,
+ 0 AS THANG_06,
+ 0 AS THANG_07,
+ 0 AS THANG_08,
+ COUNT(hsba_sovaovien) AS THANG_09,
+ 0 AS THANG_10,
+ 0 AS THANG_11,
+ 0 AS THANG_12
+FROM hsba h, dm_benh_icd benhicd
+where hsba_machdravien is not null
+ AND hsba_ngaygiorav is not null
+ AND extract(year from hsba_ngaygiorav) >=$P{TuNam}
+ AND extract(year from hsba_ngaygiorav) <=$P{DenNam}
+ AND extract(month from hsba_ngaygiorav)=9
+ AND hsba_machdravien=benhicd.DMBENHICD_MASO
+ AND($P{KHOA_MASO} Is Null OR hsba_khoarav=$P{KHOA_MASO})
+GROUP BY extract(year from hsba_ngaygiorav), hsba_machdravien,benhicd.DMBENHICD_MA,benhicd.DMBENHICD_TEN
+UNION ALL
+-- Tinh so luong Thang 10
+SELECT extract(year from hsba_ngaygiorav) AS Nam,
+ benhicd.DMBENHICD_MA AS MaBenh,
+ benhicd.DMBENHICD_TEN AS TenBenh,
+ 0 AS TONG_CONG,
+ 0 AS THANG_01,
+ 0 AS THANG_02,
+ 0 AS THANG_03,
+ 0 AS THANG_04,
+ 0 AS THANG_05,
+ 0 AS THANG_06,
+ 0 AS THANG_07,
+ 0 AS THANG_08,
+ 0 AS THANG_09,
+ COUNT(hsba_sovaovien) AS THANG_10,
+ 0 AS THANG_11,
+ 0 AS THANG_12
+FROM hsba h, dm_benh_icd benhicd
+where hsba_machdravien is not null
+ AND hsba_ngaygiorav is not null
+ AND extract(year from hsba_ngaygiorav) >=$P{TuNam}
+ AND extract(year from hsba_ngaygiorav) <=$P{DenNam}
+ AND extract(month from hsba_ngaygiorav)=10
+ AND hsba_machdravien=benhicd.DMBENHICD_MASO
+ AND($P{KHOA_MASO} Is Null OR hsba_khoarav=$P{KHOA_MASO})
+GROUP BY extract(year from hsba_ngaygiorav), hsba_machdravien,benhicd.DMBENHICD_MA,benhicd.DMBENHICD_TEN
+UNION ALL
+-- Tinh so luong Thang 11
+SELECT extract(year from hsba_ngaygiorav) AS Nam,
+ benhicd.DMBENHICD_MA AS MaBenh,
+ benhicd.DMBENHICD_TEN AS TenBenh,
+ 0 AS TONG_CONG,
+ 0 AS THANG_01,
+ 0 AS THANG_02,
+ 0 AS THANG_03,
+ 0 AS THANG_04,
+ 0 AS THANG_05,
+ 0 AS THANG_06,
+ 0 AS THANG_07,
+ 0 AS THANG_08,
+ 0 AS THANG_09,
+ 0 AS THANG_10,
+ COUNT(hsba_sovaovien) AS THANG_11,
+ 0 AS THANG_12
+FROM hsba h, dm_benh_icd benhicd
+where hsba_machdravien is not null
+ AND hsba_ngaygiorav is not null
+ AND extract(year from hsba_ngaygiorav) >=$P{TuNam}
+ AND extract(year from hsba_ngaygiorav) <=$P{DenNam}
+ AND extract(month from hsba_ngaygiorav)=11
+ AND hsba_machdravien=benhicd.DMBENHICD_MASO
+ AND($P{KHOA_MASO} Is Null OR hsba_khoarav=$P{KHOA_MASO})
+GROUP BY extract(year from hsba_ngaygiorav), hsba_machdravien,benhicd.DMBENHICD_MA,benhicd.DMBENHICD_TEN
+UNION ALL
+-- Tinh so luong Thang 12
+SELECT extract(year from hsba_ngaygiorav) AS Nam,
+ benhicd.DMBENHICD_MA AS MaBenh,
+ benhicd.DMBENHICD_TEN AS TenBenh,
+ 0 AS TONG_CONG,
+ 0 AS THANG_01,
+ 0 AS THANG_02,
+ 0 AS THANG_03,
+ 0 AS THANG_04,
+ 0 AS THANG_05,
+ 0 AS THANG_06,
+ 0 AS THANG_07,
+ 0 AS THANG_08,
+ 0 AS THANG_09,
+ 0 AS THANG_10,
+ 0 AS THANG_11,
+ COUNT(hsba_sovaovien) AS THANG_12
+FROM hsba h, dm_benh_icd benhicd
+where hsba_machdravien is not null
+ AND hsba_ngaygiorav is not null
+ AND extract(year from hsba_ngaygiorav) >=$P{TuNam}
+ AND extract(year from hsba_ngaygiorav) <=$P{DenNam}
+ AND extract(month from hsba_ngaygiorav)=12
+ AND hsba_machdravien=benhicd.DMBENHICD_MASO
+ AND($P{KHOA_MASO} Is Null OR hsba_khoarav=$P{KHOA_MASO})
+GROUP BY extract(year from hsba_ngaygiorav), hsba_machdravien,benhicd.DMBENHICD_MA,benhicd.DMBENHICD_TEN) union_data
+GROUP BY Nam, MaBenh, TenBenh
+ORDER BY MaBenh, Nam]]></queryString>
+
+	<field name="Nam" class="java.lang.Long"/>
+	<field name="MaBenh" class="java.lang.String"/>
+	<field name="TenBenh" class="java.lang.String"/>
+	<field name="TONG_CONG" class="java.math.BigDecimal"/>
+	<field name="THANG_01" class="java.math.BigDecimal"/>
+	<field name="THANG_02" class="java.math.BigDecimal"/>
+	<field name="THANG_03" class="java.math.BigDecimal"/>
+	<field name="THANG_04" class="java.math.BigDecimal"/>
+	<field name="THANG_05" class="java.math.BigDecimal"/>
+	<field name="THANG_06" class="java.math.BigDecimal"/>
+	<field name="THANG_07" class="java.math.BigDecimal"/>
+	<field name="THANG_08" class="java.math.BigDecimal"/>
+	<field name="THANG_09" class="java.math.BigDecimal"/>
+	<field name="THANG_10" class="java.math.BigDecimal"/>
+	<field name="THANG_11" class="java.math.BigDecimal"/>
+	<field name="THANG_12" class="java.math.BigDecimal"/>
+
+
+		<group  name="BENH_GROUP" >
+			<groupExpression><![CDATA[$F{MaBenh}]]></groupExpression>
+			<groupHeader>
+			<band height="24"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="567"
+						height="24"
+						key="textField-49"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["   ".concat($F{MaBenh}).concat("   ").concat($F{TenBenh})]]></textFieldExpression>
+				</textField>
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+			</groupFooter>
+		</group>
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="45"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="0"
+						y="0"
+						width="567"
+						height="20"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" size="14" isBold="true"/>
+					</textElement>
+				<text><![CDATA[SO SÁNH TÌNH HÌNH MẮC BỆNH THEO NĂM]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="20"
+						width="567"
+						height="20"
+						key="textField-41"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["XUẤT VIỆN Từ năm ".concat($P{TuNam}.toString()).concat(" đến năm ").concat($P{DenNam}.toString())]]></textFieldExpression>
+				</textField>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="24"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="0"
+						y="0"
+						width="45"
+						height="24"
+						key="staticText-7"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[Năm]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="45"
+						y="0"
+						width="42"
+						height="24"
+						key="staticText-8"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[TC]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="127"
+						y="0"
+						width="40"
+						height="24"
+						key="staticText-9"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[02]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="167"
+						y="0"
+						width="40"
+						height="24"
+						key="staticText-12"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[03]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="207"
+						y="0"
+						width="40"
+						height="24"
+						key="staticText-13"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[04]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="247"
+						y="0"
+						width="40"
+						height="24"
+						key="staticText-14"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[05]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="287"
+						y="0"
+						width="40"
+						height="24"
+						key="staticText-50"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[06]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="87"
+						y="0"
+						width="40"
+						height="24"
+						key="staticText-61"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[01]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="367"
+						y="0"
+						width="40"
+						height="24"
+						key="staticText-68"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[08]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="407"
+						y="0"
+						width="40"
+						height="24"
+						key="staticText-69"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[09]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="447"
+						y="0"
+						width="40"
+						height="24"
+						key="staticText-70"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[10]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="487"
+						y="0"
+						width="40"
+						height="24"
+						key="staticText-71"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[11]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="527"
+						y="0"
+						width="40"
+						height="24"
+						key="staticText-72"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[12]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="327"
+						y="0"
+						width="40"
+						height="24"
+						key="staticText-73"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[07]]></text>
+				</staticText>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="30"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="45"
+						height="30"
+						key="textField-7"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{Nam}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="45"
+						y="0"
+						width="42"
+						height="30"
+						key="textField-8"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="3" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TONG_CONG}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="127"
+						y="0"
+						width="40"
+						height="15"
+						key="textField-9"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{THANG_02}.intValue() > 0 ? $F{THANG_02} : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="167"
+						y="0"
+						width="40"
+						height="15"
+						key="textField-10"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{THANG_03}.intValue() > 0 ? $F{THANG_03} : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="207"
+						y="0"
+						width="40"
+						height="15"
+						key="textField-11"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{THANG_04}.intValue() > 0 ? $F{THANG_04} : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="247"
+						y="0"
+						width="40"
+						height="15"
+						key="textField-12"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{THANG_05}.intValue() > 0 ? $F{THANG_05} : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="287"
+						y="0"
+						width="40"
+						height="15"
+						key="textField-44"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{THANG_06}.intValue() > 0 ? $F{THANG_06} : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="87"
+						y="0"
+						width="40"
+						height="15"
+						key="textField-48"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{THANG_01}.intValue() > 0 ? $F{THANG_01} : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="367"
+						y="0"
+						width="40"
+						height="15"
+						key="textField-50"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{THANG_08}.intValue() > 0 ? $F{THANG_08} : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="407"
+						y="0"
+						width="40"
+						height="15"
+						key="textField-51"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{THANG_09}.intValue() > 0 ? $F{THANG_09} : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="447"
+						y="0"
+						width="40"
+						height="15"
+						key="textField-52"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{THANG_10}.intValue() > 0 ? $F{THANG_10} : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="487"
+						y="0"
+						width="40"
+						height="15"
+						key="textField-53"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{THANG_11}.intValue() > 0 ? $F{THANG_11} : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="527"
+						y="0"
+						width="40"
+						height="15"
+						key="textField-54"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{THANG_12}.intValue() > 0 ? $F{THANG_12} : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="327"
+						y="0"
+						width="40"
+						height="15"
+						key="textField-55"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{THANG_07}.intValue() > 0 ? $F{THANG_07} : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="127"
+						y="15"
+						width="40"
+						height="15"
+						key="textField-56"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{THANG_02}.intValue() > 0 ? new String(new DecimalFormat("###.00").format(($F{THANG_02}.doubleValue()* 100)/$F{TONG_CONG}.doubleValue())).concat("%"): null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="167"
+						y="15"
+						width="40"
+						height="15"
+						key="textField-57"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{THANG_03}.intValue() > 0 ? new String(new DecimalFormat("###.00").format(($F{THANG_03}.doubleValue()* 100)/$F{TONG_CONG}.doubleValue())).concat("%"): null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="207"
+						y="15"
+						width="40"
+						height="15"
+						key="textField-58"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{THANG_04}.intValue() > 0 ? new String(new DecimalFormat("###.00").format(($F{THANG_04}.doubleValue()* 100)/$F{TONG_CONG}.doubleValue())).concat("%"): null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="247"
+						y="15"
+						width="40"
+						height="15"
+						key="textField-59"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{THANG_05}.intValue() > 0 ? new String(new DecimalFormat("###.00").format(($F{THANG_05}.doubleValue()* 100)/$F{TONG_CONG}.doubleValue())).concat("%"): null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="287"
+						y="15"
+						width="40"
+						height="15"
+						key="textField-60"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{THANG_06}.intValue() > 0 ? new String(new DecimalFormat("###.00").format(($F{THANG_06}.doubleValue()* 100)/$F{TONG_CONG}.doubleValue())).concat("%"): null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="87"
+						y="15"
+						width="40"
+						height="15"
+						key="textField-61"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{THANG_01}.intValue() > 0 ? new String(new DecimalFormat("###.00").format(($F{THANG_01}.doubleValue()* 100)/$F{TONG_CONG}.doubleValue())).concat("%"): null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="367"
+						y="15"
+						width="40"
+						height="15"
+						key="textField-62"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{THANG_08}.intValue() > 0 ? new String(new DecimalFormat("###.00").format(($F{THANG_08}.doubleValue()* 100)/$F{TONG_CONG}.doubleValue())).concat("%"): null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="407"
+						y="15"
+						width="40"
+						height="15"
+						key="textField-63"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{THANG_09}.intValue() > 0 ? new String(new DecimalFormat("###.00").format(($F{THANG_09}.doubleValue()* 100)/$F{TONG_CONG}.doubleValue())).concat("%"): null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="447"
+						y="15"
+						width="40"
+						height="15"
+						key="textField-64"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{THANG_10}.intValue() > 0 ? new String(new DecimalFormat("###.00").format(($F{THANG_10}.doubleValue()* 100)/$F{TONG_CONG}.doubleValue())).concat("%"): null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="487"
+						y="15"
+						width="40"
+						height="15"
+						key="textField-65"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{THANG_11}.intValue() > 0 ? new String(new DecimalFormat("###.00").format(($F{THANG_11}.doubleValue()* 100)/$F{TONG_CONG}.doubleValue())).concat("%"): null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="527"
+						y="15"
+						width="40"
+						height="15"
+						key="textField-66"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{THANG_12}.intValue() > 0 ? new String(new DecimalFormat("###.00").format(($F{THANG_12}.doubleValue()* 100)/$F{TONG_CONG}.doubleValue())).concat("%"): null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="327"
+						y="15"
+						width="40"
+						height="15"
+						key="textField-67"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{THANG_07}.intValue() > 0 ? new String(new DecimalFormat("###.00").format(($F{THANG_07}.doubleValue()* 100)/$F{TONG_CONG}.doubleValue())).concat("%"): null]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

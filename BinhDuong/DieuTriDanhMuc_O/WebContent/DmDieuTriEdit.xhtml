@@ -1,0 +1,140 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmDieuTri" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmDieuTriHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Điều trị</f:facet>
+
+
+
+            <s:decorate id="dmdieutriDefaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mặc định</ui:define>
+                <h:selectBooleanCheckbox id="dmdieutriDefa"
+                                      value="#{dmDieuTriHome.instance.dmdieutriDefa}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmdieutriDiengiai1Field" template="layout/edit.xhtml">
+                <ui:define name="label">Diễn giải 1</ui:define>
+                <h:inputTextarea id="dmdieutriDiengiai1"
+                               cols="80"
+                               rows="3"
+                              value="#{dmDieuTriHome.instance.dmdieutriDiengiai1}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmdieutriDiengiai2Field" template="layout/edit.xhtml">
+                <ui:define name="label">Diễn giải 2</ui:define>
+                <h:inputTextarea id="dmdieutriDiengiai2"
+                               cols="80"
+                               rows="3"
+                              value="#{dmDieuTriHome.instance.dmdieutriDiengiai2}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmdieutriDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc dự phòng</ui:define>
+                <h:selectBooleanCheckbox id="dmdieutriDp"
+                                      value="#{dmDieuTriHome.instance.dmdieutriDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmdieutriDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc điều trị</ui:define>
+                <h:selectBooleanCheckbox id="dmdieutriDt"
+                                      value="#{dmDieuTriHome.instance.dmdieutriDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmdieutriMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã điều trị</ui:define>
+                <h:inputText id="dmdieutriMa"
+                       required="true"
+                           size="1"
+                      maxlength="1"
+                          value="#{dmDieuTriHome.instance.dmdieutriMa}">
+                    <a:support event="onblur" reRender="dmdieutriMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmdieutriNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmdieutriNgaygiocn"
+                          value="#{dmDieuTriHome.instance.dmdieutriNgaygiocn}">
+                    <a:support event="onblur" reRender="dmdieutriNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmdieutriQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc quản lý</ui:define>
+                <h:selectBooleanCheckbox id="dmdieutriQl"
+                                      value="#{dmDieuTriHome.instance.dmdieutriQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmdieutriTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên điều trị</ui:define>
+                <h:inputTextarea id="dmdieutriTen"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dmDieuTriHome.instance.dmdieutriTen}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmDieuTriHome.persist}"
+                       disabled="#{!dmDieuTriHome.wired}"
+                       rendered="#{!dmDieuTriHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmDieuTriHome.update}"
+                       rendered="#{dmDieuTriHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmDieuTriHome.remove}"
+                      immediate="true"
+                       rendered="#{dmDieuTriHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmDieuTri.xhtml"
+                rendered="#{dmDieuTriHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmDieuTriFrom ? 'DmDieuTriList' : dmDieuTriFrom}.xhtml"
+                rendered="#{!dmDieuTriHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

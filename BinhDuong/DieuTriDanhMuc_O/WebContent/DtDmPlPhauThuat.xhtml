@@ -1,0 +1,274 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <rich:panel>
+        <f:facet name="header">Phân loại phẫu thuật Chi tiết</f:facet>
+
+
+        <s:decorate id="dtdmplptChon" template="layout/display.xhtml">
+            <ui:define name="label">Chọn</ui:define>
+            <h:outputText value="#{dtDmPlPhauThuatHome.instance.dtdmplptChon}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmplptMa" template="layout/display.xhtml">
+            <ui:define name="label">Mã</ui:define>
+            <h:outputText value="#{dtDmPlPhauThuatHome.instance.dtdmplptMa}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmplptMaphu" template="layout/display.xhtml">
+            <ui:define name="label">Mã phụ</ui:define>
+            <h:outputText value="#{dtDmPlPhauThuatHome.instance.dtdmplptMaphu}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmplptNgaygiocn" template="layout/display.xhtml">
+            <ui:define name="label">Ngày giờ cập nhật</ui:define>
+            <h:outputText value="#{dtDmPlPhauThuatHome.instance.dtdmplptNgaygiocn}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmplptTen" template="layout/display.xhtml">
+            <ui:define name="label">Tên</ui:define>
+            <h:outputText value="#{dtDmPlPhauThuatHome.instance.dtdmplptTen}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmplptThuockhoa" template="layout/display.xhtml">
+            <ui:define name="label">Thuộc khoa</ui:define>
+            <h:outputText value="#{dtDmPlPhauThuatHome.instance.dtdmplptThuockhoa}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/DtDmPlPhauThuatEdit.xhtml"
+                    id="edit"
+                 value="Sửa"/>
+
+        <s:button view="/#{empty dtDmPlPhauThuatFrom ? 'DtDmPlPhauThuatList' : dtDmPlPhauThuatFrom}.xhtml"
+                    id="done"
+                 value="Hoàn thành"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+<ui:remove>
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Phẫu thuậts</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="dtDmPhauThuatsChildren">
+
+        <h:outputText value="Không có  dtDmPhauThuats phù hợp với dtDmPlPhauThuat."
+                   rendered="#{empty dtDmPlPhauThuatHome.dtDmPhauThuats}"/>
+
+        <rich:dataTable value="#{dtDmPlPhauThuatHome.dtDmPhauThuats}"
+                       var="_dtDmPhauThuat"
+                  rendered="#{not empty dtDmPlPhauThuatHome.dtDmPhauThuats}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="dtDmPhauThuatsTable">
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatMaso}">
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatMaso}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatChon}">
+                <f:facet name="header">Chọn</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatChon}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatChon1}">
+                <f:facet name="header">Chọn1</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatChon1}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatChon2}">
+                <f:facet name="header">Chọn2</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatChon2}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatGopca}">
+                <f:facet name="header">Có gộp ca</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatGopca}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatLienhe}">
+                <f:facet name="header">Liên hệ</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatLienhe}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatLoai2}">
+                <f:facet name="header">Loại Phẩu thuật</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatLoai2}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatMa}">
+                <f:facet name="header">Mã</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatMa}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatMamo}">
+                <f:facet name="header">Mã Mổ</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatMamo}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatMo}">
+                <f:facet name="header">Có mổ</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatMo}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatNgaygiocn}">
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatNgaygiocn}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatOrder}">
+                <f:facet name="header">Thứ tự</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatOrder}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatPhanbiet}">
+                <f:facet name="header">Phân biệt</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatPhanbiet}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatPhanloai2}">
+                <f:facet name="header">Phân loại 2</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatPhanloai2}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatTen}">
+                <f:facet name="header">Tên</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatTen}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatTtPt}">
+                <f:facet name="header">Thủ thuật phẫu thuật</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatTtPt}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="selectdtDmPhauThuat"
+                     value="Chọn"
+                      view="/DtDmPhauThuat.xhtml">
+                    <f:param name="dtDmPhauThuatDtdmphauthuatMaso"
+                            value="#{_dtDmPhauThuat.dtdmphauthuatMaso}"/>
+                    <f:param name="dtDmPhauThuatFrom" value="DtDmPlPhauThuat"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Thêm dtDmPhauThuat"
+                view="/DtDmPhauThuatEdit.xhtml">
+            <f:param name="dtDmPlPhauThuatDtdmplptMaso"
+                    value="#{dtDmPlPhauThuatHome.instance.dtdmplptMaso}"/>
+            <f:param name="dtDmPhauThuatFrom" value="DtDmPlPhauThuat"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Phẫu thuậts_1</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="dtDmPhauThuats_1Children">
+
+        <h:outputText value="Không có  dtDmPhauThuats_1 phù hợp với dtDmPlPhauThuat."
+                   rendered="#{empty dtDmPlPhauThuatHome.dtDmPhauThuats_1}"/>
+
+        <rich:dataTable value="#{dtDmPlPhauThuatHome.dtDmPhauThuats_1}"
+                       var="_dtDmPhauThuat"
+                  rendered="#{not empty dtDmPlPhauThuatHome.dtDmPhauThuats_1}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="dtDmPhauThuats_1Table">
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatMaso}">
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatMaso}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatChon}">
+                <f:facet name="header">Chọn</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatChon}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatChon1}">
+                <f:facet name="header">Chọn1</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatChon1}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatChon2}">
+                <f:facet name="header">Chọn2</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatChon2}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatGopca}">
+                <f:facet name="header">Có gộp ca</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatGopca}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatLienhe}">
+                <f:facet name="header">Liên hệ</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatLienhe}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatLoai2}">
+                <f:facet name="header">Loại Phẩu thuật</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatLoai2}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatMa}">
+                <f:facet name="header">Mã</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatMa}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatMamo}">
+                <f:facet name="header">Mã Mổ</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatMamo}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatMo}">
+                <f:facet name="header">Có mổ</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatMo}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatNgaygiocn}">
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatNgaygiocn}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatOrder}">
+                <f:facet name="header">Thứ tự</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatOrder}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatPhanbiet}">
+                <f:facet name="header">Phân biệt</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatPhanbiet}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatPhanloai2}">
+                <f:facet name="header">Phân loại 2</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatPhanloai2}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatTen}">
+                <f:facet name="header">Tên</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatTen}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmPhauThuat.dtdmphauthuatTtPt}">
+                <f:facet name="header">Thủ thuật phẫu thuật</f:facet>
+                <h:outputText value="#{_dtDmPhauThuat.dtdmphauthuatTtPt}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="selectdtDmPhauThuat"
+                     value="Chọn"
+                      view="/DtDmPhauThuat.xhtml">
+                    <f:param name="dtDmPhauThuatDtdmphauthuatMaso"
+                            value="#{_dtDmPhauThuat.dtdmphauthuatMaso}"/>
+                    <f:param name="dtDmPhauThuatFrom" value="DtDmPlPhauThuat"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Thêm dtDmPhauThuat"
+                view="/DtDmPhauThuatEdit.xhtml">
+            <f:param name="dtDmPlPhauThuatDtdmplptMaso"
+                    value="#{dtDmPlPhauThuatHome.instance.dtdmplptMaso}"/>
+            <f:param name="dtDmPhauThuatFrom" value="DtDmPlPhauThuat"/>
+        </s:button>
+    </div>
+    </rich:tab>
+    </ui:remove>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,431 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmHocVi" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmHocViHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Học vị</f:facet>
+
+
+
+
+            <s:decorate id="dmhocviDaihocField" template="layout/edit.xhtml">
+                <ui:define name="label">Đại học</ui:define>
+                <h:selectBooleanCheckbox id="dmhocviDaihoc"
+                                      value="#{dmHocViHome.instance.dmhocviDaihoc}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmhocviDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc dự phòng</ui:define>
+                <h:selectBooleanCheckbox id="dmhocviDp"
+                                      value="#{dmHocViHome.instance.dmhocviDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmhocviDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc điều trị</ui:define>
+                <h:selectBooleanCheckbox id="dmhocviDt"
+                                      value="#{dmHocViHome.instance.dmhocviDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmhocviMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã học vị</ui:define>
+                <h:inputText id="dmhocviMa"
+                       required="true"
+                           size="8"
+                      maxlength="8"
+                          value="#{dmHocViHome.instance.dmhocviMa}">
+                    <a:support event="onblur" reRender="dmhocviMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmhocviNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmhocviNgaygiocn"
+                          value="#{dmHocViHome.instance.dmhocviNgaygiocn}">
+                    <a:support event="onblur" reRender="dmhocviNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmhocviQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc quản lý</ui:define>
+                <h:selectBooleanCheckbox id="dmhocviQl"
+                                      value="#{dmHocViHome.instance.dmhocviQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmhocviTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên học vị</ui:define>
+                <h:inputTextarea id="dmhocviTen"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dmHocViHome.instance.dmhocviTen}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmhocviTenbcField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên báo cáo</ui:define>
+                <h:inputTextarea id="dmhocviTenbc"
+                               cols="80"
+                               rows="3"
+                              value="#{dmHocViHome.instance.dmhocviTenbc}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmhocviThutuField" template="layout/edit.xhtml">
+                <ui:define name="label">Thứ tự</ui:define>
+                <h:inputText id="dmhocviThutu"
+                          value="#{dmHocViHome.instance.dmhocviThutu}">
+                    <a:support event="onblur" reRender="dmhocviThutuField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmHocViHome.persist}"
+                       disabled="#{!dmHocViHome.wired}"
+                       rendered="#{!dmHocViHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmHocViHome.update}"
+                       rendered="#{dmHocViHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmHocViHome.remove}"
+                      immediate="true"
+                       rendered="#{dmHocViHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmHocVi.xhtml"
+                rendered="#{dmHocViHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmHocViFrom ? 'DmHocViList' : dmHocViFrom}.xhtml"
+                rendered="#{!dmHocViHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Nhóm học vị">
+    <div class="association" id="dmNhomHocViParent">
+
+        <h:outputText value="Không tìm thấy dmNhomHocVi phù hợp với dmHocVi."
+                   rendered="#{dmHocViHome.instance.dmNhomHocVi == null}"/>
+
+        <rich:dataTable var="_dmNhomHocVi"
+                   value="#{dmHocViHome.instance.dmNhomHocVi}"
+                rendered="#{dmHocViHome.instance.dmNhomHocVi != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dmNhomHocViTable">
+            <h:column>
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dmNhomHocVi.dmnhomhocviMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Đại học</f:facet>
+                <h:outputText value="#{_dmNhomHocVi.dmnhomhocviDaihoc}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc QL</f:facet>
+                <h:outputText value="#{_dmNhomHocVi.dmnhomhocviDl}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc DP</f:facet>
+                <h:outputText value="#{_dmNhomHocVi.dmnhomhocviDp}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc ĐT</f:facet>
+                <h:outputText value="#{_dmNhomHocVi.dmnhomhocviDt}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã</f:facet>
+                <h:outputText value="#{_dmNhomHocVi.dmnhomhocviMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmNhomHocVi.dmnhomhocviNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên</f:facet>
+                <h:outputText value="#{_dmNhomHocVi.dmnhomhocviTen}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên báo cáo</f:facet>
+                <h:outputText value="#{_dmNhomHocVi.dmnhomhocviTenbc}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thứ tự</f:facet>
+                <h:outputText value="#{_dmNhomHocVi.dmnhomhocviThutu}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{dmHocViHome.instance.dmNhomHocVi != null ? 'Thay đổi' : 'Chọn'} dmNhomHocVi"
+                       view="/DmNhomHocViList.xhtml">
+                <f:param name="from" value="DmHocViEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+<ui:remove>
+    <rich:tab label="Nhân viêns">
+        <h:form styleClass="association" id="dtDmNhanViensChildren">
+
+            <h:outputText value="Không có  dtDmNhanViens phù hợp với dmHocVi."
+                       rendered="#{empty dmHocViHome.dtDmNhanViens}"/>
+
+            <rich:dataTable value="#{dmHocViHome.dtDmNhanViens}"
+                           var="_dtDmNhanVien"
+                      rendered="#{not empty dmHocViHome.dtDmNhanViens}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dtDmNhanViensTable">
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMaso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienBienche}">
+                    <f:facet name="header">Biên chế</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienBienche}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienChon}">
+                    <f:facet name="header">Chọn</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienChon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienDiachi}">
+                    <f:facet name="header">Địa chỉ</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienDiachi}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienDuyet}">
+                    <f:facet name="header">Được duyệt phiếu</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienDuyet}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienEmail}">
+                    <f:facet name="header">Email</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienEmail}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienGioitinh}">
+                    <f:facet name="header">Giới tính</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienGioitinh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienKyphieu}">
+                    <f:facet name="header">Được ký phiếu</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienKyphieu}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMa}">
+                    <f:facet name="header">Mã bác sĩ</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMahh}">
+                    <f:facet name="header">Mã HH</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMahh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMatma}">
+                    <f:facet name="header">Mật mã</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMatma}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMo}">
+                    <f:facet name="header">Được quyền mổ</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMo}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMobile}">
+                    <f:facet name="header">Số di động</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMobile}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienNgaysinh}">
+                    <f:facet name="header">Ngày sinh</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienNgaysinh}">
+                        <s:convertDateTime type="date" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienNghiviec}">
+                    <f:facet name="header">Đã nghỉ việc</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienNghiviec}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienSobhxh}">
+                    <f:facet name="header">Số BHXH</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienSobhxh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienTen}">
+                    <f:facet name="header">Tên bác sĩ</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienTen}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienTkatm}">
+                    <f:facet name="header">Tài khoản ATM</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienTkatm}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.nhomMa}">
+                    <f:facet name="header">Mã nhóm</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.nhomMa}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dmHocViHome.managed}" id="dtDmNhanViens">
+        <div class="actionButtons">
+            <s:button id="adddtDmNhanVien"
+                   value="Thêm dtDmNhanVien"
+                    view="/DtDmNhanVienEdit.xhtml"
+             propagation="none">
+                 <f:param name="dmHocViDmhocviMaso"
+                         value="#{dmHocViHome.instance.dmhocviMaso}"/>
+                 <f:param name="dtDmNhanVienFrom" value="DmHocVi"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Nhân viêns_1">
+        <h:form styleClass="association" id="dtDmNhanViens_1Children">
+
+            <h:outputText value="Không có  dtDmNhanViens_1 phù hợp với dmHocVi."
+                       rendered="#{empty dmHocViHome.dtDmNhanViens_1}"/>
+
+            <rich:dataTable value="#{dmHocViHome.dtDmNhanViens_1}"
+                           var="_dtDmNhanVien"
+                      rendered="#{not empty dmHocViHome.dtDmNhanViens_1}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dtDmNhanViens_1Table">
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMaso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienBienche}">
+                    <f:facet name="header">Biên chế</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienBienche}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienChon}">
+                    <f:facet name="header">Chọn</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienChon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienDiachi}">
+                    <f:facet name="header">Địa chỉ</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienDiachi}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienDuyet}">
+                    <f:facet name="header">Được duyệt phiếu</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienDuyet}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienEmail}">
+                    <f:facet name="header">Email</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienEmail}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienGioitinh}">
+                    <f:facet name="header">Giới tính</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienGioitinh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienKyphieu}">
+                    <f:facet name="header">Được ký phiếu</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienKyphieu}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMa}">
+                    <f:facet name="header">Mã bác sĩ</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMahh}">
+                    <f:facet name="header">Mã HH</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMahh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMatma}">
+                    <f:facet name="header">Mật mã</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMatma}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMo}">
+                    <f:facet name="header">Được quyền mổ</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMo}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMobile}">
+                    <f:facet name="header">Số di động</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMobile}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienNgaysinh}">
+                    <f:facet name="header">Ngày sinh</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienNgaysinh}">
+                        <s:convertDateTime type="date" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienNghiviec}">
+                    <f:facet name="header">Đã nghỉ việc</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienNghiviec}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienSobhxh}">
+                    <f:facet name="header">Số BHXH</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienSobhxh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienTen}">
+                    <f:facet name="header">Tên bác sĩ</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienTen}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienTkatm}">
+                    <f:facet name="header">Tài khoản ATM</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienTkatm}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.nhomMa}">
+                    <f:facet name="header">Mã nhóm</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.nhomMa}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dmHocViHome.managed}" id="dtDmNhanViens_1">
+        <div class="actionButtons">
+            <s:button id="adddtDmNhanVien"
+                   value="Thêm dtDmNhanVien"
+                    view="/DtDmNhanVienEdit.xhtml"
+             propagation="none">
+                 <f:param name="dmHocViDmhocviMaso"
+                         value="#{dmHocViHome.instance.dmhocviMaso}"/>
+                 <f:param name="dtDmNhanVienFrom" value="DmHocVi"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+    </ui:remove>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,132 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmNoiSinh" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmNoiSinhHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Nơi sinh</f:facet>
+
+
+
+            <s:decorate id="dtdmnoisinhChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dtdmnoisinhChon"
+                                      value="#{dtDmNoiSinhHome.instance.dtdmnoisinhChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmnoisinhGhichuField" template="layout/edit.xhtml">
+                <ui:define name="label">Ghi chú</ui:define>
+                <h:inputTextarea id="dtdmnoisinhGhichu"
+                               cols="80"
+                               rows="3"
+                              value="#{dtDmNoiSinhHome.instance.dtdmnoisinhGhichu}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmnoisinhMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dtdmnoisinhMa"
+                       required="true"
+                           size="3"
+                      maxlength="3"
+                          value="#{dtDmNoiSinhHome.instance.dtdmnoisinhMa}">
+                    <a:support event="onblur" reRender="dtdmnoisinhMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmnoisinhMaphuField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã phụ</ui:define>
+                <h:inputText id="dtdmnoisinhMaphu"
+                           size="3"
+                      maxlength="3"
+                          value="#{dtDmNoiSinhHome.instance.dtdmnoisinhMaphu}">
+                    <a:support event="onblur" reRender="dtdmnoisinhMaphuField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmnoisinhNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dtdmnoisinhNgaygiocn"
+                          value="#{dtDmNoiSinhHome.instance.dtdmnoisinhNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmnoisinhNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmnoisinhPhanloaiField" template="layout/edit.xhtml">
+                <ui:define name="label">Phân loại</ui:define>
+                <h:inputText id="dtdmnoisinhPhanloai"
+                           size="5"
+                      maxlength="5"
+                          value="#{dtDmNoiSinhHome.instance.dtdmnoisinhPhanloai}">
+                    <a:support event="onblur" reRender="dtdmnoisinhPhanloaiField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmnoisinhTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputTextarea id="dtdmnoisinhTen"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dtDmNoiSinhHome.instance.dtdmnoisinhTen}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmNoiSinhHome.persist}"
+                       disabled="#{!dtDmNoiSinhHome.wired}"
+                       rendered="#{!dtDmNoiSinhHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmNoiSinhHome.update}"
+                       rendered="#{dtDmNoiSinhHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmNoiSinhHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmNoiSinhHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmNoiSinh.xhtml"
+                rendered="#{dtDmNoiSinhHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmNoiSinhFrom ? 'DtDmNoiSinhList' : dtDmNoiSinhFrom}.xhtml"
+                rendered="#{!dtDmNoiSinhHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

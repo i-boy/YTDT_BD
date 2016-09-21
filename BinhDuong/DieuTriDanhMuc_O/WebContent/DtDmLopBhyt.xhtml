@@ -1,0 +1,121 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <rich:panel>
+        <f:facet name="header">Lớp BHYT Chi tiết</f:facet>
+
+
+        <s:decorate id="dtdmlopbhytChon" template="layout/display.xhtml">
+            <ui:define name="label">Chọn</ui:define>
+            <h:outputText value="#{dtDmLopBhytHome.instance.dtdmlopbhytChon}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmlopbhytMa" template="layout/display.xhtml">
+            <ui:define name="label">Mã</ui:define>
+            <h:outputText value="#{dtDmLopBhytHome.instance.dtdmlopbhytMa}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmlopbhytNgaygiocn" template="layout/display.xhtml">
+            <ui:define name="label">Ngày giờ cập nhật</ui:define>
+            <h:outputText value="#{dtDmLopBhytHome.instance.dtdmlopbhytNgaygiocn}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmlopbhytTen" template="layout/display.xhtml">
+            <ui:define name="label">Tên</ui:define>
+            <h:outputText value="#{dtDmLopBhytHome.instance.dtdmlopbhytTen}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/DtDmLopBhytEdit.xhtml"
+                    id="edit"
+                 value="Sửa"/>
+
+        <s:button view="/#{empty dtDmLopBhytFrom ? 'DtDmLopBhytList' : dtDmLopBhytFrom}.xhtml"
+                    id="done"
+                 value="Hoàn thành"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+<ui:remove>
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Nhóm BHYTs</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="dtDmNhomBhytsChildren">
+
+        <h:outputText value="Không có  dtDmNhomBhyts phù hợp với dtDmLopBhyt."
+                   rendered="#{empty dtDmLopBhytHome.dtDmNhomBhyts}"/>
+
+        <rich:dataTable value="#{dtDmLopBhytHome.dtDmNhomBhyts}"
+                       var="_dtDmNhomBhyt"
+                  rendered="#{not empty dtDmLopBhytHome.dtDmNhomBhyts}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="dtDmNhomBhytsTable">
+            <rich:column sortBy="#{_dtDmNhomBhyt.dtdmnhombhytMaso}">
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dtDmNhomBhyt.dtdmnhombhytMaso}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmNhomBhyt.dtdmnhombhytChon}">
+                <f:facet name="header">Chọn</f:facet>
+                <h:outputText value="#{_dtDmNhomBhyt.dtdmnhombhytChon}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmNhomBhyt.dtdmnhombhytDefa}">
+                <f:facet name="header">Mặc định</f:facet>
+                <h:outputText value="#{_dtDmNhomBhyt.dtdmnhombhytDefa}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmNhomBhyt.dtdmnhombhytMa}">
+                <f:facet name="header">Mã</f:facet>
+                <h:outputText value="#{_dtDmNhomBhyt.dtdmnhombhytMa}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmNhomBhyt.dtdmnhombhytNgaygiocn}">
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dtDmNhomBhyt.dtdmnhombhytNgaygiocn}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmNhomBhyt.dtdmnhombhytTen}">
+                <f:facet name="header">Tên</f:facet>
+                <h:outputText value="#{_dtDmNhomBhyt.dtdmnhombhytTen}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="selectdtDmNhomBhyt"
+                     value="Chọn"
+                      view="/DtDmNhomBhyt.xhtml">
+                    <f:param name="dtDmNhomBhytDtdmnhombhytMaso"
+                            value="#{_dtDmNhomBhyt.dtdmnhombhytMaso}"/>
+                    <f:param name="dtDmNhomBhytFrom" value="DtDmLopBhyt"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Thêm dtDmNhomBhyt"
+                view="/DtDmNhomBhytEdit.xhtml">
+            <f:param name="dtDmLopBhytDtdmlopbhytMaso"
+                    value="#{dtDmLopBhytHome.instance.dtdmlopbhytMaso}"/>
+            <f:param name="dtDmNhomBhytFrom" value="DtDmLopBhyt"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:remove>
+</ui:define>
+
+</ui:composition>

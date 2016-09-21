@@ -1,0 +1,113 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <rich:panel>
+        <f:facet name="header">Thôn Chi tiết</f:facet>
+
+
+        <s:decorate id="dmthonChon" template="layout/display.xhtml">
+            <ui:define name="label">Chọn</ui:define>
+            <h:outputText value="#{dmThonHome.instance.dmthonChon}"/>
+        </s:decorate>
+
+        <s:decorate id="dmthonMa" template="layout/display.xhtml">
+            <ui:define name="label">Mã</ui:define>
+            <h:outputText value="#{dmThonHome.instance.dmthonMa}"/>
+        </s:decorate>
+
+        <s:decorate id="dmthonNgaygiocn" template="layout/display.xhtml">
+            <ui:define name="label">Ngày giờ cập nhật</ui:define>
+            <h:outputText value="#{dmThonHome.instance.dmthonNgaygiocn}"/>
+        </s:decorate>
+
+        <s:decorate id="dmthonTen" template="layout/display.xhtml">
+            <ui:define name="label">Tên</ui:define>
+            <h:outputText value="#{dmThonHome.instance.dmthonTen}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/DmThonEdit.xhtml"
+                    id="edit"
+                 value="Sửa"/>
+
+        <s:button view="/#{empty dmThonFrom ? 'DmThonList' : dmThonFrom}.xhtml"
+                    id="done"
+                 value="Hoàn thành"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Xã</h:panelGroup>
+        </f:facet>
+    <div class="association" id="dmXaParent">
+
+        <h:outputText value="Không tìm thấy dmXa phù hợp với dmThon."
+                   rendered="#{dmThonHome.instance.dmXa == null}"/>
+
+        <rich:dataTable var="_dmXa"
+                   value="#{dmThonHome.instance.dmXa}"
+                rendered="#{dmThonHome.instance.dmXa != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dmXaTable">
+            <h:column>
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dmXa.dmxaMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Huyện Mã số</f:facet>
+                <h:outputText value="#{_dmXa.dmHuyen.dmhuyenMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Chọn</f:facet>
+                <h:outputText value="#{_dmXa.dmxaChon}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mặc định</f:facet>
+                <h:outputText value="#{_dmXa.dmxaDefa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã xã</f:facet>
+                <h:outputText value="#{_dmXa.dmxaMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmXa.dmxaNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên xã</f:facet>
+                <h:outputText value="#{_dmXa.dmxaTen}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="viewdmXa"
+                     value="Xem"
+                      view="/DmXa.xhtml">
+                    <f:param name="dmXaDmxaMaso"
+                           value="#{_dmXa.dmxaMaso}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

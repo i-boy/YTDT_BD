@@ -1,0 +1,742 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="phieucongkhaithuocvatonghopvienphi"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="814"
+		 columnSpacing="0"
+		 leftMargin="14"
+		 rightMargin="14"
+		 topMargin="8"
+		 bottomMargin="8"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<import value="com.iesvn.commaseparator.*" />
+	<reportFont name="Times New Roman" isDefault="true" fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<parameter name="SOYTE" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{SOYTE}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="BENHVIEN" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{BENHVIEN}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DIENTHOAI" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{DIENTHOAI}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DENNGAY" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="SUBREPORT_DIR" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["D:/tmp/iReport/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SOVAOVIEN" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="TUNGAY" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_01" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_02" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_03" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_04" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_05" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_06" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_07" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_08" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_09" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_10" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="KHOAMA" isForPrompting="false" class="java.lang.Integer"/>
+	<parameter name="TANGMASO" isForPrompting="false" class="java.lang.Integer"/>
+	<parameter name="KHOA" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="TANGTEN" isForPrompting="false" class="java.lang.String"/>
+	<queryString><![CDATA[SELECT bn.BENHNHAN_HOTEN,
+ bn.BENHNHAN_TUOI,
+ bn.BENHNHAN_DONVITUOI,
+ bn.BENHNHAN_NAMSINH,
+ gt.DMGT_TEN,
+ bn.BENHNHAN_DIACHI,
+ dmxa.DMXA_TEN,
+ dmhuyen.DMHUYEN_TEN,
+ dmtinh.DMTINH_TEN,
+ v_bg.HSBACM_SOBUONG,
+ v_bg.HSBACM_SOGIUONG,
+ hsba.HSBA_NGAYGIOVAOV,
+ hsba.HSBA_NGAYGIORAV,
+ v_tu.TAMUNG,
+ benhicd.DMBENHICD_TEN,
+ case when(hsba.HSBA_NGAYGIORAV Is Null) then null else trunc((TO_DATE(hsba.HSBA_NGAYGIORAV)- TO_DATE(hsba.HSBA_NGAYGIOVAOV)),2) + 1 end AS SONGAYDIEUTRI
+FROM hsba
+ LEFT JOIN benh_nhan bn ON hsba.BENHNHAN_MA=bn.BENHNHAN_MA
+ LEFT JOIN dm_gioi_tinh gt ON bn.DMGT_MASO=gt.DMGT_MASO
+ LEFT JOIN dm_xa dmxa ON bn.XA_MA=dmxa.DMXA_MASO
+ LEFT JOIN dm_huyen dmhuyen ON bn.HUYEN_MA=dmhuyen.DMHUYEN_MASO
+ LEFT JOIN dm_tinh dmtinh ON bn.TINH_MA=dmtinh.DMTINH_MASO
+ LEFT JOIN dm_benh_icd benhicd ON hsba.HSBA_MACHDOANBD=benhicd.DMBENHICD_MASO
+ LEFT JOIN
+ -- View buong, giuong
+(SELECT h.HSBA_SOVAOVIEN,h.HSBACM_SOBUONG, h.HSBACM_SOGIUONG
+FROM hsba_chuyen_mon h
+WHERE h.HSBA_SOVAOVIEN=$P{SOVAOVIEN}
+ AND h.KHOA_MA=(SELECT HSBA_KHOADANGDT FROM hsba Where HSBA_SOVAOVIEN=$P{SOVAOVIEN})) v_bg ON hsba.HSBA_SOVAOVIEN=v_bg.HSBA_SOVAOVIEN
+ LEFT JOIN
+ -- View SUM so tien tam ung
+(SELECT t.HSBA_SOVAOVIEN, SUM(TAMUNG_SOTIEN) AS TAMUNG
+ FROM tam_ung t
+ WHERE t.HSBA_SOVAOVIEN=$P{SOVAOVIEN}
+ GROUP BY t.HSBA_SOVAOVIEN)  v_tu ON hsba.HSBA_SOVAOVIEN=v_tu.HSBA_SOVAOVIEN
+WHERE hsba.HSBA_SOVAOVIEN=$P{SOVAOVIEN}]]></queryString>
+
+	<field name="BENHNHAN_HOTEN" class="java.lang.String"/>
+	<field name="BENHNHAN_TUOI" class="java.lang.Long"/>
+	<field name="BENHNHAN_DONVITUOI" class="java.lang.Integer"/>
+	<field name="BENHNHAN_NAMSINH" class="java.lang.String"/>
+	<field name="DMGT_TEN" class="java.lang.String"/>
+	<field name="BENHNHAN_DIACHI" class="java.lang.String"/>
+	<field name="DMXA_TEN" class="java.lang.String"/>
+	<field name="DMHUYEN_TEN" class="java.lang.String"/>
+	<field name="DMTINH_TEN" class="java.lang.String"/>
+	<field name="HSBACM_SOBUONG" class="java.lang.String"/>
+	<field name="HSBACM_SOGIUONG" class="java.lang.String"/>
+	<field name="HSBA_NGAYGIOVAOV" class="java.sql.Timestamp"/>
+	<field name="HSBA_NGAYGIORAV" class="java.sql.Timestamp"/>
+	<field name="TAMUNG" class="java.lang.Double"/>
+	<field name="DMBENHICD_TEN" class="java.lang.String"/>
+	<field name="SONGAYDIEUTRI" class="java.lang.Long"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="135"  isSplitAllowed="false" >
+				<staticText>
+					<reportElement
+						x="0"
+						y="48"
+						width="814"
+						height="32"
+						forecolor="#000000"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="18" isBold="true"/>
+					</textElement>
+				<text><![CDATA[PHIẾU CÔNG KHAI THUỐC VÀ TỔNG HỢP VIỆN PHÍ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="25"
+						y="82"
+						width="106"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-140"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<text><![CDATA[Họ tên người bệnh: bệnh:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="131"
+						y="82"
+						width="208"
+						height="17"
+						forecolor="#000000"
+						key="textField-4"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Dotted" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{BENHNHAN_HOTEN}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="268"
+						y="99"
+						width="46"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-141"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<text><![CDATA[Giường:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="314"
+						y="99"
+						width="37"
+						height="17"
+						forecolor="#000000"
+						key="textField-5"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Dotted" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{HSBACM_SOGIUONG}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="339"
+						y="82"
+						width="35"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-142"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<text><![CDATA[Tuổi:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="374"
+						y="82"
+						width="61"
+						height="17"
+						forecolor="#000000"
+						key="textField-6"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Dotted" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{BENHNHAN_TUOI}.toString()
+				+ ( $F{BENHNHAN_DONVITUOI}.intValue() == 2 ? " Tháng" : ( $F{BENHNHAN_DONVITUOI}.intValue() == 3 ? " Ngày" : "" ) )]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="173"
+						y="99"
+						width="47"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-143"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<text><![CDATA[Phòng :]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="220"
+						y="99"
+						width="48"
+						height="17"
+						forecolor="#000000"
+						key="textField-7"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Dotted" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{HSBACM_SOBUONG}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="483"
+						y="82"
+						width="52"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-157"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<text><![CDATA[Địa chỉ :]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="435"
+						y="82"
+						width="45"
+						height="17"
+						forecolor="#000000"
+						key="textField-30"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DMGT_TEN}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="351"
+						y="99"
+						width="80"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-158"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<text><![CDATA[Ngày vào viện:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="431"
+						y="99"
+						width="65"
+						height="17"
+						forecolor="#000000"
+						key="textField-31"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Dotted" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{HSBA_NGAYGIOVAOV}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="496"
+						y="99"
+						width="81"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-159"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<text><![CDATA[Ngày xuất viện:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="577"
+						y="99"
+						width="68"
+						height="17"
+						forecolor="#000000"
+						key="textField-32"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Dotted" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{HSBA_NGAYGIORAV}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="25"
+						y="116"
+						width="72"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-160"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<text><![CDATA[Chẩn đoán:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="97"
+						y="116"
+						width="322"
+						height="17"
+						forecolor="#000000"
+						key="textField-33"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DMBENHICD_TEN}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="670"
+						y="18"
+						width="61"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-161"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Số vào viện:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="731"
+						y="18"
+						width="83"
+						height="15"
+						forecolor="#000000"
+						key="textField-34"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="3" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SOVAOVIEN}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="690"
+						y="2"
+						width="103"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-162"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[MS: 18/BV-01]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="1"
+						width="256"
+						height="15"
+						key="textField-66"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SOYTE}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="17"
+						width="256"
+						height="15"
+						key="textField-67"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{BENHVIEN}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="33"
+						width="256"
+						height="15"
+						key="textField-68"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{KHOA}.toUpperCase()]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="535"
+						y="82"
+						width="272"
+						height="17"
+						forecolor="#000000"
+						key="textField-74"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Dotted" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($F{BENHNHAN_DIACHI} == null ? "" : $F{BENHNHAN_DIACHI}).concat(
+ ($F{DMXA_TEN} == null ? "" : " " + $F{DMXA_TEN})).concat(
+ ($F{DMHUYEN_TEN} == null ? "" : " " + $F{DMHUYEN_TEN})).concat(
+ ($F{DMTINH_TEN} == null ? "" : " " + $F{DMTINH_TEN}))]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="645"
+						y="99"
+						width="54"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-167"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<text><![CDATA[Tạm ứng :]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="699"
+						y="99"
+						width="108"
+						height="17"
+						forecolor="#000000"
+						key="textField-75"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Dotted" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TAMUNG}.toString()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="419"
+						y="116"
+						width="116"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-168"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<text><![CDATA[Tổng số ngày điều trị :]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="535"
+						y="116"
+						width="272"
+						height="17"
+						forecolor="#000000"
+						key="textField-76"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{SONGAYDIEUTRI}.toString()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="25"
+						y="99"
+						width="47"
+						height="17"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-173"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<text><![CDATA[Buồng :]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="72"
+						y="99"
+						width="101"
+						height="17"
+						forecolor="#000000"
+						key="textField-79"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Dotted" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TANGTEN}]]></textFieldExpression>
+				</textField>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="false" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="20"  isSplitAllowed="true" >
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="1"
+						y="0"
+						width="806"
+						height="20"
+						key="subreport-1"
+						positionType="Float"/>
+					<subreportParameter  name="DENNGAY">
+						<subreportParameterExpression><![CDATA[$P{DENNGAY}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SOVAOVIEN">
+						<subreportParameterExpression><![CDATA[$P{SOVAOVIEN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="TUNGAY">
+						<subreportParameterExpression><![CDATA[$P{TUNGAY}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NGAY_01">
+						<subreportParameterExpression><![CDATA[$P{NGAY_01}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NGAY_02">
+						<subreportParameterExpression><![CDATA[$P{NGAY_02}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NGAY_03">
+						<subreportParameterExpression><![CDATA[$P{NGAY_03}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NGAY_04">
+						<subreportParameterExpression><![CDATA[$P{NGAY_04}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NGAY_05">
+						<subreportParameterExpression><![CDATA[$P{NGAY_05}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NGAY_06">
+						<subreportParameterExpression><![CDATA[$P{NGAY_06}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NGAY_07">
+						<subreportParameterExpression><![CDATA[$P{NGAY_07}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NGAY_08">
+						<subreportParameterExpression><![CDATA[$P{NGAY_08}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NGAY_09">
+						<subreportParameterExpression><![CDATA[$P{NGAY_09}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NGAY_10">
+						<subreportParameterExpression><![CDATA[$P{NGAY_10}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="KHOAMA">
+						<subreportParameterExpression><![CDATA[$P{KHOAMA}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SOYTE">
+						<subreportParameterExpression><![CDATA[$P{SOYTE}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="BENHVIEN">
+						<subreportParameterExpression><![CDATA[$P{BENHVIEN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="DIENTHOAI">
+						<subreportParameterExpression><![CDATA[$P{DIENTHOAI}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SUBREPORT_DIR">
+						<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="KHOA">
+						<subreportParameterExpression><![CDATA[$P{KHOA}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="TANGMASO">
+						<subreportParameterExpression><![CDATA[$P{TANGMASO}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "phieucongkhaithuocvatonghopvienphi_subreport0.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="27"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="357"
+						y="7"
+						width="24"
+						height="20"
+						key="textField-77"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="395"
+						y="7"
+						width="416"
+						height="20"
+						key="textField-78"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="0"
+						y="7"
+						width="357"
+						height="20"
+						key="staticText-171"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<text><![CDATA[Trang ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="381"
+						y="7"
+						width="14"
+						height="20"
+						key="staticText-172"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<text><![CDATA[/]]></text>
+				</staticText>
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

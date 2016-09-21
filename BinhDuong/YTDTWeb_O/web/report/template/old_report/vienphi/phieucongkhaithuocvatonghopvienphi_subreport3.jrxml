@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="phieucongkhaithuocvatonghopvienphi_subreport3"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="842"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="0"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<import value="com.iesvn.commaseparator.*" />
+	<import value="com.iesvn.utils.*" />
+	<reportFont name="Time New Roman" isDefault="true" fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<parameter name="SOVAOVIEN" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TUNGAY" isForPrompting="false" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DENNGAY" isForPrompting="false" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NGAY_01" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_02" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_03" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_04" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_05" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_06" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_07" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NGAY_08" isForPrompting="false" class="java.util.Date"/>
+	<queryString><![CDATA[Select v_dmt.TENTHUOC,
+       v_dmt.DONVITINH,
+       v_ngay01.SOLUONG AS SOLUONG_NGAY01,
+       v_ngay01.DONGIA AS DONGIA_NGAY01,
+       v_ngay02.SOLUONG AS SOLUONG_NGAY02,
+       v_ngay02.DONGIA AS DONGIA_NGAY02,
+       v_ngay03.SOLUONG AS SOLUONG_NGAY03,
+       v_ngay03.DONGIA AS DONGIA_NGAY03,
+       v_ngay04.SOLUONG AS SOLUONG_NGAY04,
+       v_ngay04.DONGIA AS DONGIA_NGAY04,
+       v_ngay05.SOLUONG AS SOLUONG_NGAY05,
+       v_ngay05.DONGIA AS DONGIA_NGAY05,
+       v_ngay06.SOLUONG AS SOLUONG_NGAY06,
+       v_ngay06.DONGIA AS DONGIA_NGAY06,
+       v_ngay07.SOLUONG AS SOLUONG_NGAY07,
+       v_ngay07.DONGIA AS DONGIA_NGAY07,
+       v_ngay08.SOLUONG AS SOLUONG_NGAY08,
+       v_ngay08.DONGIA AS DONGIA_NGAY08
+FROM
+-- View lay danh muc thuoc benh nhan co su dung tu ngay - den ngay
+(SELECT d.`DMTHUOC_MASO` AS MATHUOC,
+       d.`DMTHUOC_TEN` AS TENTHUOC,
+       dvt.DMDONVITINH_TEN AS DONVITINH
+FROM dm_thuoc d
+     LEFT JOIN dm_don_vi_tinh dvt ON d.DMDONVITINH_MASO = dvt.DMDONVITINH_MASO
+     LEFT JOIN dm_phan_loai_thuoc dmplt ON d.DMPHANLOAITHUOC_MASO = dmplt.DMPHANLOAITHUOC_MASO
+     LEFT JOIN dm_loai_thuoc dmlt ON dmplt.DMLOAITHUOC_MASO = dmlt.DMLOAITHUOC_MASO
+WHERE dmlt.DMLOAITHUOC_MA LIKE 'YC' AND d.`DMTHUOC_MASO` IN (
+SELECT
+       tnt.THUOCNOITRU_MATHUOC AS MATHUOC
+FROM thuoc_noi_tru tnt
+    LEFT JOIN hsba_khoa hsbakhoa ON tnt.HSBA_KHOA = hsbakhoa.HSBAKHOA_MASO
+    LEFT JOIN hsba ON hsbakhoa.HSBA_SOVAOVIEN = hsba.HSBA_SOVAOVIEN
+WHERE hsba.HSBA_SOVAOVIEN = $P{SOVAOVIEN}
+      AND DATE(tnt.THUOCNOITRU_NGAYGIO) >= DATE($P{TUNGAY})
+      AND DATE(tnt.THUOCNOITRU_NGAYGIO) <= DATE($P{DENNGAY}))) v_dmt
+LEFT JOIN
+-- View lay so luong, don gia theo ngay - 01
+(SELECT v_tnt.MATHUOC AS MATHUOC,
+       v_tnt.SOLUONG AS SOLUONG,
+       v_tnt.DONGIA AS DONGIA
+FROM
+  v_thuocnoitru as v_tnt
+WHERE v_tnt.SOVAOVIEN = $P{SOVAOVIEN} 
+      AND v_tnt.DMLOAITHUOC_MA LIKE 'YC'
+      AND DATE(v_tnt.NGAY) = DATE($P{TUNGAY})) v_ngay01 ON v_dmt.MATHUOC = v_ngay01.MATHUOC
+LEFT JOIN
+-- View lay so luong, don gia theo ngay - 02
+(SELECT v_tnt.MATHUOC AS MATHUOC,
+       v_tnt.SOLUONG AS SOLUONG,
+       v_tnt.DONGIA AS DONGIA
+FROM
+  v_thuocnoitru as v_tnt
+WHERE v_tnt.SOVAOVIEN = $P{SOVAOVIEN} 
+      AND v_tnt.DMLOAITHUOC_MA LIKE 'YC'
+      AND DATE(v_tnt.NGAY) = DATE(DATE_ADD($P{TUNGAY}, INTERVAL 1 DAY))) v_ngay02 ON v_dmt.MATHUOC = v_ngay02.MATHUOC
+LEFT JOIN
+-- View lay so luong, don gia theo ngay - 03
+(SELECT v_tnt.MATHUOC AS MATHUOC,
+       v_tnt.SOLUONG AS SOLUONG,
+       v_tnt.DONGIA AS DONGIA
+FROM
+  v_thuocnoitru as v_tnt
+WHERE v_tnt.SOVAOVIEN = $P{SOVAOVIEN} 
+      AND v_tnt.DMLOAITHUOC_MA LIKE 'YC'
+      AND DATE(v_tnt.NGAY) = DATE(DATE_ADD($P{TUNGAY}, INTERVAL 2 DAY))) v_ngay03 ON v_dmt.MATHUOC = v_ngay03.MATHUOC
+LEFT JOIN
+-- View lay so luong, don gia theo ngay - 04
+(SELECT v_tnt.MATHUOC AS MATHUOC,
+       v_tnt.SOLUONG AS SOLUONG,
+       v_tnt.DONGIA AS DONGIA
+FROM
+  v_thuocnoitru as v_tnt
+WHERE v_tnt.SOVAOVIEN = $P{SOVAOVIEN} 
+      AND v_tnt.DMLOAITHUOC_MA LIKE 'YC'
+      AND DATE(v_tnt.NGAY) = DATE(DATE_ADD($P{TUNGAY}, INTERVAL 3 DAY))) v_ngay04 ON v_dmt.MATHUOC = v_ngay04.MATHUOC
+LEFT JOIN
+-- View lay so luong, don gia theo ngay - 05
+(SELECT v_tnt.MATHUOC AS MATHUOC,
+       v_tnt.SOLUONG AS SOLUONG,
+       v_tnt.DONGIA AS DONGIA
+FROM
+  v_thuocnoitru as v_tnt
+WHERE v_tnt.SOVAOVIEN = $P{SOVAOVIEN} 
+      AND v_tnt.DMLOAITHUOC_MA LIKE 'YC'
+      AND DATE(v_tnt.NGAY) = DATE(DATE_ADD($P{TUNGAY}, INTERVAL 4 DAY))) v_ngay05 ON v_dmt.MATHUOC = v_ngay05.MATHUOC
+LEFT JOIN
+-- View lay so luong, don gia theo ngay - 06
+(SELECT v_tnt.MATHUOC AS MATHUOC,
+       v_tnt.SOLUONG AS SOLUONG,
+       v_tnt.DONGIA AS DONGIA
+FROM
+  v_thuocnoitru as v_tnt
+WHERE v_tnt.SOVAOVIEN = $P{SOVAOVIEN} 
+      AND v_tnt.DMLOAITHUOC_MA LIKE 'YC'
+      AND DATE(v_tnt.NGAY) = DATE(DATE_ADD($P{TUNGAY}, INTERVAL 5 DAY))) v_ngay06 ON v_dmt.MATHUOC = v_ngay06.MATHUOC
+LEFT JOIN
+-- View lay so luong, don gia theo ngay - 07
+(SELECT v_tnt.MATHUOC AS MATHUOC,
+       v_tnt.SOLUONG AS SOLUONG,
+       v_tnt.DONGIA AS DONGIA
+FROM
+  v_thuocnoitru as v_tnt
+WHERE v_tnt.SOVAOVIEN = $P{SOVAOVIEN} 
+      AND v_tnt.DMLOAITHUOC_MA LIKE 'YC'
+      AND DATE(v_tnt.NGAY) = DATE(DATE_ADD($P{TUNGAY}, INTERVAL 6 DAY))) v_ngay07 ON v_dmt.MATHUOC = v_ngay07.MATHUOC
+LEFT JOIN
+-- View lay so luong, don gia theo ngay - 08
+(SELECT v_tnt.MATHUOC AS MATHUOC,
+       v_tnt.SOLUONG AS SOLUONG,
+       v_tnt.DONGIA AS DONGIA
+FROM
+  v_thuocnoitru as v_tnt
+WHERE v_tnt.SOVAOVIEN = $P{SOVAOVIEN} 
+      AND v_tnt.DMLOAITHUOC_MA LIKE 'YC'
+      AND DATE(v_tnt.NGAY) = DATE(DATE_ADD($P{TUNGAY}, INTERVAL 7 DAY))) v_ngay08 ON v_dmt.MATHUOC = v_ngay08.MATHUOC;]]></queryString>
+
+	<field name="TENTHUOC" class="java.lang.String"/>
+	<field name="DONVITINH" class="java.lang.String"/>
+	<field name="SOLUONG_NGAY01" class="java.lang.Double"/>
+	<field name="DONGIA_NGAY01" class="java.lang.Double"/>
+	<field name="SOLUONG_NGAY02" class="java.lang.Double"/>
+	<field name="DONGIA_NGAY02" class="java.lang.Double"/>
+	<field name="SOLUONG_NGAY03" class="java.lang.Double"/>
+	<field name="DONGIA_NGAY03" class="java.lang.Double"/>
+	<field name="SOLUONG_NGAY04" class="java.lang.Double"/>
+	<field name="DONGIA_NGAY04" class="java.lang.Double"/>
+	<field name="SOLUONG_NGAY05" class="java.lang.Double"/>
+	<field name="DONGIA_NGAY05" class="java.lang.Double"/>
+	<field name="SOLUONG_NGAY06" class="java.lang.Double"/>
+	<field name="DONGIA_NGAY06" class="java.lang.Double"/>
+	<field name="SOLUONG_NGAY07" class="java.lang.Double"/>
+	<field name="DONGIA_NGAY07" class="java.lang.Double"/>
+	<field name="SOLUONG_NGAY08" class="java.lang.Double"/>
+	<field name="DONGIA_NGAY08" class="java.lang.Double"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="20"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="18"
+						y="0"
+						width="798"
+						height="20"
+						key="textField-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="3" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Time New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Y CỤ"]]></textFieldExpression>
+				</textField>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="20"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="18"
+						y="0"
+						width="235"
+						height="20"
+						key="textField-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="3" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Time New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TENTHUOC}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="253"
+						y="0"
+						width="37"
+						height="20"
+						key="textField-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Time New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($P{NGAY_01}.compareTo($P{DENNGAY} ) <= 0 ? CommaSeparator.formatDoubleWithSeprator($F{SOLUONG_NGAY01} == null ? new Double(0.0) : $F{SOLUONG_NGAY01}) : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="290"
+						y="0"
+						width="37"
+						height="20"
+						key="textField-4"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Time New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($P{NGAY_02}.compareTo($P{DENNGAY} ) <= 0 ? CommaSeparator.formatDoubleWithSeprator($F{SOLUONG_NGAY02} == null ? new Double(0.0) : $F{SOLUONG_NGAY02}) : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="327"
+						y="0"
+						width="37"
+						height="20"
+						key="textField-5"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Time New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($P{NGAY_03}.compareTo($P{DENNGAY} ) <= 0 ? CommaSeparator.formatDoubleWithSeprator($F{SOLUONG_NGAY03} == null ? new Double(0.0) : $F{SOLUONG_NGAY03}) : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="364"
+						y="0"
+						width="37"
+						height="20"
+						key="textField-6"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Time New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($P{NGAY_04}.compareTo($P{DENNGAY} ) <= 0 ? CommaSeparator.formatDoubleWithSeprator($F{SOLUONG_NGAY04} == null ? new Double(0.0) : $F{SOLUONG_NGAY04}) : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="401"
+						y="0"
+						width="37"
+						height="20"
+						key="textField-7"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Time New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($P{NGAY_05}.compareTo($P{DENNGAY} ) <= 0 ? CommaSeparator.formatDoubleWithSeprator($F{SOLUONG_NGAY05} == null ? new Double(0.0) : $F{SOLUONG_NGAY05}) : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="438"
+						y="0"
+						width="37"
+						height="20"
+						key="textField-8"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Time New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($P{NGAY_06}.compareTo($P{DENNGAY} ) <= 0 ? CommaSeparator.formatDoubleWithSeprator($F{SOLUONG_NGAY06} == null ? new Double(0.0) : $F{SOLUONG_NGAY06}) : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="475"
+						y="0"
+						width="37"
+						height="20"
+						key="textField-9"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Time New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($P{NGAY_07}.compareTo($P{DENNGAY} ) <= 0 ? CommaSeparator.formatDoubleWithSeprator($F{SOLUONG_NGAY07} == null ? new Double(0.0) : $F{SOLUONG_NGAY07}) : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="512"
+						y="0"
+						width="37"
+						height="20"
+						key="textField-10"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Time New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($P{NGAY_08}.compareTo($P{DENNGAY} ) <= 0 ? CommaSeparator.formatDoubleWithSeprator($F{SOLUONG_NGAY08} == null ? new Double(0.0) : $F{SOLUONG_NGAY08}) : null)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="549"
+						y="0"
+						width="87"
+						height="20"
+						key="textField-11"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Time New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSeprator(new Double(
+($P{NGAY_01}.compareTo($P{DENNGAY} ) <= 0 ? ($F{SOLUONG_NGAY01} == null ? 0 : $F{SOLUONG_NGAY01}.doubleValue()) : 0) +
+($P{NGAY_02}.compareTo($P{DENNGAY} ) <= 0 ? ($F{SOLUONG_NGAY02} == null ? 0 : $F{SOLUONG_NGAY02}.doubleValue()) : 0) +
+($P{NGAY_03}.compareTo($P{DENNGAY} ) <= 0 ? ($F{SOLUONG_NGAY03} == null ? 0 : $F{SOLUONG_NGAY03}.doubleValue()) : 0) +
+($P{NGAY_04}.compareTo($P{DENNGAY} ) <= 0 ? ($F{SOLUONG_NGAY04} == null ? 0 : $F{SOLUONG_NGAY04}.doubleValue()) : 0) +
+($P{NGAY_05}.compareTo($P{DENNGAY} ) <= 0 ? ($F{SOLUONG_NGAY05} == null ? 0 : $F{SOLUONG_NGAY05}.doubleValue()) : 0) +
+($P{NGAY_06}.compareTo($P{DENNGAY} ) <= 0 ? ($F{SOLUONG_NGAY06} == null ? 0 : $F{SOLUONG_NGAY06}.doubleValue()) : 0) +
+($P{NGAY_07}.compareTo($P{DENNGAY} ) <= 0 ? ($F{SOLUONG_NGAY07} == null ? 0 : $F{SOLUONG_NGAY07}.doubleValue()) : 0) +
+($P{NGAY_08}.compareTo($P{DENNGAY} ) <= 0 ? ($F{SOLUONG_NGAY08} == null ? 0 : $F{SOLUONG_NGAY08}.doubleValue()) : 0)
+))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="636"
+						y="0"
+						width="58"
+						height="20"
+						key="textField-12"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Time New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="694"
+						y="0"
+						width="122"
+						height="20"
+						key="textField-13"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Time New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSeprator(new Double(
+($P{NGAY_01}.compareTo($P{DENNGAY} ) <= 0 ? ($F{DONGIA_NGAY01} == null ? 0 : $F{DONGIA_NGAY01}.doubleValue()) : 0) +
+($P{NGAY_02}.compareTo($P{DENNGAY} ) <= 0 ? ($F{DONGIA_NGAY02} == null ? 0 : $F{DONGIA_NGAY02}.doubleValue()) : 0) +
+($P{NGAY_03}.compareTo($P{DENNGAY} ) <= 0 ? ($F{DONGIA_NGAY03} == null ? 0 : $F{DONGIA_NGAY03}.doubleValue()) : 0) +
+($P{NGAY_04}.compareTo($P{DENNGAY} ) <= 0 ? ($F{DONGIA_NGAY04} == null ? 0 : $F{DONGIA_NGAY04}.doubleValue()) : 0) +
+($P{NGAY_05}.compareTo($P{DENNGAY} ) <= 0 ? ($F{DONGIA_NGAY05} == null ? 0 : $F{DONGIA_NGAY05}.doubleValue()) : 0) +
+($P{NGAY_06}.compareTo($P{DENNGAY} ) <= 0 ? ($F{DONGIA_NGAY06} == null ? 0 : $F{DONGIA_NGAY06}.doubleValue()) : 0) +
+($P{NGAY_07}.compareTo($P{DENNGAY} ) <= 0 ? ($F{DONGIA_NGAY07} == null ? 0 : $F{DONGIA_NGAY07}.doubleValue()) : 0) +
+($P{NGAY_08}.compareTo($P{DENNGAY} ) <= 0 ? ($F{DONGIA_NGAY08} == null ? 0 : $F{DONGIA_NGAY08}.doubleValue()) : 0)
+))]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="60"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="18"
+						y="0"
+						width="383"
+						height="50"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Time New Roman" pdfFontName="timesbd.ttf"/>
+					</textElement>
+				<text><![CDATA[Người bệnh ký tên]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="401"
+						y="0"
+						width="415"
+						height="25"
+						key="textField-14"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Time New Roman" pdfFontName="timesbd.ttf"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Ngày " + 
+(new Date().getDate() < 10 ? "0" + new Date().getDate() : "" + new Date().getDate()) + 
+" tháng " + 
+((new Date().getMonth() + 1) < 10 ? "0" + (new Date().getMonth() + 1) : "" + (new Date().getMonth() + 1)) + 
+" năm " + 
+(new Date().getYear() < 1900 ? (new Date().getYear() + 1900) : new Date().getYear())]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="401"
+						y="25"
+						width="415"
+						height="25"
+						key="staticText-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Time New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<text><![CDATA[DB PHỤ TRÁCH]]></text>
+				</staticText>
+			</band>
+		</summary>
+</jasperReport>

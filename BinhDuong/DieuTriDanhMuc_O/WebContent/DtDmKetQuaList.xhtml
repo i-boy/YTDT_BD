@@ -1,0 +1,168 @@
+﻿<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmKetQuaSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="DtDmKetQua tìm kiếm" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Dtdmketqua diengiai</ui:define>
+                <h:inputText id="dtdmketquaDiengiai" value="#{dtDmKetQuaList.dtDmKetQua.dtdmketquaDiengiai}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Dtdmketqua ma</ui:define>
+                <h:inputText id="dtdmketquaMa" value="#{dtDmKetQuaList.dtDmKetQua.dtdmketquaMa}"/>
+            </s:decorate>
+
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Tìm kiếm" action="/DtDmKetQuaList.xhtml"/>
+            <s:button id="reset" value="Nhập lại" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">DtDmKetQua Kết quả</f:facet>
+    <div class="results" id="dtDmKetQuaList">
+
+    <h:outputText value="Không tìm thấy kết quả nào."
+               rendered="#{empty dtDmKetQuaList.resultList}"/>
+
+    <rich:dataTable id="dtDmKetQuaList"
+                var="_dtDmKetQua"
+              value="#{dtDmKetQuaList.resultList}"
+           rendered="#{not empty dtDmKetQuaList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmKetQuaList}"/>
+                    <ui:param name="propertyLabel" value="Dtdmketqua maso"/>
+                    <ui:param name="propertyPath" value="dtDmKetQua.dtdmketquaMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmKetQua.dtdmketquaMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmKetQuaList}"/>
+                    <ui:param name="propertyLabel" value="Dtdmketqua chon"/>
+                    <ui:param name="propertyPath" value="dtDmKetQua.dtdmketquaChon"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmKetQua.dtdmketquaChon}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmKetQuaList}"/>
+                    <ui:param name="propertyLabel" value="Dtdmketqua diengiai"/>
+                    <ui:param name="propertyPath" value="dtDmKetQua.dtdmketquaDiengiai"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmKetQua.dtdmketquaDiengiai}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmKetQuaList}"/>
+                    <ui:param name="propertyLabel" value="Dtdmketqua ma"/>
+                    <ui:param name="propertyPath" value="dtDmKetQua.dtdmketquaMa"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmKetQua.dtdmketquaMa}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmKetQuaList}"/>
+                    <ui:param name="propertyLabel" value="Dtdmketqua ngaygiocn"/>
+                    <ui:param name="propertyPath" value="dtDmKetQua.dtdmketquaNgaygiocn"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmKetQua.dtdmketquaNgaygiocn}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Thao tác</f:facet>
+            <s:link view="/#{empty from ? 'DtDmKetQua' : from}.xhtml"
+                   value="#{empty from ? 'Xem' : 'Chọn'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="dtDmKetQua">
+                <f:param name="dtDmKetQuaDtdmketquaMaso"
+                        value="#{_dtDmKetQua.dtdmketquaMaso}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/DtDmKetQuaEdit.xhtml"
+                   value="Sửa"
+             propagation="none"
+                      id="dtDmKetQuaEdit"
+                rendered="#{empty from}">
+                <f:param name="dtDmKetQuaDtdmketquaMaso"
+                        value="#{_dtDmKetQua.dtdmketquaMaso}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/DtDmKetQuaList.xhtml"
+            rendered="#{dtDmKetQuaList.previousExists}"
+               value="#{messages.left}#{messages.left} Trang đầu"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/DtDmKetQuaList.xhtml"
+            rendered="#{dtDmKetQuaList.previousExists}"
+               value="#{messages.left} Trang trước"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{dtDmKetQuaList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DtDmKetQuaList.xhtml"
+            rendered="#{dtDmKetQuaList.nextExists}"
+               value="Trang sau #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{dtDmKetQuaList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DtDmKetQuaList.xhtml"
+            rendered="#{dtDmKetQuaList.nextExists}"
+               value="Trang cuối #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{dtDmKetQuaList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/DtDmKetQuaEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Thêm mới dtDmKetQua">
+            <f:param name="dtDmKetQuaDtdmketquaMaso"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

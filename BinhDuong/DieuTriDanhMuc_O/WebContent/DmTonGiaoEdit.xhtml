@@ -1,0 +1,102 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmTonGiao" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmTonGiaoHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Tôn giáo</f:facet>
+
+
+
+            <s:decorate id="tongiaoChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="tongiaoChon"
+                                      value="#{dmTonGiaoHome.instance.tongiaoChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="tongiaoMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="tongiaoMa"
+                       required="true"
+                           size="10"
+                      maxlength="10"
+                          value="#{dmTonGiaoHome.instance.tongiaoMa}">
+                    <a:support event="onblur" reRender="tongiaoMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="tongiaoNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="tongiaoNgaygiocn"
+                          value="#{dmTonGiaoHome.instance.tongiaoNgaygiocn}">
+                    <a:support event="onblur" reRender="tongiaoNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="tongiaoTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="tongiaoTen"
+                           size="100"
+                      maxlength="100"
+                          value="#{dmTonGiaoHome.instance.tongiaoTen}">
+                    <a:support event="onblur" reRender="tongiaoTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmTonGiaoHome.persist}"
+                       disabled="#{!dmTonGiaoHome.wired}"
+                       rendered="#{!dmTonGiaoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmTonGiaoHome.update}"
+                       rendered="#{dmTonGiaoHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmTonGiaoHome.remove}"
+                      immediate="true"
+                       rendered="#{dmTonGiaoHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmTonGiao.xhtml"
+                rendered="#{dmTonGiaoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmTonGiaoFrom ? 'DmTonGiaoList' : dmTonGiaoFrom}.xhtml"
+                rendered="#{!dmTonGiaoHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

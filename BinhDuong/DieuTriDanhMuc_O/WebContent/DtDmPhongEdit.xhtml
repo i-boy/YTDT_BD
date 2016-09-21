@@ -1,0 +1,104 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmPhong" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmPhongHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Phòng</f:facet>
+
+
+
+            <s:decorate id="dtdmpChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:inputText id="dtdmpChon"
+                          value="#{dtDmPhongHome.instance.dtdmpChon}">
+                    <a:support event="onblur" reRender="dtdmpChonField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmpMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dtdmpMa"
+                       required="true"
+                           size="100"
+                      maxlength="100"
+                          value="#{dtDmPhongHome.instance.dtdmpMa}">
+                    <a:support event="onblur" reRender="dtdmpMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmpNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dtdmpNgaygiocn"
+                       required="true"
+                          value="#{dtDmPhongHome.instance.dtdmpNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmpNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmpTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputTextarea id="dtdmpTen"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dtDmPhongHome.instance.dtdmpTen}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmPhongHome.persist}"
+                       disabled="#{!dtDmPhongHome.wired}"
+                       rendered="#{!dtDmPhongHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmPhongHome.update}"
+                       rendered="#{dtDmPhongHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmPhongHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmPhongHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmPhong.xhtml"
+                rendered="#{dtDmPhongHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmPhongFrom ? 'DtDmPhongList' : dtDmPhongFrom}.xhtml"
+                rendered="#{!dtDmPhongHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

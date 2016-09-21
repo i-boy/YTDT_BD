@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="toathuoc_sub3"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="595"
+		 pageHeight="842"
+		 columnWidth="595"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="0"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isFloatColumnFooter="true"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<import value="com.iesvn.commaseparator.*" />
+	<reportFont name="TNRM bold" isDefault="false" fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+	<reportFont name="TNRM" isDefault="false" fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+	<reportFont name="TNRM bui" isDefault="false" fontName="Times New Roman" size="12" isBold="true" isItalic="true" isUnderline="true" isStrikeThrough="false" pdfFontName="timesbi.ttf" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+	<reportFont name="TNRM bi" isDefault="false" fontName="Times New Roman" size="12" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="timesbi.ttf" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+
+	<style 
+		name="Triet_Style"
+		isDefault="true"
+		fontName="Times New Roman"
+		fontSize="12"
+		pdfFontName="times.ttf"
+		pdfEncoding="Identity-H"
+		isPdfEmbedded="true"
+	/>
+
+	<parameter name="SOVAOVIEN" isForPrompting="true" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{SOVAOVIEN}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SOYTE" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{SOYTE}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="BENHVIEN" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{BENHVIEN}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DIENTHOAI" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{DIENTHOAI}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HOTENBN" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{HOTENBN}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DIACHI" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{DIACHI}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="GTTU" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{GTTU}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="GTDEN" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{GTDEN}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="MATHEBHYT" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{MATHEBHYT}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NGAYDIEUTRI" isForPrompting="false" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[$P{NGAYDIEUTRI}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="KHOADIEUTRI" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[$P{KHOADIEUTRI}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SOTHETEKSCS" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{SOTHETEKSCS}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tuoi" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{tuoi}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="GIOITINH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{GIOITINH}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="BASIDIEUTRI" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{BASIDIEUTRI}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NHANVIENCN" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{NHANVIENCN}]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[SELECT( case when(bang1.THANHTIEN is null) then 0 else bang1.THANHTIEN end ) AS CONGTHANHTIEN
+FROM
+( 
+ SELECT SUM( case when(tbl1.THANHTIEN is null) then 0 else tbl1.THANHTIEN end ) as THANHTIEN
+ FROM(
+	SELECT (com.SL * com.DG) as THANHTIEN FROM
+	(
+	SELECT SUM(tnt.THUOCNOITRU_SOLUONG) as SL, tnt.THUOCNOITRU_DONGIA as DG
+	FROM THUOC_NOI_TRU tnt, HSBA_KHOA hsbakhoa, DM_THUOC thuoc
+	WHERE tnt.HSBA_KHOA=hsbakhoa.HSBAKHOA_MASO
+	AND tnt.THUOCNOITRU_MATHUOC=thuoc.DMTHUOC_MASO
+	AND($P{SOVAOVIEN} is null or hsbakhoa.HSBA_SOVAOVIEN=$P{SOVAOVIEN})
+	AND( tnt.THUOCNOITRU_TUTRUC_PDT=2)
+	AND( $P{KHOADIEUTRI} IS NULL OR hsbakhoa.KHOA_MA=$P{KHOADIEUTRI})
+	group by thuoc.DMTHUOC_TEN, tnt.THUOCNOITRU_DONGIA
+	)com
+) tbl1
+) bang1]]></queryString>
+
+	<field name="CONGTHANHTIEN" class="java.lang.Double"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="185"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						style="Triet_Style"
+						x="390"
+						y="0"
+						width="73"
+						height="15"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font reportFont="TNRM"/>
+					</textElement>
+				<text><![CDATA[Cộng khoản:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						style="Triet_Style"
+						x="7"
+						y="130"
+						width="87"
+						height="16"
+						key="staticText-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font reportFont="TNRM"/>
+					</textElement>
+				<text><![CDATA[Dược cấp thuốc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						style="Triet_Style"
+						x="148"
+						y="130"
+						width="88"
+						height="16"
+						key="staticText-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font reportFont="TNRM"/>
+					</textElement>
+				<text><![CDATA[Kế toán viện phí]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						style="Triet_Style"
+						x="328"
+						y="130"
+						width="62"
+						height="16"
+						key="staticText-4"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font reportFont="TNRM"/>
+					</textElement>
+				<text><![CDATA[Giám đốc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						style="Triet_Style"
+						x="496"
+						y="130"
+						width="65"
+						height="16"
+						key="staticText-5"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font reportFont="TNRM"/>
+					</textElement>
+				<text><![CDATA[Bệnh nhân]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						style="Triet_Style"
+						x="5"
+						y="146"
+						width="90"
+						height="16"
+						key="staticText-6"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font reportFont="TNRM"/>
+					</textElement>
+				<text><![CDATA[(ký, ghi rõ họ tên)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						style="Triet_Style"
+						x="148"
+						y="146"
+						width="90"
+						height="16"
+						key="staticText-7"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font reportFont="TNRM"/>
+					</textElement>
+				<text><![CDATA[(ký, ghi rõ họ tên)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						style="Triet_Style"
+						x="318"
+						y="146"
+						width="90"
+						height="16"
+						key="staticText-8"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font reportFont="TNRM"/>
+					</textElement>
+				<text><![CDATA[(ký, ghi rõ họ tên)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						style="Triet_Style"
+						x="481"
+						y="146"
+						width="90"
+						height="16"
+						key="staticText-9"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font reportFont="TNRM"/>
+					</textElement>
+				<text><![CDATA[(ký, ghi rõ họ tên)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						style="Triet_Style"
+						x="457"
+						y="32"
+						width="76"
+						height="16"
+						key="staticText-10"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font reportFont="TNRM"/>
+					</textElement>
+				<text><![CDATA[Bác sĩ điều trị]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						style="Triet_Style"
+						x="450"
+						y="48"
+						width="90"
+						height="16"
+						key="staticText-11"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font reportFont="TNRM"/>
+					</textElement>
+				<text><![CDATA[(ký, ghi rõ họ tên)]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="399"
+						y="16"
+						width="194"
+						height="15"
+						backcolor="#CCCCCC"
+						key="textField-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="TNRM"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[new String("Ngày ") + new SimpleDateFormat("dd").format($P{NGAYDIEUTRI})
++ new String(" tháng ") + new SimpleDateFormat("MM").format($P{NGAYDIEUTRI})
++ new String(" năm ") + new SimpleDateFormat("yyyy").format($P{NGAYDIEUTRI})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="Triet_Style"
+						x="465"
+						y="0"
+						width="106"
+						height="15"
+						key="textField-4"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="TNRM" pdfFontName="timesbd.ttf"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $F{CONGTHANHTIEN} == null ? CommaSeparator.formatDoubleWithSeprator(new Double(0.0)) : CommaSeparator.formatDoubleWithSeprator($F{CONGTHANHTIEN}) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="412"
+						y="109"
+						width="168"
+						height="18"
+						key="textField-5"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font reportFont="TNRM bi"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $P{BASIDIEUTRI} == null ? "" : "BS. "+ $P{BASIDIEUTRI} )]]></textFieldExpression>
+				</textField>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

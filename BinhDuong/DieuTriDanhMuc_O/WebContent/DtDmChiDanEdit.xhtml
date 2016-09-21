@@ -1,0 +1,197 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmChiDan" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmChiDanHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Chỉ dẫn</f:facet>
+
+
+
+
+
+            <s:decorate id="dtdmchidanChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dtdmchidanChon"
+                                      value="#{dtDmChiDanHome.instance.dtdmchidanChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmchidanMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã chỉ dẫn</ui:define>
+                <h:inputText id="dtdmchidanMa"
+                       required="true"
+                           size="4"
+                      maxlength="4"
+                          value="#{dtDmChiDanHome.instance.dtdmchidanMa}">
+                    <a:support event="onblur" reRender="dtdmchidanMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmchidanMaphuField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã phụ</ui:define>
+                <h:inputText id="dtdmchidanMaphu"
+                           size="12"
+                      maxlength="12"
+                          value="#{dtDmChiDanHome.instance.dtdmchidanMaphu}">
+                    <a:support event="onblur" reRender="dtdmchidanMaphuField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmchidanNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dtdmchidanNgaygiocn"
+                          value="#{dtDmChiDanHome.instance.dtdmchidanNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmchidanNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmchidanTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên chỉ dẫn</ui:define>
+                <h:inputTextarea id="dtdmchidanTen"
+                               cols="80"
+                               rows="3"
+                              value="#{dtDmChiDanHome.instance.dtdmchidanTen}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmChiDanHome.persist}"
+                       disabled="#{!dtDmChiDanHome.wired}"
+                       rendered="#{!dtDmChiDanHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmChiDanHome.update}"
+                       rendered="#{dtDmChiDanHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmChiDanHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmChiDanHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmChiDan.xhtml"
+                rendered="#{dtDmChiDanHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmChiDanFrom ? 'DtDmChiDanList' : dtDmChiDanFrom}.xhtml"
+                rendered="#{!dtDmChiDanHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+<ui:remove>
+    <rich:tab label="DS chỉ dẫn ĐVT">
+        <h:form styleClass="association" id="dtDmChiDanDvtsChildren">
+
+            <h:outputText value="Không có  dtDmChiDanDvts phù hợp với dtDmChiDan."
+                       rendered="#{empty dtDmChiDanHome.dtDmChiDanDvts}"/>
+
+            <rich:dataTable value="#{dtDmChiDanHome.dtDmChiDanDvts}"
+                           var="_dtDmChiDanDvt"
+                      rendered="#{not empty dtDmChiDanHome.dtDmChiDanDvts}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dtDmChiDanDvtsTable">
+                <rich:column sortBy="#{_dtDmChiDanDvt.dtdmchidandvtMaso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dtDmChiDanDvt.dtdmchidandvtMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmChiDanDvt.dtdmchidandvtChon}">
+                    <f:facet name="header">Chọn</f:facet>
+                    <h:outputText value="#{_dtDmChiDanDvt.dtdmchidandvtChon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmChiDanDvt.dtdmchidandvtNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dtDmChiDanDvt.dtdmchidandvtNgaygiocn}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dtDmChiDanHome.managed}" id="dtDmChiDanDvts">
+        <div class="actionButtons">
+            <s:button id="adddtDmChiDanDvt"
+                   value="Thêm dtDmChiDanDvt"
+                    view="/DtDmChiDanDvtEdit.xhtml"
+             propagation="none">
+                 <f:param name="dtDmChiDanDtdmchidanMaso"
+                         value="#{dtDmChiDanHome.instance.dtdmchidanMaso}"/>
+                 <f:param name="dtDmChiDanDvtFrom" value="DtDmChiDan"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="DS chỉ dẫn ĐVT_1">
+        <h:form styleClass="association" id="dtDmChiDanDvts_1Children">
+
+            <h:outputText value="Không có  dtDmChiDanDvts_1 phù hợp với dtDmChiDan."
+                       rendered="#{empty dtDmChiDanHome.dtDmChiDanDvts_1}"/>
+
+            <rich:dataTable value="#{dtDmChiDanHome.dtDmChiDanDvts_1}"
+                           var="_dtDmChiDanDvt"
+                      rendered="#{not empty dtDmChiDanHome.dtDmChiDanDvts_1}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dtDmChiDanDvts_1Table">
+                <rich:column sortBy="#{_dtDmChiDanDvt.dtdmchidandvtMaso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dtDmChiDanDvt.dtdmchidandvtMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmChiDanDvt.dtdmchidandvtChon}">
+                    <f:facet name="header">Chọn</f:facet>
+                    <h:outputText value="#{_dtDmChiDanDvt.dtdmchidandvtChon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmChiDanDvt.dtdmchidandvtNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dtDmChiDanDvt.dtdmchidandvtNgaygiocn}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dtDmChiDanHome.managed}" id="dtDmChiDanDvts_1">
+        <div class="actionButtons">
+            <s:button id="adddtDmChiDanDvt"
+                   value="Thêm dtDmChiDanDvt"
+                    view="/DtDmChiDanDvtEdit.xhtml"
+             propagation="none">
+                 <f:param name="dtDmChiDanDtdmchidanMaso"
+                         value="#{dtDmChiDanHome.instance.dtdmchidanMaso}"/>
+                 <f:param name="dtDmChiDanDvtFrom" value="DtDmChiDan"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab></ui:remove>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

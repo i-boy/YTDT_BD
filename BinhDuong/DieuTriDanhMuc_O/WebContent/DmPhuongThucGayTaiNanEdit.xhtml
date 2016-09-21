@@ -1,0 +1,176 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmPhuongThucGayTaiNan" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmPhuongThucGayTaiNanHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Phương Thức Gây Tai Nạn</f:facet>
+
+
+
+
+            <s:decorate id="dmptgtnBhytField" template="layout/edit.xhtml">
+                <ui:define name="label">BHYT</ui:define>
+                <h:selectBooleanCheckbox id="dmptgtnBhyt"
+                                      value="#{dmPhuongThucGayTaiNanHome.instance.dmptgtnBhyt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmptgtnDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc DP</ui:define>
+                <h:selectBooleanCheckbox id="dmptgtnDp"
+                                      value="#{dmPhuongThucGayTaiNanHome.instance.dmptgtnDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmptgtnDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc ĐT</ui:define>
+                <h:selectBooleanCheckbox id="dmptgtnDt"
+                                      value="#{dmPhuongThucGayTaiNanHome.instance.dmptgtnDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmptgtnMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dmptgtnMa"
+                       required="true"
+                           size="10"
+                      maxlength="10"
+                          value="#{dmPhuongThucGayTaiNanHome.instance.dmptgtnMa}">
+                    <a:support event="onblur" reRender="dmptgtnMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmptgtnNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmptgtnNgaygiocn"
+                          value="#{dmPhuongThucGayTaiNanHome.instance.dmptgtnNgaygiocn}">
+                    <a:support event="onblur" reRender="dmptgtnNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmptgtnQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc QL</ui:define>
+                <h:selectBooleanCheckbox id="dmptgtnQl"
+                                      value="#{dmPhuongThucGayTaiNanHome.instance.dmptgtnQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmptgtnTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputTextarea id="dmptgtnTen"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dmPhuongThucGayTaiNanHome.instance.dmptgtnTen}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmPhuongThucGayTaiNanHome.persist}"
+                       disabled="#{!dmPhuongThucGayTaiNanHome.wired}"
+                       rendered="#{!dmPhuongThucGayTaiNanHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmPhuongThucGayTaiNanHome.update}"
+                       rendered="#{dmPhuongThucGayTaiNanHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmPhuongThucGayTaiNanHome.remove}"
+                      immediate="true"
+                       rendered="#{dmPhuongThucGayTaiNanHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmPhuongThucGayTaiNan.xhtml"
+                rendered="#{dmPhuongThucGayTaiNanHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmPhuongThucGayTaiNanFrom ? 'DmPhuongThucGayTaiNanList' : dmPhuongThucGayTaiNanFrom}.xhtml"
+                rendered="#{!dmPhuongThucGayTaiNanHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Tai nạn">
+    <div class="association" id="dmTaiNanParent">
+
+        <h:outputText value="Không tìm thấy dmTaiNan phù hợp với dmPhuongThucGayTaiNan."
+                   rendered="#{dmPhuongThucGayTaiNanHome.instance.dmTaiNan == null}"/>
+
+        <rich:dataTable var="_dmTaiNan"
+                   value="#{dmPhuongThucGayTaiNanHome.instance.dmTaiNan}"
+                rendered="#{dmPhuongThucGayTaiNanHome.instance.dmTaiNan != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dmTaiNanTable">
+            <h:column>
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dmTaiNan.dmtainanMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc DP</f:facet>
+                <h:outputText value="#{_dmTaiNan.dmtainanDp}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc ĐT</f:facet>
+                <h:outputText value="#{_dmTaiNan.dmtainanDt}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã</f:facet>
+                <h:outputText value="#{_dmTaiNan.dmtainanMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmTaiNan.dmtainanNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc QL</f:facet>
+                <h:outputText value="#{_dmTaiNan.dmtainanQl}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên</f:facet>
+                <h:outputText value="#{_dmTaiNan.dmtainanTen}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{dmPhuongThucGayTaiNanHome.instance.dmTaiNan != null ? 'Thay đổi' : 'Chọn'} dmTaiNan"
+                       view="/DmTaiNanList.xhtml">
+                <f:param name="from" value="DmPhuongThucGayTaiNanEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

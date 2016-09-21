@@ -1,0 +1,165 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <rich:panel>
+        <f:facet name="header">Chỉ dẫn Chi tiết</f:facet>
+
+
+        <s:decorate id="dtdmchidanChon" template="layout/display.xhtml">
+            <ui:define name="label">Chọn</ui:define>
+            <h:outputText value="#{dtDmChiDanHome.instance.dtdmchidanChon}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmchidanMa" template="layout/display.xhtml">
+            <ui:define name="label">Mã chỉ dẫn</ui:define>
+            <h:outputText value="#{dtDmChiDanHome.instance.dtdmchidanMa}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmchidanMaphu" template="layout/display.xhtml">
+            <ui:define name="label">Mã phụ</ui:define>
+            <h:outputText value="#{dtDmChiDanHome.instance.dtdmchidanMaphu}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmchidanNgaygiocn" template="layout/display.xhtml">
+            <ui:define name="label">Ngày giờ cập nhật</ui:define>
+            <h:outputText value="#{dtDmChiDanHome.instance.dtdmchidanNgaygiocn}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmchidanTen" template="layout/display.xhtml">
+            <ui:define name="label">Tên chỉ dẫn</ui:define>
+            <h:outputText value="#{dtDmChiDanHome.instance.dtdmchidanTen}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/DtDmChiDanEdit.xhtml"
+                    id="edit"
+                 value="Sửa"/>
+
+        <s:button view="/#{empty dtDmChiDanFrom ? 'DtDmChiDanList' : dtDmChiDanFrom}.xhtml"
+                    id="done"
+                 value="Hoàn thành"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+<ui:remove>
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>DS chỉ dẫn ĐVT</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="dtDmChiDanDvtsChildren">
+
+        <h:outputText value="Không có  dtDmChiDanDvts phù hợp với dtDmChiDan."
+                   rendered="#{empty dtDmChiDanHome.dtDmChiDanDvts}"/>
+
+        <rich:dataTable value="#{dtDmChiDanHome.dtDmChiDanDvts}"
+                       var="_dtDmChiDanDvt"
+                  rendered="#{not empty dtDmChiDanHome.dtDmChiDanDvts}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="dtDmChiDanDvtsTable">
+            <rich:column sortBy="#{_dtDmChiDanDvt.dtdmchidandvtMaso}">
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dtDmChiDanDvt.dtdmchidandvtMaso}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmChiDanDvt.dtdmchidandvtChon}">
+                <f:facet name="header">Chọn</f:facet>
+                <h:outputText value="#{_dtDmChiDanDvt.dtdmchidandvtChon}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmChiDanDvt.dtdmchidandvtNgaygiocn}">
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dtDmChiDanDvt.dtdmchidandvtNgaygiocn}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="selectdtDmChiDanDvt"
+                     value="Chọn"
+                      view="/DtDmChiDanDvt.xhtml">
+                    <f:param name="dtDmChiDanDvtDtdmchidandvtMaso"
+                            value="#{_dtDmChiDanDvt.dtdmchidandvtMaso}"/>
+                    <f:param name="dtDmChiDanDvtFrom" value="DtDmChiDan"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Thêm dtDmChiDanDvt"
+                view="/DtDmChiDanDvtEdit.xhtml">
+            <f:param name="dtDmChiDanDtdmchidanMaso"
+                    value="#{dtDmChiDanHome.instance.dtdmchidanMaso}"/>
+            <f:param name="dtDmChiDanDvtFrom" value="DtDmChiDan"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>DS chỉ dẫn ĐVT_1</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="dtDmChiDanDvts_1Children">
+
+        <h:outputText value="Không có  dtDmChiDanDvts_1 phù hợp với dtDmChiDan."
+                   rendered="#{empty dtDmChiDanHome.dtDmChiDanDvts_1}"/>
+
+        <rich:dataTable value="#{dtDmChiDanHome.dtDmChiDanDvts_1}"
+                       var="_dtDmChiDanDvt"
+                  rendered="#{not empty dtDmChiDanHome.dtDmChiDanDvts_1}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="dtDmChiDanDvts_1Table">
+            <rich:column sortBy="#{_dtDmChiDanDvt.dtdmchidandvtMaso}">
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dtDmChiDanDvt.dtdmchidandvtMaso}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmChiDanDvt.dtdmchidandvtChon}">
+                <f:facet name="header">Chọn</f:facet>
+                <h:outputText value="#{_dtDmChiDanDvt.dtdmchidandvtChon}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dtDmChiDanDvt.dtdmchidandvtNgaygiocn}">
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dtDmChiDanDvt.dtdmchidandvtNgaygiocn}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="selectdtDmChiDanDvt"
+                     value="Chọn"
+                      view="/DtDmChiDanDvt.xhtml">
+                    <f:param name="dtDmChiDanDvtDtdmchidandvtMaso"
+                            value="#{_dtDmChiDanDvt.dtdmchidandvtMaso}"/>
+                    <f:param name="dtDmChiDanDvtFrom" value="DtDmChiDan"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Thêm dtDmChiDanDvt"
+                view="/DtDmChiDanDvtEdit.xhtml">
+            <f:param name="dtDmChiDanDtdmchidanMaso"
+                    value="#{dtDmChiDanHome.instance.dtdmchidanMaso}"/>
+            <f:param name="dtDmChiDanDvtFrom" value="DtDmChiDan"/>
+        </s:button>
+    </div>
+    </rich:tab>
+    </ui:remove>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

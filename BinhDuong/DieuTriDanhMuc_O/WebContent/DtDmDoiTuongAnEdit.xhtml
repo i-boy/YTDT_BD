@@ -1,0 +1,102 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmDoiTuongAn" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmDoiTuongAnHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Đối tượng ăn</f:facet>
+
+
+
+            <s:decorate id="dtdmdtaChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dtdmdtaChon"
+                                      value="#{dtDmDoiTuongAnHome.instance.dtdmdtaChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmdtaMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dtdmdtaMa"
+                       required="true"
+                           size="50"
+                      maxlength="50"
+                          value="#{dtDmDoiTuongAnHome.instance.dtdmdtaMa}">
+                    <a:support event="onblur" reRender="dtdmdtaMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmdtaNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dtdmdtaNgaygiocn"
+                          value="#{dtDmDoiTuongAnHome.instance.dtdmdtaNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmdtaNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmdtaTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dtdmdtaTen"
+                           size="100"
+                      maxlength="100"
+                          value="#{dtDmDoiTuongAnHome.instance.dtdmdtaTen}">
+                    <a:support event="onblur" reRender="dtdmdtaTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmDoiTuongAnHome.persist}"
+                       disabled="#{!dtDmDoiTuongAnHome.wired}"
+                       rendered="#{!dtDmDoiTuongAnHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmDoiTuongAnHome.update}"
+                       rendered="#{dtDmDoiTuongAnHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmDoiTuongAnHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmDoiTuongAnHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmDoiTuongAn.xhtml"
+                rendered="#{dtDmDoiTuongAnHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmDoiTuongAnFrom ? 'DtDmDoiTuongAnList' : dtDmDoiTuongAnFrom}.xhtml"
+                rendered="#{!dtDmDoiTuongAnHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

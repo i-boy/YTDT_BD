@@ -1,0 +1,2247 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="BA02_BaoCaoBenhTruyenNhiem_Tinh_subreport0"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="842"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="0"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<reportFont name="Times New Roman" isDefault="true" fontName="Times New Roman" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+	<reportFont name="Times New Roman Bold" isDefault="false" fontName="Times New Roman" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="timesbd.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<parameter name="MAHUYEN" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["711.01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="MATINH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["711"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TUNGAY" isForPrompting="true" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DENNGAY" isForPrompting="true" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["F:\\tmp\\iReport\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[Select 
+ listHuyen.HUYEN_MASO AS HUYEN_MASO,
+ listHuyen.HUYEN_TEN AS HUYEN_TEN,
+
+ countTaMac.TA_MAC AS TA_MAC,
+ countTaChet.TA_CHET AS TA_CHET,
+
+ countThHanMac.THHAN_MAC AS THHAN_MAC,
+ countThHanChet.THHAN_CHET AS THHAN_CHET,
+
+ countLyttMac.LYTT_MAC AS LYTT_MAC,
+ countLyttChet.LYTT_CHET AS LYTT_CHET,
+
+ countLyAmipMac.LYAMIP_MAC AS LYAMIP_MAC,
+ countLyAmipChet.LYAMIP_CHET AS LYAMIP_CHET,
+
+ countTcMac.TC_MAC AS TC_MAC,
+ countTcChet.TC_CHET AS TC_CHET,
+
+ countVnaoMac.VNAO_MAC AS VNAO_MAC,
+ countVnaoChet.VNAO_CHET AS VNAO_CHET,
+
+ countDenMac.DEN_MAC AS DEN_MAC,
+ countDenChet.DEN_CHET AS DEN_CHET,
+
+ countVganMac.VGAN_MAC AS VGAN_MAC,
+ countVganChet.VGAN_CHET AS VGAN_CHET,
+
+ countDaiMac.DAI_MAC AS DAI_MAC,
+ countDaiChet.DAI_CHET AS DAI_CHET,
+
+ countVmnMac.VMN_MAC AS VMN_MAC,
+ countVmnChet.VMN_CHET AS VMN_CHET,
+
+ countTdMac.TD_MAC AS TD_MAC,
+ countTdChet.TD_CHET AS TD_CHET
+FROM
+
+-- Lay danh sach huyen theo tinh default
+(SELECT dmhuyen.DMHUYEN_MASO AS HUYEN_MASO,
+ dmhuyen.DMHUYEN_TEN AS HUYEN_TEN
+FROM dm_huyen dmhuyen
+ LEFT JOIN dm_tinh dmtinh ON dmhuyen.DMTINH_MASO=dmtinh.DMTINH_MASO
+WHERE dmtinh.DMTINH_MA LIKE $P{MATINH}
+union  SELECT 0 AS HUYEN_MASO,
+ 'Nội tỉnh không xác định huyện ' AS HUYEN_TEN  FROM cau_hinh 
+) listHuyen
+LEFT JOIN
+-- Tinh so benh nhan mac benh ta(Ma ICD=A00)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) TA_MAC
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.DMBENHICD_MA LIKE 'A00'
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countTaMac ON listHuyen.HUYEN_MASO=countTaMac.HUYEN_MASO
+LEFT JOIN
+-- Tinh so benh nhan chet do benh ta(Ma ICD=A00)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) TA_CHET
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.MABENH_TUVONG LIKE 'A00'
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countTaChet ON listHuyen.HUYEN_MASO=countTaChet.HUYEN_MASO
+-- #####################
+
+LEFT JOIN
+-- Tinh so benh nhan mac benh thuong han(Ma ICD=A01)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) THHAN_MAC
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.DMBENHICD_MA LIKE 'A01'
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countThHanMac ON listHuyen.HUYEN_MASO=countThHanMac.HUYEN_MASO
+LEFT JOIN
+-- Tinh so benh nhan chet do benh thuong han(Ma ICD=A01)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) THHAN_CHET
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.MABENH_TUVONG LIKE 'A01'
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countThHanChet ON listHuyen.HUYEN_MASO=countThHanChet.HUYEN_MASO
+-- #####################
+
+LEFT JOIN
+-- Tinh so benh nhan mac benh Ly TT(Ma ICD=A03)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) LYTT_MAC
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.DMBENHICD_MA LIKE 'A03'
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countLyttMac ON listHuyen.HUYEN_MASO=countLyttMac.HUYEN_MASO
+LEFT JOIN
+-- Tinh so benh nhan chet do benh LyTT(Ma ICD=A03)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) LYTT_CHET
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.MABENH_TUVONG LIKE 'A03'
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countLyttChet ON listHuyen.HUYEN_MASO=countLyttChet.HUYEN_MASO
+-- #####################
+LEFT JOIN
+-- Tinh so benh nhan mac benh ly amip(Ma ICD=A06.0)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) LYAMIP_MAC
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.DMBENHICD_MA LIKE 'A06.0'
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countLyAmipMac ON listHuyen.HUYEN_MASO=countLyAmipMac.HUYEN_MASO
+LEFT JOIN
+-- Tinh so benh nhan chet do benh ly amip(Ma ICD=A06.0)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) LYAMIP_CHET
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.MABENH_TUVONG LIKE 'A06.0'
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countLyAmipChet ON listHuyen.HUYEN_MASO=countLyAmipChet.HUYEN_MASO
+-- #####################
+
+LEFT JOIN
+-- Tinh so benh nhan mac benh tieu chay(Ma ICD=A09)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) TC_MAC
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.DMBENHICD_MA LIKE 'A09'
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countTcMac ON listHuyen.HUYEN_MASO=countTcMac.HUYEN_MASO
+LEFT JOIN
+-- Tinh so benh nhan chet do benh tieu chay(Ma ICD=A09)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) TC_CHET
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.MABENH_TUVONG LIKE 'A09'
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countTcChet ON listHuyen.HUYEN_MASO=countTcChet.HUYEN_MASO
+-- #####################
+LEFT JOIN
+-- Tinh so benh nhan mac benh Vnao virus(Ma ICD=A83, A84, A85, A86, A87, A88, A89)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) VNAO_MAC
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.DMBENHICD_MA LIKE 'A83' OR listBTN.DMBENHICD_MA LIKE 'A84' OR listBTN.DMBENHICD_MA LIKE 'A85' OR 
+					 listBTN.DMBENHICD_MA LIKE 'A87' OR listBTN.DMBENHICD_MA LIKE 'A87' OR listBTN.DMBENHICD_MA LIKE 'A88' OR listBTN.DMBENHICD_MA LIKE 'A89' 						)	
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countVnaoMac ON listHuyen.HUYEN_MASO=countVnaoMac.HUYEN_MASO
+LEFT JOIN
+-- Tinh so benh nhan chet do benh Vnao virus(Ma ICD=A83, A84, A85, A86, A87, A88, A89)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) VNAO_CHET
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.MABENH_TUVONG LIKE 'A83' OR listBTN.MABENH_TUVONG LIKE 'A84' OR listBTN.MABENH_TUVONG LIKE 'A85' OR 
+					 listBTN.MABENH_TUVONG LIKE 'A87' OR listBTN.MABENH_TUVONG LIKE 'A87' OR listBTN.MABENH_TUVONG LIKE 'A88' OR listBTN.MABENH_TUVONG LIKE 'A89' 						)
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countVnaoChet ON listHuyen.HUYEN_MASO=countVnaoChet.HUYEN_MASO
+-- #####################
+LEFT JOIN
+-- Tinh so benh nhan mac benh Sot Dengue(Ma ICD=A90, A91)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) DEN_MAC
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.DMBENHICD_MA LIKE 'A90' OR listBTN.DMBENHICD_MA LIKE 'A91')
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countDenMac ON listHuyen.HUYEN_MASO=countDenMac.HUYEN_MASO
+LEFT JOIN
+-- Tinh so benh nhan chet do benh Sot Dengue(Ma ICD=A90, A91)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) DEN_CHET
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.MABENH_TUVONG LIKE 'A90' OR listBTN.MABENH_TUVONG LIKE 'A91')
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countDenChet ON listHuyen.HUYEN_MASO=countDenChet.HUYEN_MASO
+-- #####################
+LEFT JOIN
+-- Tinh so benh nhan mac benh Vgan(Ma ICD=B15, B16, B17, B18, B19)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) VGAN_MAC
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.DMBENHICD_MA LIKE 'B15' OR listBTN.DMBENHICD_MA LIKE 'B16' OR listBTN.DMBENHICD_MA LIKE 'B17' OR
+			 listBTN.DMBENHICD_MA LIKE 'B18' OR listBTN.DMBENHICD_MA LIKE 'B19')
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countVganMac ON listHuyen.HUYEN_MASO=countVganMac.HUYEN_MASO
+LEFT JOIN
+-- Tinh so benh nhan chet do benh Vgan(Ma ICD=B15, B16, B17, B18, B19)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) VGAN_CHET
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.MABENH_TUVONG LIKE 'B15' OR listBTN.MABENH_TUVONG LIKE 'B16' OR listBTN.MABENH_TUVONG LIKE 'B17' OR
+			 listBTN.MABENH_TUVONG LIKE 'B18' OR listBTN.MABENH_TUVONG LIKE 'B19')
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countVganChet ON listHuyen.HUYEN_MASO=countVganChet.HUYEN_MASO
+-- #####################
+LEFT JOIN
+-- Tinh so benh nhan mac benh dai(Ma ICD=A82)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) DAI_MAC
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.DMBENHICD_MA LIKE 'A82' 
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countDaiMac ON listHuyen.HUYEN_MASO=countDaiMac.HUYEN_MASO
+LEFT JOIN
+-- Tinh so benh nhan chet do benh dai(Ma ICD=A82)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) DAI_CHET
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.MABENH_TUVONG LIKE 'A82' 
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countDaiChet ON listHuyen.HUYEN_MASO=countDaiChet.HUYEN_MASO
+-- #####################
+LEFT JOIN
+-- Tinh so benh nhan mac benh VMN mo cau(Ma ICD=A39.0)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) VMN_MAC
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.DMBENHICD_MA LIKE 'A39.0'
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countVmnMac ON listHuyen.HUYEN_MASO=countVmnMac.HUYEN_MASO
+
+LEFT JOIN
+-- Tinh so benh nhan chet do benh VMN mo cau(Ma ICD=A39.0)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) VMN_CHET
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.MABENH_TUVONG LIKE 'A39.0'
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countVmnChet ON listHuyen.HUYEN_MASO=countVmnChet.HUYEN_MASO
+-- #####################
+LEFT JOIN
+-- Tinh so benh nhan mac benh Thuy dau(Ma ICD=B01,B02)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) TD_MAC
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.DMBENHICD_MA LIKE 'B01' OR listBTN.DMBENHICD_MA LIKE 'B02')
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countTdMac ON listHuyen.HUYEN_MASO=countTdMac.HUYEN_MASO
+LEFT JOIN
+-- Tinh so benh nhan chet do benh Thuy dau(Ma ICD=B01,B02)
+(SELECT listBTN.HUYEN_MASO AS HUYEN_MASO,
+ COUNT(listBTN.BENHNHAN_MA) TD_CHET
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.MABENH_TUVONG LIKE 'B01' OR listBTN.MABENH_TUVONG LIKE 'B02')
+ AND listBTN.TINH_MA LIKE $P{MATINH}
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+ GROUP BY listBTN.HUYEN_MASO)  countTdChet ON listHuyen.HUYEN_MASO=countTdChet.HUYEN_MASO
+
+ Union
+Select
+ Null AS HUYEN_MASO,
+ 'Ngoài tỉnh' AS HUYEN_TEN,
+-- Tinh so benh nhan mac benh ta(Ma ICD=A00)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.DMBENHICD_MA LIKE 'A00'
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+)  TA_MAC,
+
+-- Tinh so benh nhan chet do benh ta(Ma ICD=A00)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.MABENH_TUVONG LIKE 'A00'
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+)AS TA_CHET,
+-- #####################
+-- Tinh so benh nhan mac benh thuong han(Ma ICD=A01)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.DMBENHICD_MA LIKE 'A01'
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) THHAN_MAC,
+-- Tinh so benh nhan chet do benh thuong han(Ma ICD=A01)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.MABENH_TUVONG LIKE 'A01'
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) THHAN_CHET ,
+-- #####################
+-- Tinh so benh nhan mac benh Ly TT(Ma ICD=A03)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.DMBENHICD_MA LIKE 'A03'
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) LYTT_MAC,
+-- Tinh so benh nhan chet do benh Ly TT(Ma ICD=A03)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.MABENH_TUVONG LIKE 'A03'
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) LYTT_CHET ,
+-- #####################
+-- Tinh so benh nhan mac benh ly amip(Ma ICD=A06)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.DMBENHICD_MA LIKE 'A06'
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) LYAMIP_MAC ,
+-- Tinh so benh nhan chet do benh ly amip(Ma ICD=A06)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.MABENH_TUVONG LIKE 'A06'
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) LYAMIP_CHET ,
+-- #####################
+-- Tinh so benh nhan mac benh tieu chay(Ma ICD=A09)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.DMBENHICD_MA LIKE 'A09'
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) TC_MAC,
+-- Tinh so benh nhan chet do benh tieu chay(Ma ICD=A09)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.MABENH_TUVONG LIKE 'A09'
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) TC_CHET,
+-- #####################
+-- Tinh so benh nhan mac benh Vnao virus(Ma ICD=A83, A84, A85, A86, A87, A88, A89)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.DMBENHICD_MA LIKE 'A83' OR listBTN.DMBENHICD_MA LIKE 'A84' OR listBTN.DMBENHICD_MA LIKE 'A85' OR listBTN.DMBENHICD_MA LIKE 'A86' OR listBTN.DMBENHICD_MA LIKE 'A87' OR listBTN.DMBENHICD_MA LIKE 'A88' OR listBTN.DMBENHICD_MA LIKE 'A89')
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) VNAO_MAC,
+-- Tinh so benh nhan chet do benh Vnao virus(Ma ICD=A87)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.MABENH_TUVONG LIKE 'A83' OR listBTN.MABENH_TUVONG LIKE 'A84' OR listBTN.MABENH_TUVONG LIKE 'A85' OR listBTN.MABENH_TUVONG LIKE 'A86' OR listBTN.MABENH_TUVONG LIKE 'A87' OR listBTN.MABENH_TUVONG LIKE 'A88' OR listBTN.MABENH_TUVONG LIKE 'A89')
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) VNAO_CHET,
+-- #####################
+-- Tinh so benh nhan mac benh Sot Dengue(Ma ICD=A90, A91)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.DMBENHICD_MA LIKE 'A90' OR listBTN.DMBENHICD_MA LIKE 'A91')
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) DEN_MAC,
+-- Tinh so benh nhan chet do benh Sot Dengue(Ma ICD=A90)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.MABENH_TUVONG LIKE 'A90' OR listBTN.MABENH_TUVONG LIKE 'A91')
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) DEN_CHET,
+-- #####################
+
+-- Tinh so benh nhan mac benh Vgan(Ma ICD=B15, B16, B17, B18, B19)
+(SELECT
+ COUNT(listBTN.BENHNHAN_MA)
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.DMBENHICD_MA LIKE 'B15' OR listBTN.DMBENHICD_MA LIKE 'B16' OR listBTN.DMBENHICD_MA LIKE 'B17' OR
+					 listBTN.DMBENHICD_MA LIKE 'B18' OR listBTN.DMBENHICD_MA LIKE 'B19')
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) VGAN_MAC,
+-- Tinh so benh nhan chet do benh Vgan(Ma ICD=B15, B16, B17, B18, B19)
+(SELECT 
+ COUNT(listBTN.BENHNHAN_MA) 
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.MABENH_TUVONG LIKE 'B15' OR listBTN.MABENH_TUVONG LIKE 'B16' OR listBTN.MABENH_TUVONG LIKE 'B17' OR
+					 listBTN.MABENH_TUVONG LIKE 'B18' OR listBTN.MABENH_TUVONG LIKE 'B19')
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) VGAN_CHET,
+-- #####################
+-- Tinh so benh nhan mac benh Dai(Ma ICD=A82)
+(SELECT 
+ COUNT(listBTN.BENHNHAN_MA) 
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.DMBENHICD_MA LIKE 'A82'
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) DAI_MAC,
+
+-- Tinh so benh nhan chet do benh Dai(Ma ICD=A82)
+(SELECT 
+ COUNT(listBTN.BENHNHAN_MA) 
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.MABENH_TUVONG LIKE 'A82'
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) DAI_CHET,
+-- #####################
+-- Tinh so benh nhan mac benh VMN mo cau(Ma ICD=A39.0)
+(SELECT 
+ COUNT(listBTN.BENHNHAN_MA) 
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.DMBENHICD_MA LIKE 'A39.0'
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) VMN_MAC,
+
+-- Tinh so benh nhan chet do benh VMN mo cau(Ma ICD=A39.0)
+(SELECT 
+ COUNT(listBTN.BENHNHAN_MA) 
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE listBTN.MABENH_TUVONG LIKE 'A39.0'
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) VMN_CHET,
+-- #####################
+-- Tinh so benh nhan mac benh Thuy dau(Ma ICD=B01, B02)
+(SELECT 
+ COUNT(listBTN.BENHNHAN_MA) 
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.DMBENHICD_MA LIKE 'B01' OR listBTN.DMBENHICD_MA LIKE 'B02')
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) TD_MAC,
+
+-- Tinh so benh nhan chet do benh Thuy dau(Ma ICD=B01, B02)
+(SELECT 
+ COUNT(listBTN.BENHNHAN_MA) 
+ FROM v_list_benh_nhan_btn listBTN
+ WHERE(listBTN.MABENH_TUVONG LIKE 'B01' OR listBTN.MABENH_TUVONG LIKE 'B02')
+ AND ( listBTN.TINH_MA is null OR listBTN.TINH_MA NOT LIKE $P{MATINH})
+ AND to_date(listBTN.HSBA_NGAYGIORAV) BETWEEN $P{TUNGAY} AND $P{DENNGAY}
+) TD_CHET
+from cau_hinh]]></queryString>
+
+	<field name="HUYEN_MASO" class="java.math.BigDecimal"/>
+	<field name="HUYEN_TEN" class="java.lang.String"/>
+	<field name="TA_MAC" class="java.math.BigDecimal"/>
+	<field name="TA_CHET" class="java.math.BigDecimal"/>
+	<field name="THHAN_MAC" class="java.math.BigDecimal"/>
+	<field name="THHAN_CHET" class="java.math.BigDecimal"/>
+	<field name="LYTT_MAC" class="java.math.BigDecimal"/>
+	<field name="LYTT_CHET" class="java.math.BigDecimal"/>
+	<field name="LYAMIP_MAC" class="java.math.BigDecimal"/>
+	<field name="LYAMIP_CHET" class="java.math.BigDecimal"/>
+	<field name="TC_MAC" class="java.math.BigDecimal"/>
+	<field name="TC_CHET" class="java.math.BigDecimal"/>
+	<field name="VNAO_MAC" class="java.math.BigDecimal"/>
+	<field name="VNAO_CHET" class="java.math.BigDecimal"/>
+	<field name="DEN_MAC" class="java.math.BigDecimal"/>
+	<field name="DEN_CHET" class="java.math.BigDecimal"/>
+	<field name="VGAN_MAC" class="java.math.BigDecimal"/>
+	<field name="VGAN_CHET" class="java.math.BigDecimal"/>
+	<field name="DAI_MAC" class="java.math.BigDecimal"/>
+	<field name="DAI_CHET" class="java.math.BigDecimal"/>
+	<field name="VMN_MAC" class="java.math.BigDecimal"/>
+	<field name="VMN_CHET" class="java.math.BigDecimal"/>
+	<field name="TD_MAC" class="java.math.BigDecimal"/>
+	<field name="TD_CHET" class="java.math.BigDecimal"/>
+
+	<variable name="SUM_TA_MAC" class="java.lang.Long" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{TA_MAC}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_TA_MAC}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_TA_CHET" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{TA_CHET}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_TA_CHET}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_THHAN_MAC" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[
+new Long($F{THHAN_MAC}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_THHAN_MAC}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_THHAN_CHET" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[
+new Long($F{THHAN_CHET}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_THHAN_CHET}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_LYAMIP_MAC" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{LYAMIP_MAC}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_LYAMIP_MAC}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_LYAMIP_CHET" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{LYAMIP_CHET}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_LYAMIP_CHET}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_TC_MAC" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{TC_MAC}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_TC_MAC}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_TC_CHET" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{TC_CHET}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_TC_CHET}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_VNAO_MAC" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{VNAO_MAC}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_VNAO_MAC}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_VNAO_CHET" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{VGAN_CHET}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_VNAO_CHET}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_DEN_MAC" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{DEN_MAC}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_DEN_MAC}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_DEN_CHET" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{DEN_CHET}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_DEN_CHET}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_DAI_MAC" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{DAI_MAC}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_DAI_MAC}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_DAI_CHET" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{DAI_CHET}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_DAI_CHET}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_VGAN_MAC" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{VGAN_MAC}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_VGAN_MAC}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_VGAN_CHET" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{VGAN_CHET}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_VGAN_CHET}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_VMN_MAC" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{VMN_MAC}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_VMN_MAC}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_VMN_CHET" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{VMN_CHET}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_VMN_CHET}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_TD_MAC" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{TD_MAC}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_TD_MAC}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_TD_CHET" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{TD_CHET}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_TD_CHET}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_LYTT_MAC" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{LYTT_MAC}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_LYTT_MAC}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_LYTT_CHET" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Long($F{LYTT_CHET}.longValue())]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_LYTT_CHET}]]></initialValueExpression>
+	</variable>
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="70"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="87"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-14"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="1"
+						y="0"
+						width="86"
+						height="68"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-1"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="Thin" topBorderColor="#000000" topPadding="7" leftBorder="None" leftBorderColor="#000000" leftPadding="19" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Tên bệnh]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="87"
+						y="0"
+						width="62"
+						height="55"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-2"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[
+Tả]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="211"
+						y="0"
+						width="62"
+						height="55"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-3"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[
+Lỵ trực
+ trùng]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="273"
+						y="0"
+						width="62"
+						height="55"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-4"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[
+Lỵ Amíp]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="645"
+						y="0"
+						width="62"
+						height="55"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-5"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Số tiêm phòng dại]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="149"
+						y="0"
+						width="62"
+						height="55"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-6"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Thương 
+hàn, 
+Phó TH	]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="707"
+						y="0"
+						width="62"
+						height="55"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-7"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[VMN 
+mô cầu]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="397"
+						y="0"
+						width="62"
+						height="55"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-8"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[
+Tiêu
+chảy]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="459"
+						y="0"
+						width="62"
+						height="55"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-9"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[
+Viêm não
+virut]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="521"
+						y="0"
+						width="62"
+						height="55"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-10"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[
+Sốt
+Dengue]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="769"
+						y="0"
+						width="62"
+						height="55"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-11"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Thủy đậu]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="583"
+						y="0"
+						width="62"
+						height="55"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-12"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[
+Viêm gan
+Virut]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="335"
+						y="0"
+						width="62"
+						height="55"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-13"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="Thin" topBorderColor="#000000" topPadding="2" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[H/C lỵ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="118"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-15"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="149"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-16"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="180"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-17"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="211"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-18"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="242"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-19"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="273"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-20"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="304"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-21"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="397"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-22"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="428"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-23"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="459"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-24"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="490"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-25"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="521"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-26"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="552"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-27"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="583"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-28"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="614"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-29"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="645"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-30"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="676"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-31"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="800"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-33"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="707"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-34"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="738"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-35"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="0"
+						width="86"
+						height="68"
+						key="line-1"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="0"
+						y="1"
+						width="86"
+						height="69"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-36"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" rightPadding="17" bottomBorder="Thin" bottomBorderColor="#000000" bottomPadding="5"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Địa phương]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="335"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-37"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="366"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-38"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="769"
+						y="55"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-32"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="15"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="0"
+						y="0"
+						width="87"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-1"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{HUYEN_TEN}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="87"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-2"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TA_MAC} != null ? $F{TA_MAC}.longValue() > 0 ? $F{TA_MAC} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="118"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-3"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TA_CHET} != null ? $F{TA_CHET}.longValue() > 0 ? $F{TA_CHET} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="149"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-4"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{THHAN_MAC} != null ? $F{THHAN_MAC}.longValue() > 0 ? $F{THHAN_MAC} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="180"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-5"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{THHAN_CHET} != null ? $F{THHAN_CHET}.longValue() > 0 ? $F{THHAN_CHET} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="211"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-6"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{LYTT_MAC} != null ? $F{LYTT_MAC}.longValue() > 0 ? $F{LYTT_MAC} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="242"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-7"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{LYTT_CHET} != null ? $F{LYTT_CHET}.longValue() > 0 ? $F{LYTT_CHET} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="273"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-8"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{LYAMIP_MAC} != null ? $F{LYAMIP_MAC}.longValue() > 0 ? $F{LYAMIP_MAC} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="304"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-9"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{LYAMIP_CHET} != null ? $F{LYAMIP_CHET}.longValue() > 0 ? $F{LYAMIP_CHET} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="397"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-10"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TC_MAC} != null ? $F{TC_MAC}.longValue() > 0 ? $F{TC_MAC} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="428"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-11"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TC_CHET} != null ? $F{TC_CHET}.longValue() > 0 ? $F{TC_CHET} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="459"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-12"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{VNAO_MAC} != null ? $F{VNAO_MAC}.longValue() > 0 ? $F{VNAO_MAC} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="490"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-13"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{VNAO_CHET} != null ? $F{VNAO_CHET}.longValue() > 0 ? $F{VNAO_CHET} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="521"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-14"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DEN_MAC} != null ? $F{DEN_MAC}.longValue() > 0 ? $F{DEN_MAC} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="552"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-15"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DEN_CHET} != null ? $F{DEN_CHET}.longValue() > 0 ? $F{DEN_CHET} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="335"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-16"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="366"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-17"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="583"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-18"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{VGAN_MAC} != null ? $F{VGAN_MAC}.longValue() > 0 ? $F{VGAN_MAC} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="614"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-19"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{VGAN_CHET} != null ? $F{VGAN_CHET}.longValue() > 0 ? $F{VGAN_CHET} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="707"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-20"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{VMN_MAC} != null ? $F{VMN_MAC}.longValue() > 0 ? $F{VMN_MAC} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="738"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-21"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{VMN_CHET} != null ? $F{VMN_CHET}.longValue() > 0 ? $F{VMN_CHET} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="769"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-22"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TD_MAC} != null ? $F{TD_MAC}.longValue() > 0 ? $F{TD_MAC} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="800"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-23"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TD_CHET} != null ? $F{TD_CHET}.longValue() > 0 ? $F{TD_CHET} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="645"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-24"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DAI_MAC} != null ? $F{DAI_MAC}.longValue() > 0 ? $F{DAI_MAC} : null : null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="676"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-25"
+						stretchType="RelativeToTallestObject"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="1" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DAI_CHET} != null ? $F{DAI_CHET}.longValue() > 0 ? $F{DAI_CHET} : null : null]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="15"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="87"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-26"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_TA_MAC} == null ? 0 : $V{SUM_TA_MAC}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="118"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-27"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_TA_CHET} == null ? 0 : $V{SUM_TA_CHET}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="149"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-28"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_THHAN_MAC} == null ? 0 : $V{SUM_THHAN_MAC}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="180"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-29"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_THHAN_CHET} == null ? 0 : $V{SUM_THHAN_CHET}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="211"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-30"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_LYTT_MAC} == null ? 0 : $V{SUM_LYTT_MAC}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="242"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-31"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_LYTT_CHET} == null ? 0 : $V{SUM_LYTT_CHET}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="273"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-32"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_LYAMIP_MAC} == null ? 0 : $V{SUM_LYAMIP_MAC}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="304"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-33"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_LYAMIP_CHET} == null ? 0 : $V{SUM_LYAMIP_CHET}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="397"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-34"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_TC_MAC} == null ? 0 : $V{SUM_TC_MAC}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="428"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-35"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_TC_CHET} == null ? 0 : $V{SUM_TC_CHET}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="459"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-36"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_VNAO_MAC} == null ? 0 : $V{SUM_VNAO_MAC}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="490"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-37"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_VNAO_CHET} == null ? 0 : $V{SUM_VNAO_CHET}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="521"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-38"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_DEN_MAC} == null ? 0 : $V{SUM_DEN_MAC}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="552"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-39"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_DEN_CHET} == null ? 0 : $V{SUM_DEN_CHET}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="335"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-40"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="366"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-41"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="583"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-42"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_VGAN_MAC} == null ? 0 : $V{SUM_VGAN_MAC}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="614"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-43"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_VGAN_CHET} == null ? 0 : $V{SUM_VGAN_CHET}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="707"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-44"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_VMN_MAC} == null ? 0 : $V{SUM_VMN_MAC}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="738"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-45"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_VMN_CHET} == null ? 0 : $V{SUM_VMN_CHET}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="769"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-46"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_TD_MAC} == null ? 0 : $V{SUM_TD_MAC}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="800"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-47"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_TD_CHET} == null ? 0 : $V{SUM_TD_CHET}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="645"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-48"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_DAI_MAC} == null ? 0 : $V{SUM_DAI_MAC}.longValue()))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="676"
+						y="0"
+						width="31"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FBFEFF"
+						key="textField-49"
+						stretchType="RelativeToTallestObject"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[new Long(($V{SUM_DAI_CHET} == null ? 0 : $V{SUM_DAI_CHET}.longValue()))]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="0"
+						y="0"
+						width="87"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-39"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Tổng cộng]]></text>
+				</staticText>
+			</band>
+		</summary>
+</jasperReport>

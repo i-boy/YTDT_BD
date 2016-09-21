@@ -1,0 +1,37 @@
+INSERT INTO yte_sequence( SEQUENCE_NAME_MA, SEQUENCE_CURRENT_VALUE, SEQUENCE_CURRENT_NEXT, SEQUENCE_STEP) VALUES('MAPHIEU_TOM_TAT_BENH_AN',1,2,1);
+
+CREATE TABLE `hsba_tom_tat_benh_an` (
+  `HSBATTBA_MASO` int(11) NOT NULL auto_increment,
+  `HSBA_SOVAOVIEN` varchar(17) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `NHANVIEN_MA` int(10) unsigned default NULL,
+  `HSBATTBA_BACSI` int(10) unsigned default NULL,
+  `HSBATTBA_NGAYGIOCN` datetime default NULL,
+  `HSBATTBA_MA` varchar(11) default NULL,
+  `HSBATTBA_DIENBIENLAMSANG` varchar(1000) default NULL,
+  `HSBATTBA_CACXETNGHIEM` varchar(1000) default NULL,
+  `HSBATTBA_KHAMCHUYENKHOA` varchar(1000) default NULL,
+  `HSBATTBA_PPTH_BVLAO` varchar(1000) default NULL,
+  `HSBATTBA_RAVIEN_SONGAYDUONGSUC` varchar(10) character set utf8 collate utf8_unicode_ci default NULL,
+  `HSBATTBA_RAVIEN_LAODONGNHE` varchar(100) character set utf8 collate utf8_unicode_ci default NULL,
+  `HSBATTBA_RAVIEN_BOIDUONG` varchar(100) character set utf8 collate utf8_unicode_ci default NULL,
+  `HSBATTBA_CV_TINHTHAN` varchar(100) character set utf8 collate utf8_unicode_ci default NULL,
+  `HSBATTBA_CV_MACH` double default NULL,
+  `HSBATTBA_CV_NHIET` double default NULL,
+  `HSBATTBA_CV_HA` double default NULL,
+  `HSBATTBA_CV_BANGCODINH` varchar(100) character set utf8 collate utf8_unicode_ci default NULL,
+  `HSBATTBA_CV_TRUYENDICH` varchar(100) character set utf8 collate utf8_unicode_ci default NULL,
+  `HSBATTBA_CV_MAU` varchar(100) character set utf8 collate utf8_unicode_ci default NULL,
+  `HSBATTBA_CV_NGUOIHOTONG` varchar(100) character set utf8 collate utf8_unicode_ci default NULL,
+  `HSBATTBA_CV_DIEUTRINGOAI_KHOA` varchar(50) default NULL,
+  `HSBATTBA_CV_DIEUTRINGOAI_KHU` varchar(50) default NULL,
+  `HSBATTBA_CV_DIEUTRINGOAI_KHAM` varchar(50) default NULL,
+  `HSBATTBA_NGAYCAP` date default NULL,
+  PRIMARY KEY  (`HSBATTBA_MASO`),
+  KEY `FK_HSBA_BANG_TOMTAT_BENH_AN_NHANVIEN_MA` (`NHANVIEN_MA`),
+  KEY `FK_HSBA_BANG_TOMTAT_BENH_AN_HSBA_SOVAOVIEN` (`HSBA_SOVAOVIEN`),
+  KEY `FK_HSBA_BANG_TOMTAT_BENH_AN_HSBA_BACSI` (`HSBATTBA_BACSI`),
+  CONSTRAINT `FK_HSBA_BANG_TOMTAT_BENH_ANN_NHANVIEN_MA` FOREIGN KEY (`HSBA_SOVAOVIEN`) REFERENCES `hsba` (`HSBA_SOVAOVIEN`),
+  CONSTRAINT `FK_HSBA_BANG_TOMTAT_BENH_AN_BACSI` FOREIGN KEY (`HSBATTBA_BACSI`) REFERENCES `dt_dm_nhan_vien` (`DTDMNHANVIEN_MASO`),
+  CONSTRAINT `FK_HSBA_BANG_TOMTAT_BENH_AN_SOVAOVIEN` FOREIGN KEY (`NHANVIEN_MA`) REFERENCES `dt_dm_nhan_vien` (`DTDMNHANVIEN_MASO`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+

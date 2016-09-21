@@ -1,0 +1,271 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmNguonKinhPhi" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmNguonKinhPhiHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} NKP</f:facet>
+
+
+
+            <s:decorate id="dmnguonkinhphiDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc DP</ui:define>
+                <h:selectBooleanCheckbox id="dmnguonkinhphiDp"
+                                      value="#{dmNguonKinhPhiHome.instance.dmnguonkinhphiDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmnguonkinhphiDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc ĐT</ui:define>
+                <h:selectBooleanCheckbox id="dmnguonkinhphiDt"
+                                      value="#{dmNguonKinhPhiHome.instance.dmnguonkinhphiDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmnguonkinhphiMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dmnguonkinhphiMa"
+                       required="true"
+                           size="3"
+                      maxlength="3"
+                          value="#{dmNguonKinhPhiHome.instance.dmnguonkinhphiMa}">
+                    <a:support event="onblur" reRender="dmnguonkinhphiMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmnguonkinhphiNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmnguonkinhphiNgaygiocn"
+                          value="#{dmNguonKinhPhiHome.instance.dmnguonkinhphiNgaygiocn}">
+                    <a:support event="onblur" reRender="dmnguonkinhphiNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmnguonkinhphiQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc QL</ui:define>
+                <h:selectBooleanCheckbox id="dmnguonkinhphiQl"
+                                      value="#{dmNguonKinhPhiHome.instance.dmnguonkinhphiQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmnguonkinhphiTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dmnguonkinhphiTen"
+                       required="true"
+                           size="100"
+                      maxlength="100"
+                          value="#{dmNguonKinhPhiHome.instance.dmnguonkinhphiTen}">
+                    <a:support event="onblur" reRender="dmnguonkinhphiTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmNguonKinhPhiHome.persist}"
+                       disabled="#{!dmNguonKinhPhiHome.wired}"
+                       rendered="#{!dmNguonKinhPhiHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmNguonKinhPhiHome.update}"
+                       rendered="#{dmNguonKinhPhiHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmNguonKinhPhiHome.remove}"
+                      immediate="true"
+                       rendered="#{dmNguonKinhPhiHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmNguonKinhPhi.xhtml"
+                rendered="#{dmNguonKinhPhiHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmNguonKinhPhiFrom ? 'DmNguonKinhPhiList' : dmNguonKinhPhiFrom}.xhtml"
+                rendered="#{!dmNguonKinhPhiHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+<ui:remove>
+    <rich:tab label="Dt dm khachs">
+        <h:form styleClass="association" id="dtDmKhachsChildren">
+
+            <h:outputText value="Không có  dtDmKhachs phù hợp với dmNguonKinhPhi."
+                       rendered="#{empty dmNguonKinhPhiHome.dtDmKhachs}"/>
+
+            <rich:dataTable value="#{dmNguonKinhPhiHome.dtDmKhachs}"
+                           var="_dtDmKhach"
+                      rendered="#{not empty dmNguonKinhPhiHome.dtDmKhachs}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dtDmKhachsTable">
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachMa}">
+                    <f:facet name="header">Dtdmkhach ma</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachChon}">
+                    <f:facet name="header">Dtdmkhach chon</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachChon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachDiachi}">
+                    <f:facet name="header">Dtdmkhach diachi</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachDiachi}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachDienthoai}">
+                    <f:facet name="header">Dtdmkhach dienthoai</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachDienthoai}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachFax}">
+                    <f:facet name="header">Dtdmkhach fax</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachFax}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachMabophan}">
+                    <f:facet name="header">Dtdmkhach mabophan</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachMabophan}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachMasothue}">
+                    <f:facet name="header">Dtdmkhach masothue</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachMasothue}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachNgaygiocn}">
+                    <f:facet name="header">Dtdmkhach ngaygiocn</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachNgaylv}">
+                    <f:facet name="header">Dtdmkhach ngaylv</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachNgaylv}">
+                        <s:convertDateTime type="date" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachPhanbiet}">
+                    <f:facet name="header">Dtdmkhach phanbiet</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachPhanbiet}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachTen}">
+                    <f:facet name="header">Dtdmkhach ten</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachTen}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dmNguonKinhPhiHome.managed}" id="dtDmKhachs">
+        <div class="actionButtons">
+            <s:button id="adddtDmKhach"
+                   value="Thêm dtDmKhach"
+                    view="/DtDmKhachEdit.xhtml"
+             propagation="none">
+                 <f:param name="dmNguonKinhPhiDmnguonkinhphiMaso"
+                         value="#{dmNguonKinhPhiHome.instance.dmnguonkinhphiMaso}"/>
+                 <f:param name="dtDmKhachFrom" value="DmNguonKinhPhi"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Dt dm khachs_1">
+        <h:form styleClass="association" id="dtDmKhachs_1Children">
+
+            <h:outputText value="Không có  dtDmKhachs_1 phù hợp với dmNguonKinhPhi."
+                       rendered="#{empty dmNguonKinhPhiHome.dtDmKhachs_1}"/>
+
+            <rich:dataTable value="#{dmNguonKinhPhiHome.dtDmKhachs_1}"
+                           var="_dtDmKhach"
+                      rendered="#{not empty dmNguonKinhPhiHome.dtDmKhachs_1}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dtDmKhachs_1Table">
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachMa}">
+                    <f:facet name="header">Dtdmkhach ma</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachChon}">
+                    <f:facet name="header">Dtdmkhach chon</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachChon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachDiachi}">
+                    <f:facet name="header">Dtdmkhach diachi</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachDiachi}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachDienthoai}">
+                    <f:facet name="header">Dtdmkhach dienthoai</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachDienthoai}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachFax}">
+                    <f:facet name="header">Dtdmkhach fax</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachFax}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachMabophan}">
+                    <f:facet name="header">Dtdmkhach mabophan</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachMabophan}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachMasothue}">
+                    <f:facet name="header">Dtdmkhach masothue</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachMasothue}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachNgaygiocn}">
+                    <f:facet name="header">Dtdmkhach ngaygiocn</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachNgaylv}">
+                    <f:facet name="header">Dtdmkhach ngaylv</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachNgaylv}">
+                        <s:convertDateTime type="date" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachPhanbiet}">
+                    <f:facet name="header">Dtdmkhach phanbiet</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachPhanbiet}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhach.dtdmkhachTen}">
+                    <f:facet name="header">Dtdmkhach ten</f:facet>
+                    <h:outputText value="#{_dtDmKhach.dtdmkhachTen}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dmNguonKinhPhiHome.managed}" id="dtDmKhachs_1">
+        <div class="actionButtons">
+            <s:button id="adddtDmKhach"
+                   value="Thêm dtDmKhach"
+                    view="/DtDmKhachEdit.xhtml"
+             propagation="none">
+                 <f:param name="dmNguonKinhPhiDmnguonkinhphiMaso"
+                         value="#{dmNguonKinhPhiHome.instance.dmnguonkinhphiMaso}"/>
+                 <f:param name="dtDmKhachFrom" value="DmNguonKinhPhi"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab></ui:remove>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

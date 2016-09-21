@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="BaoCaoSanPhamDinhDuong_redesign_subreport2"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="535"
+		 pageHeight="802"
+		 columnWidth="535"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="0"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<reportFont name="Times New Roman" isDefault="true" fontName="Times New Roman" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<parameter name="tungay" isForPrompting="false" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="denngay" isForPrompting="false" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="duongmaso" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer("4")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="suadacmaso" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer("5")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="spddmaso" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer("2")]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[Select xuatnhapton.NHASX_TEN AS NHASX_TEN,
+ xuatnhapton.DTDMLA2_MASO AS DTDMLA2_MASO,
+ 'TONGCONG' as TONGCONG,
+ xuatnhapton.TONCUOI AS TONCUOI
+FROM
+(Select ' ĐƯỜNG' AS NHASX_TEN,
+ NVL(nxt.DTDMLA2_MASO_NHAP,NVL(nxt.DTDMLA2_MASO_XUAT,nxt.DTDMLA2_MASO_TONCU)) AS DTDMLA2_MASO,
+ SUM(NVL(nxt.NK_SOLUONG,0) + NVL(nxt.SUM_NHAPCU,0) - NVL(nxt.SUM_XUATCU,0) - NVL(nxt.XK_SOLUONG,0)) AS TONCUOI
+FROM
+(
+Select listNsx.NHASX_MASO AS NHASX_MASO,
+ listNsx.NHASX_TEN AS NHASX_TEN,
+ nhapkho.DTDMLA2_MASO AS DTDMLA2_MASO_NHAP,
+ nhapkho.NK_SOLUONG AS NK_SOLUONG,
+ xuatkho.DTDMLA2_MASO AS DTDMLA2_MASO_XUAT,
+ xuatkho.XK_SOLUONG AS XK_SOLUONG,
+ toncu.DTDMLA2_MASO AS DTDMLA2_MASO_TONCU,
+ toncu.SUM_NHAPCU AS SUM_NHAPCU,
+ toncu.SUM_XUATCU AS SUM_XUATCU
+FROM
+(Select dmnsx.DTDMNSX_MASO AS NHASX_MASO,
+ dmnsx.DTDMNSX_TEN AS NHASX_TEN
+FROM dt_dm_nha_sx_spdd dmnsx
+WHERE dmnsx.DTDMNSX_MASO IN
+(Select dmnsx.DTDMNSX_MASO AS DTDMNSX_MASO
+FROM nhap_kho_dinh_duong nk LEFT JOIN dt_dm_nha_sx_spdd dmnsx ON nk.DTDMNSX_MASO=dmnsx.DTDMNSX_MASO
+WHERE(nk.DTDMLA2_MASO=$P{duongmaso} -- Duong
+ OR nk.DTDMLA2_MASO=$P{suadacmaso} -- Sua dac
+) AND nk.NKDD_NGAYNHAP BETWEEN TO_DATE($P{tungay}) AND TO_DATE($P{denngay})
+
+Union All
+
+Select dmnsx.DTDMNSX_MASO AS DTDMNSX_MASO
+FROM xuat_kho_dinh_duong xk LEFT JOIN dt_dm_nha_sx_spdd dmnsx ON xk.DTDMNSX_MASO=dmnsx.DTDMNSX_MASO
+WHERE(xk.DTDMLA2_MASO=$P{duongmaso} -- Duong
+ OR xk.DTDMLA2_MASO=$P{suadacmaso} -- Sua dac
+)AND xk.XKDD_NGAYXUAT BETWEEN TO_DATE($P{tungay}) AND TO_DATE($P{denngay})
+
+)) listNsx
+LEFT JOIN
+-- Lay so lieu ton cu
+(Select nhapxuat.DTDMNSX_MASO AS NHASX_MASO,
+ nhapxuat.DTDMLA2_MASO AS DTDMLA2_MASO,
+ SUM(nhapxuat.NHAPCU) AS SUM_NHAPCU,
+ SUM(nhapxuat.XUATCU) AS SUM_XUATCU
+FROM
+(SELECT nk.DTDMNSX_MASO AS DTDMNSX_MASO,
+ nk.DTDMLA2_MASO AS DTDMLA2_MASO,
+ nk.NKDD_SOLUONG AS NHAPCU,
+ Null AS XUATCU
+FROM nhap_kho_dinh_duong nk
+WHERE nk.DTDMLA2_MASO=$P{duongmaso} -- Duong
+ AND nk.NKDD_NGAYNHAP < TO_DATE($P{tungay})
+-- GROUP BY nk.DTDMNSX_MASO, nk.DTDMLA2_MASO
+Union All
+-- Lay so luong xuat cu
+SELECT xk.DTDMNSX_MASO AS DTDMNSX_MASO,
+ xk.DTDMLA2_MASO AS DTDMLA2_MASO,
+ Null AS NHAPCU,
+ xk.XKDD_SOLUONG AS XUATCU
+FROM xuat_kho_dinh_duong xk
+WHERE xk.DTDMLA2_MASO=$P{duongmaso} -- Duong
+ AND xk.xKDD_NGAYXUAT < TO_DATE($P{tungay})
+-- GROUP BY xk.DTDMNSX_MASO, xk.DTDMLA2_MASO
+) nhapxuat
+GROUP BY nhapxuat.DTDMNSX_MASO, nhapxuat.DTDMLA2_MASO) toncu ON listNsx.NHASX_MASO=toncu.NHASX_MASO
+LEFT JOIN
+-- So lieu nhap kho
+(Select dmnsx.DTDMNSX_MASO AS NHASX_MASO,
+ nk.DTDMLA2_MASO AS DTDMLA2_MASO,
+ SUM(nk.NKDD_SOLUONG) AS NK_SOLUONG
+ FROM nhap_kho_dinh_duong nk
+ LEFT JOIN dt_dm_nha_sx_spdd dmnsx ON nk.DTDMNSX_MASO=dmnsx.DTDMNSX_MASO
+WHERE nk.DTDMLA2_MASO=$P{duongmaso} -- Duong
+ AND nk.NKDD_NGAYNHAP BETWEEN TO_DATE($P{tungay}) AND TO_DATE($P{denngay})
+GROUP BY nk.DTDMLA2_MASO,dmnsx.DTDMNSX_MASO) nhapkho ON listNsx.NHASX_MASO=nhapkho.NHASX_MASO
+LEFT JOIN
+-- So lieu xuat kho
+(Select dmnsx.DTDMNSX_MASO AS NHASX_MASO,
+ dmnsx.DTDMNSX_TEN AS DTDMNSX_TEN,
+ xk.DTDMLA2_MASO AS DTDMLA2_MASO,
+ SUM(xk.XKDD_SOLUONG) AS XK_SOLUONG
+ FROM xuat_kho_dinh_duong xk
+ LEFT JOIN dt_dm_nha_sx_spdd dmnsx ON xk.DTDMNSX_MASO=dmnsx.DTDMNSX_MASO
+WHERE xk.DTDMLA2_MASO=$P{duongmaso} -- Duong
+ AND xk.XKDD_NGAYXUAT BETWEEN TO_DATE($P{tungay}) AND TO_DATE($P{denngay})
+GROUP BY xk.DTDMLA2_MASO,dmnsx.DTDMNSX_MASO,dmnsx.DTDMNSX_TEN) xuatkho ON listNsx.NHASX_MASO=xuatkho.NHASX_MASO
+) nxt
+WHERE((nxt.DTDMLA2_MASO_NHAP=nxt.DTDMLA2_MASO_XUAT AND nxt.DTDMLA2_MASO_NHAP=nxt.DTDMLA2_MASO_TONCU) -- 1 - 1 - 1
+ OR(nxt.DTDMLA2_MASO_NHAP=nxt.DTDMLA2_MASO_XUAT AND nxt.DTDMLA2_MASO_TONCU Is Null) -- 1 - 1 - 0
+ OR(nxt.DTDMLA2_MASO_NHAP=DTDMLA2_MASO_TONCU AND nxt.DTDMLA2_MASO_XUAT Is Null) -- 1 - 0 - 1
+ OR(nxt.DTDMLA2_MASO_NHAP Is Not Null AND nxt.DTDMLA2_MASO_XUAT Is Null AND nxt.DTDMLA2_MASO_TONCU Is Null) -- 1 - 0 - 0
+ OR(nxt.DTDMLA2_MASO_NHAP Is Null AND nxt.DTDMLA2_MASO_XUAT=nxt.DTDMLA2_MASO_TONCU) -- 0 - 1 - 1
+ OR(nxt.DTDMLA2_MASO_NHAP Is Null AND nxt.DTDMLA2_MASO_XUAT Is Not Null AND nxt.DTDMLA2_MASO_TONCU Is Null) -- 0 - 1 -0
+ OR(nxt.DTDMLA2_MASO_NHAP Is Null AND nxt.DTDMLA2_MASO_XUAT Is Null AND nxt.DTDMLA2_MASO_TONCU Is Not Null)) -- 0 - 0 - 1
+ AND(nxt.DTDMLA2_MASO_NHAP=$P{duongmaso} OR nxt.DTDMLA2_MASO_XUAT=$P{duongmaso} OR nxt.DTDMLA2_MASO_TONCU=$P{duongmaso})
+
+GROUP BY nxt.DTDMLA2_MASO_NHAP,nxt.DTDMLA2_MASO_XUAT,nxt.DTDMLA2_MASO_TONCU -- DUYEN THEM
+
+UNION
+Select nxt.NHASX_TEN AS NHASX_TEN,
+ NVL(nxt.DTDMLA2_MASO_NHAP,NVL(nxt.DTDMLA2_MASO_XUAT,nxt.DTDMLA2_MASO_TONCU)) AS DTDMLA2_MASO,
+ NVL(nxt.NK_SOLUONG,0) + NVL(nxt.SUM_NHAPCU,0) - NVL(nxt.SUM_XUATCU,0) - NVL(nxt.XK_SOLUONG,0) AS TONCUOI
+FROM
+(
+Select listNsx.NHASX_MASO AS NHASX_MASO,
+ listNsx.NHASX_TEN AS NHASX_TEN,
+ nhapkho.DTDMLA2_MASO AS DTDMLA2_MASO_NHAP,
+ nhapkho.NK_SOLUONG AS NK_SOLUONG,
+ xuatkho.DTDMLA2_MASO AS DTDMLA2_MASO_XUAT,
+ xuatkho.XK_SOLUONG AS XK_SOLUONG,
+ toncu.DTDMLA2_MASO AS DTDMLA2_MASO_TONCU,
+ toncu.SUM_NHAPCU AS SUM_NHAPCU,
+ toncu.SUM_XUATCU AS SUM_XUATCU
+FROM
+(Select dmnsx.DTDMNSX_MASO AS NHASX_MASO,
+ dmnsx.DTDMNSX_TEN AS NHASX_TEN
+FROM dt_dm_nha_sx_spdd dmnsx
+WHERE dmnsx.DTDMNSX_MASO IN
+(Select dmnsx.DTDMNSX_MASO AS DTDMNSX_MASO
+FROM nhap_kho_dinh_duong nk LEFT JOIN dt_dm_nha_sx_spdd dmnsx ON nk.DTDMNSX_MASO=dmnsx.DTDMNSX_MASO
+WHERE(nk.DTDMLA2_MASO=$P{duongmaso} -- Duong
+ OR nk.DTDMLA2_MASO=$P{suadacmaso} -- Sua dac
+) AND nk.NKDD_NGAYNHAP BETWEEN TO_DATE($P{tungay}) AND TO_DATE($P{denngay})
+
+Union All
+
+Select dmnsx.DTDMNSX_MASO AS DTDMNSX_MASO
+FROM xuat_kho_dinh_duong xk LEFT JOIN dt_dm_nha_sx_spdd dmnsx ON xk.DTDMNSX_MASO=dmnsx.DTDMNSX_MASO
+WHERE(xk.DTDMLA2_MASO=$P{duongmaso} -- Duong
+ OR xk.DTDMLA2_MASO=$P{suadacmaso} -- Sua dac
+)AND xk.XKDD_NGAYXUAT BETWEEN TO_DATE($P{tungay}) AND TO_DATE($P{denngay})
+
+)) listNsx
+LEFT JOIN
+-- Lay so lieu ton cu
+(Select nhapxuat.DTDMNSX_MASO AS NHASX_MASO,
+ nhapxuat.DTDMLA2_MASO AS DTDMLA2_MASO,
+ SUM(nhapxuat.NHAPCU) AS SUM_NHAPCU,
+ SUM(nhapxuat.XUATCU) AS SUM_XUATCU
+FROM
+(SELECT nk.DTDMNSX_MASO AS DTDMNSX_MASO,
+ nk.DTDMLA2_MASO AS DTDMLA2_MASO,
+ nk.NKDD_SOLUONG AS NHAPCU,
+ Null AS XUATCU
+FROM nhap_kho_dinh_duong nk
+WHERE nk.DTDMLA2_MASO=$P{suadacmaso} -- Sua dac
+ AND nk.NKDD_NGAYNHAP < TO_DATE($P{tungay})
+-- GROUP BY nk.DTDMNSX_MASO, nk.DTDMLA2_MASO
+Union All
+-- Lay so luong xuat cu
+SELECT xk.DTDMNSX_MASO AS DTDMNSX_MASO,
+ xk.DTDMLA2_MASO AS DTDMLA2_MASO,
+ Null AS NHAPCU,
+ xk.XKDD_SOLUONG AS XUATCU
+FROM xuat_kho_dinh_duong xk
+WHERE xk.DTDMLA2_MASO=$P{suadacmaso} -- Sua dac
+ AND xk.xKDD_NGAYXUAT < TO_DATE($P{tungay})
+-- GROUP BY xk.DTDMNSX_MASO, xk.DTDMLA2_MASO
+) nhapxuat
+GROUP BY nhapxuat.DTDMNSX_MASO, nhapxuat.DTDMLA2_MASO) toncu ON listNsx.NHASX_MASO=toncu.NHASX_MASO
+LEFT JOIN
+-- So lieu nhap kho
+(Select dmnsx.DTDMNSX_MASO AS NHASX_MASO,
+ nk.DTDMLA2_MASO AS DTDMLA2_MASO,
+ SUM(nk.NKDD_SOLUONG) AS NK_SOLUONG
+ FROM nhap_kho_dinh_duong nk
+ LEFT JOIN dt_dm_nha_sx_spdd dmnsx ON nk.DTDMNSX_MASO=dmnsx.DTDMNSX_MASO
+WHERE nk.DTDMLA2_MASO=$P{suadacmaso} -- Sua dac
+ AND nk.NKDD_NGAYNHAP BETWEEN TO_DATE($P{tungay}) AND TO_DATE($P{denngay})
+GROUP BY nk.DTDMLA2_MASO,dmnsx.DTDMNSX_MASO) nhapkho ON listNsx.NHASX_MASO=nhapkho.NHASX_MASO
+LEFT JOIN
+-- So lieu xuat kho
+(Select dmnsx.DTDMNSX_MASO AS NHASX_MASO,
+ dmnsx.DTDMNSX_TEN AS DTDMNSX_TEN,
+ xk.DTDMLA2_MASO AS DTDMLA2_MASO,
+ SUM(xk.XKDD_SOLUONG) AS XK_SOLUONG
+ FROM xuat_kho_dinh_duong xk
+ LEFT JOIN dt_dm_nha_sx_spdd dmnsx ON xk.DTDMNSX_MASO=dmnsx.DTDMNSX_MASO
+WHERE xk.DTDMLA2_MASO=$P{suadacmaso} -- Sua dac
+ AND xk.XKDD_NGAYXUAT BETWEEN TO_DATE($P{tungay}) AND TO_DATE($P{denngay})
+GROUP BY xk.DTDMLA2_MASO,dmnsx.DTDMNSX_MASO,dmnsx.DTDMNSX_TEN) xuatkho ON listNsx.NHASX_MASO=xuatkho.NHASX_MASO
+) nxt
+WHERE((nxt.DTDMLA2_MASO_NHAP=nxt.DTDMLA2_MASO_XUAT AND nxt.DTDMLA2_MASO_NHAP=nxt.DTDMLA2_MASO_TONCU) -- 1 - 1 - 1
+ OR(nxt.DTDMLA2_MASO_NHAP=nxt.DTDMLA2_MASO_XUAT AND nxt.DTDMLA2_MASO_TONCU Is Null) -- 1 - 1 - 0
+ OR(nxt.DTDMLA2_MASO_NHAP=DTDMLA2_MASO_TONCU AND nxt.DTDMLA2_MASO_XUAT Is Null) -- 1 - 0 - 1
+ OR(nxt.DTDMLA2_MASO_NHAP Is Not Null AND nxt.DTDMLA2_MASO_XUAT Is Null AND nxt.DTDMLA2_MASO_TONCU Is Null) -- 1 - 0 - 0
+ OR(nxt.DTDMLA2_MASO_NHAP Is Null AND nxt.DTDMLA2_MASO_XUAT=nxt.DTDMLA2_MASO_TONCU) -- 0 - 1 - 1
+ OR(nxt.DTDMLA2_MASO_NHAP Is Null AND nxt.DTDMLA2_MASO_XUAT Is Not Null AND nxt.DTDMLA2_MASO_TONCU Is Null) -- 0 - 1 -0
+ OR(nxt.DTDMLA2_MASO_NHAP Is Null AND nxt.DTDMLA2_MASO_XUAT Is Null AND nxt.DTDMLA2_MASO_TONCU Is Not Null)) -- 0 - 0 - 1
+ AND(nxt.DTDMLA2_MASO_NHAP=$P{suadacmaso} OR nxt.DTDMLA2_MASO_XUAT=$P{suadacmaso} OR nxt.DTDMLA2_MASO_TONCU=$P{suadacmaso})
+ 
+ ) xuatnhapton]]></queryString>
+
+	<field name="NHASX_TEN" class="java.lang.String"/>
+	<field name="DTDMLA2_MASO" class="java.lang.Long"/>
+	<field name="TONGCONG" class="java.lang.String"/>
+	<field name="TONCUOI" class="java.lang.Double"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="19"  isSplitAllowed="true" >
+				<crosstab >
+					<reportElement
+						x="7"
+						y="0"
+						width="522"
+						height="17"
+						key="crosstab-1"/>
+					<crosstabHeaderCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabHeaderCell>					<rowGroup name="TONGCONG" width="138" totalPosition="End">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{TONGCONG}]]></bucketExpression>
+						</bucket>
+						<crosstabTotalRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="138"
+						height="30"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["TỔNG CỘNG"]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="NHASX_TEN" height="0" totalPosition="End" headerPosition="Center">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{NHASX_TEN}]]></bucketExpression>
+						</bucket>
+					</columnGroup>
+
+					<measure name="TONCUOI_Sum" class="java.lang.Double" calculation="Sum">
+						<measureExpression><![CDATA[$F{TONCUOI}]]></measureExpression>
+					</measure>
+					<crosstabCell width="84" height="0">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="43" height="0" columnTotalGroup="NHASX_TEN">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="84" height="30" rowTotalGroup="TONGCONG">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="83"
+						height="30"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TONCUOI_Sum}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="43" height="30" rowTotalGroup="TONGCONG" columnTotalGroup="NHASX_TEN">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<whenNoDataCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</whenNoDataCell>					</crosstab>
+			</band>
+		</summary>
+</jasperReport>

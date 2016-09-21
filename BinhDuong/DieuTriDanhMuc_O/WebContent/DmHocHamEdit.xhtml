@@ -1,0 +1,116 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmHocHam" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmHocHamHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Học hàm</f:facet>
+
+
+
+            <s:decorate id="dmhochamDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc DP</ui:define>
+                <h:selectBooleanCheckbox id="dmhochamDp"
+                                      value="#{dmHocHamHome.instance.dmhochamDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmhochamDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc ĐT</ui:define>
+                <h:selectBooleanCheckbox id="dmhochamDt"
+                                      value="#{dmHocHamHome.instance.dmhochamDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmhochamMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dmhochamMa"
+                           size="15"
+                      maxlength="15"
+                          value="#{dmHocHamHome.instance.dmhochamMa}">
+                    <a:support event="onblur" reRender="dmhochamMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmhochamNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmhochamNgaygiocn"
+                          value="#{dmHocHamHome.instance.dmhochamNgaygiocn}">
+                    <a:support event="onblur" reRender="dmhochamNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmhochamQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc QL</ui:define>
+                <h:selectBooleanCheckbox id="dmhochamQl"
+                                      value="#{dmHocHamHome.instance.dmhochamQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmhochamTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dmhochamTen"
+                       required="true"
+                           size="100"
+                      maxlength="150"
+                          value="#{dmHocHamHome.instance.dmhochamTen}">
+                    <a:support event="onblur" reRender="dmhochamTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmHocHamHome.persist}"
+                       disabled="#{!dmHocHamHome.wired}"
+                       rendered="#{!dmHocHamHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmHocHamHome.update}"
+                       rendered="#{dmHocHamHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmHocHamHome.remove}"
+                      immediate="true"
+                       rendered="#{dmHocHamHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmHocHam.xhtml"
+                rendered="#{dmHocHamHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmHocHamFrom ? 'DmHocHamList' : dmHocHamFrom}.xhtml"
+                rendered="#{!dmHocHamHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

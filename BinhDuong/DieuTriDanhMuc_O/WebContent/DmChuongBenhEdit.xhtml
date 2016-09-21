@@ -1,0 +1,362 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmChuongBenh" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmChuongBenhHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Chương bệnh</f:facet>
+
+
+
+
+
+
+            <s:decorate id="dmbenhicdMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã bệnh ICD</ui:define>
+                <h:inputText id="dmbenhicdMa"
+                           size="10"
+                      maxlength="10"
+                          value="#{dmChuongBenhHome.instance.dmbenhicdMa}">
+                    <a:support event="onblur" reRender="dmbenhicdMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmchuongbenhDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc dự phòng</ui:define>
+                <h:selectBooleanCheckbox id="dmchuongbenhDp"
+                                      value="#{dmChuongBenhHome.instance.dmchuongbenhDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmchuongbenhDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc điều trị</ui:define>
+                <h:selectBooleanCheckbox id="dmchuongbenhDt"
+                                      value="#{dmChuongBenhHome.instance.dmchuongbenhDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmchuongbenhMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã chương bệnh</ui:define>
+                <h:inputText id="dmchuongbenhMa"
+                           size="10"
+                      maxlength="10"
+                          value="#{dmChuongBenhHome.instance.dmchuongbenhMa}">
+                    <a:support event="onblur" reRender="dmchuongbenhMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmchuongbenhNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmchuongbenhNgaygiocn"
+                          value="#{dmChuongBenhHome.instance.dmchuongbenhNgaygiocn}">
+                    <a:support event="onblur" reRender="dmchuongbenhNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmchuongbenhQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc quản lý</ui:define>
+                <h:selectBooleanCheckbox id="dmchuongbenhQl"
+                                      value="#{dmChuongBenhHome.instance.dmchuongbenhQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmchuongbenhTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên chương bệnh</ui:define>
+                <h:inputTextarea id="dmchuongbenhTen"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dmChuongBenhHome.instance.dmchuongbenhTen}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmChuongBenhHome.persist}"
+                       disabled="#{!dmChuongBenhHome.wired}"
+                       rendered="#{!dmChuongBenhHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmChuongBenhHome.update}"
+                       rendered="#{dmChuongBenhHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmChuongBenhHome.remove}"
+                      immediate="true"
+                       rendered="#{dmChuongBenhHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmChuongBenh.xhtml"
+                rendered="#{dmChuongBenhHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmChuongBenhFrom ? 'DmChuongBenhList' : dmChuongBenhFrom}.xhtml"
+                rendered="#{!dmChuongBenhHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+<ui:remove>
+    <rich:tab label="Bệnh ICDs">
+        <h:form styleClass="association" id="dmBenhIcdsChildren">
+
+            <h:outputText value="Không có  dmBenhIcds phù hợp với dmChuongBenh."
+                       rendered="#{empty dmChuongBenhHome.dmBenhIcds}"/>
+
+            <rich:dataTable value="#{dmChuongBenhHome.dmBenhIcds}"
+                           var="_dmBenhIcd"
+                      rendered="#{not empty dmChuongBenhHome.dmBenhIcds}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dmBenhIcdsTable">
+                <rich:column sortBy="#{_dmBenhIcd.dmbenhicdMaso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dmBenhIcd.dmbenhicdMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhIcd.dmbenhicdDp}">
+                    <f:facet name="header">Thuộc dự phòng</f:facet>
+                    <h:outputText value="#{_dmBenhIcd.dmbenhicdDp}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhIcd.dmbenhicdDt}">
+                    <f:facet name="header">Thuộc điều trị</f:facet>
+                    <h:outputText value="#{_dmBenhIcd.dmbenhicdDt}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhIcd.dmbenhicdLienhe}">
+                    <f:facet name="header">Liên hệ</f:facet>
+                    <h:outputText value="#{_dmBenhIcd.dmbenhicdLienhe}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhIcd.dmbenhicdMa}">
+                    <f:facet name="header">Mã bệnh ICD</f:facet>
+                    <h:outputText value="#{_dmBenhIcd.dmbenhicdMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhIcd.dmbenhicdMachung}">
+                    <f:facet name="header">Mã chung</f:facet>
+                    <h:outputText value="#{_dmBenhIcd.dmbenhicdMachung}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhIcd.dmbenhicdNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dmBenhIcd.dmbenhicdNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhIcd.dmbenhicdQl}">
+                    <f:facet name="header">Thuộc quản lý</f:facet>
+                    <h:outputText value="#{_dmBenhIcd.dmbenhicdQl}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhIcd.dmbenhicdSs}">
+                    <f:facet name="header">Dmbenhicd ss</f:facet>
+                    <h:outputText value="#{_dmBenhIcd.dmbenhicdSs}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhIcd.dmbenhicdTacnhan}">
+                    <f:facet name="header">Tác nhân</f:facet>
+                    <h:outputText value="#{_dmBenhIcd.dmbenhicdTacnhan}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhIcd.dmbenhicdTen}">
+                    <f:facet name="header">Tên bệnh ICD</f:facet>
+                    <h:outputText value="#{_dmBenhIcd.dmbenhicdTen}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhIcd.dmbenhicdTienganh}">
+                    <f:facet name="header">Tên tiếng anh</f:facet>
+                    <h:outputText value="#{_dmBenhIcd.dmbenhicdTienganh}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dmChuongBenhHome.managed}" id="dmBenhIcds">
+        <div class="actionButtons">
+            <s:button id="adddmBenhIcd"
+                   value="Thêm dmBenhIcd"
+                    view="/DmBenhIcdEdit.xhtml"
+             propagation="none">
+                 <f:param name="dmChuongBenhDmchuongbenhMaso"
+                         value="#{dmChuongBenhHome.instance.dmchuongbenhMaso}"/>
+                 <f:param name="dmBenhIcdFrom" value="DmChuongBenh"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Bệnh VNs">
+        <h:form styleClass="association" id="dmBenhVnsChildren">
+
+            <h:outputText value="Không có  dmBenhVns phù hợp với dmChuongBenh."
+                       rendered="#{empty dmChuongBenhHome.dmBenhVns}"/>
+
+            <rich:dataTable value="#{dmChuongBenhHome.dmBenhVns}"
+                           var="_dmBenhVn"
+                      rendered="#{not empty dmChuongBenhHome.dmBenhVns}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dmBenhVnsTable">
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnMaso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnBaogom}">
+                    <f:facet name="header">Bao gồm</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnBaogom}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnDp}">
+                    <f:facet name="header">Thuộc dự phòng</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnDp}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnDt}">
+                    <f:facet name="header">Thuộc điều trị</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnDt}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnMa}">
+                    <f:facet name="header">Mã bệnh VN</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnMabyt}">
+                    <f:facet name="header">Mã BHYT</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnMabyt}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnMachung}">
+                    <f:facet name="header">Mã chung</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnMachung}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnMaicd10}">
+                    <f:facet name="header">Mã ICD 10</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnMaicd10}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnMaicd10b}">
+                    <f:facet name="header">Mã ICD 10b</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnMaicd10b}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnQl}">
+                    <f:facet name="header">Thuộc quản lý</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnQl}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnTen}">
+                    <f:facet name="header">Tên bệnh VN</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnTen}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dmChuongBenhHome.managed}" id="dmBenhVns">
+        <div class="actionButtons">
+            <s:button id="adddmBenhVn"
+                   value="Thêm dmBenhVn"
+                    view="/DmBenhVnEdit.xhtml"
+             propagation="none">
+                 <f:param name="dmChuongBenhDmchuongbenhMaso"
+                         value="#{dmChuongBenhHome.instance.dmchuongbenhMaso}"/>
+                 <f:param name="dmBenhVnFrom" value="DmChuongBenh"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Bệnh VNs_1">
+        <h:form styleClass="association" id="dmBenhVns_1Children">
+
+            <h:outputText value="Không có  dmBenhVns_1 phù hợp với dmChuongBenh."
+                       rendered="#{empty dmChuongBenhHome.dmBenhVns_1}"/>
+
+            <rich:dataTable value="#{dmChuongBenhHome.dmBenhVns_1}"
+                           var="_dmBenhVn"
+                      rendered="#{not empty dmChuongBenhHome.dmBenhVns_1}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dmBenhVns_1Table">
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnMaso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnBaogom}">
+                    <f:facet name="header">Bao gồm</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnBaogom}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnDp}">
+                    <f:facet name="header">Thuộc dự phòng</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnDp}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnDt}">
+                    <f:facet name="header">Thuộc điều trị</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnDt}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnMa}">
+                    <f:facet name="header">Mã bệnh VN</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnMabyt}">
+                    <f:facet name="header">Mã BHYT</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnMabyt}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnMachung}">
+                    <f:facet name="header">Mã chung</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnMachung}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnMaicd10}">
+                    <f:facet name="header">Mã ICD 10</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnMaicd10}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnMaicd10b}">
+                    <f:facet name="header">Mã ICD 10b</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnMaicd10b}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnQl}">
+                    <f:facet name="header">Thuộc quản lý</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnQl}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmBenhVn.dmbenhvnTen}">
+                    <f:facet name="header">Tên bệnh VN</f:facet>
+                    <h:outputText value="#{_dmBenhVn.dmbenhvnTen}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dmChuongBenhHome.managed}" id="dmBenhVns_1">
+        <div class="actionButtons">
+            <s:button id="adddmBenhVn"
+                   value="Thêm dmBenhVn"
+                    view="/DmBenhVnEdit.xhtml"
+             propagation="none">
+                 <f:param name="dmChuongBenhDmchuongbenhMaso"
+                         value="#{dmChuongBenhHome.instance.dmchuongbenhMaso}"/>
+                 <f:param name="dmBenhVnFrom" value="DmChuongBenh"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+    </ui:remove>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

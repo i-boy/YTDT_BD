@@ -1,0 +1,102 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmBanKhamSequence" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmBanKhamSequenceHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Bán khám sequence</f:facet>
+
+
+
+            <s:decorate id="currentNextField" template="layout/edit.xhtml">
+                <ui:define name="label">Current next</ui:define>
+                <h:inputText id="currentNext"
+                          value="#{dtDmBanKhamSequenceHome.instance.currentNext}">
+                    <a:support event="onblur" reRender="currentNextField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="currentValueField" template="layout/edit.xhtml">
+                <ui:define name="label">Current value</ui:define>
+                <h:inputText id="currentValue"
+                          value="#{dtDmBanKhamSequenceHome.instance.currentValue}">
+                    <a:support event="onblur" reRender="currentValueField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="maField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="ma"
+                       required="true"
+                           size="10"
+                      maxlength="10"
+                          value="#{dtDmBanKhamSequenceHome.instance.ma}">
+                    <a:support event="onblur" reRender="maField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="stepField" template="layout/edit.xhtml">
+                <ui:define name="label">Step</ui:define>
+                <h:inputText id="step"
+                          value="#{dtDmBanKhamSequenceHome.instance.step}">
+                    <a:support event="onblur" reRender="stepField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmBanKhamSequenceHome.persist}"
+                       disabled="#{!dtDmBanKhamSequenceHome.wired}"
+                       rendered="#{!dtDmBanKhamSequenceHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmBanKhamSequenceHome.update}"
+                       rendered="#{dtDmBanKhamSequenceHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmBanKhamSequenceHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmBanKhamSequenceHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmBanKhamSequence.xhtml"
+                rendered="#{dtDmBanKhamSequenceHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmBanKhamSequenceFrom ? 'DtDmBanKhamSequenceList' : dtDmBanKhamSequenceFrom}.xhtml"
+                rendered="#{!dtDmBanKhamSequenceHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

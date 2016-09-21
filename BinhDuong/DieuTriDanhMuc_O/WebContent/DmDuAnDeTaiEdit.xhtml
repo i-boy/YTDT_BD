@@ -1,0 +1,115 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmDuAnDeTai" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmDuAnDeTaiHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Dự án đề tài</f:facet>
+
+
+
+            <s:decorate id="dmduandetaiDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc dự phòng</ui:define>
+                <h:selectBooleanCheckbox id="dmduandetaiDp"
+                                      value="#{dmDuAnDeTaiHome.instance.dmduandetaiDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmduandetaiDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc điều trị</ui:define>
+                <h:selectBooleanCheckbox id="dmduandetaiDt"
+                                      value="#{dmDuAnDeTaiHome.instance.dmduandetaiDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmduandetaiMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã dự án đề tài</ui:define>
+                <h:inputText id="dmduandetaiMa"
+                           size="15"
+                      maxlength="15"
+                          value="#{dmDuAnDeTaiHome.instance.dmduandetaiMa}">
+                    <a:support event="onblur" reRender="dmduandetaiMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmduandetaiNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmduandetaiNgaygiocn"
+                          value="#{dmDuAnDeTaiHome.instance.dmduandetaiNgaygiocn}">
+                    <a:support event="onblur" reRender="dmduandetaiNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmduandetaiQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc quản lý</ui:define>
+                <h:selectBooleanCheckbox id="dmduandetaiQl"
+                                      value="#{dmDuAnDeTaiHome.instance.dmduandetaiQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmduandetaiTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên dự án đề tài</ui:define>
+                <h:inputText id="dmduandetaiTen"
+                           size="100"
+                      maxlength="100"
+                          value="#{dmDuAnDeTaiHome.instance.dmduandetaiTen}">
+                    <a:support event="onblur" reRender="dmduandetaiTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmDuAnDeTaiHome.persist}"
+                       disabled="#{!dmDuAnDeTaiHome.wired}"
+                       rendered="#{!dmDuAnDeTaiHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmDuAnDeTaiHome.update}"
+                       rendered="#{dmDuAnDeTaiHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmDuAnDeTaiHome.remove}"
+                      immediate="true"
+                       rendered="#{dmDuAnDeTaiHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmDuAnDeTai.xhtml"
+                rendered="#{dmDuAnDeTaiHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmDuAnDeTaiFrom ? 'DmDuAnDeTaiList' : dmDuAnDeTaiFrom}.xhtml"
+                rendered="#{!dmDuAnDeTaiHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

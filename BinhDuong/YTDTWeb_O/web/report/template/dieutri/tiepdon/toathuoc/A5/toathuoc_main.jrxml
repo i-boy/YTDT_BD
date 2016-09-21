@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="toathuoc_main"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="421"
+		 pageHeight="595"
+		 columnWidth="399"
+		 columnSpacing="0"
+		 leftMargin="11"
+		 rightMargin="11"
+		 topMargin="11"
+		 bottomMargin="11"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="BENHVIEN" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="CHANDOAN" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="DIACHI" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="GIOITINH" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="DIENTHOAI" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="GTDEN" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="GTTU" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="HOTENBN" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="HUYETAP" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="MABENHVIEN" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="MACH" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="MATHEBHYT" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="MATIEPDON" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="NGAYKHAMBENH" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NHIETDO" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="NOIDKKCBBANDAU" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="PHONGKHAM" isForPrompting="true" class="java.lang.Integer"/>
+	<parameter name="SOTHETEKSCS" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="SOYTE" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="VUOTTUYEN" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="TUOI" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="LOIDAN" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="BASIKHAMBENH" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="IS_PRINTCLS" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" isForPrompting="true" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[".\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[SELECT  NVL(bang1.THANHTIENTHUOC,0)+ 
+        (case when($P{IS_PRINTCLS}='1') then NVL(bang2.THANHTIENCLS, 0) else 0 end) CONGTHANHTIEN
+
+FROM
+(
+   SELECT SUM(NVL(tbl1.THANHTIEN,0)) THANHTIENTHUOC
+   FROM
+  (
+     SELECT SUM(tpk.THUOCPHONGKHAM_THANHTIEN) THANHTIEN
+     FROM (((THUOC_PHONG_KHAM tpk
+     INNER join THAM_KHAM tk on (tpk.THUOCPHONGKHAM_THAMKHAM = tk.THAMKHAM_MA))
+     INNER join TIEP_DON td on (tk.TIEPDON_MA = td.TIEPDON_MA))
+     INNER join DM_THUOC thuoc on (tpk.THUOCPHONGKHAM_MATHUOC = thuoc.DMTHUOC_MASO))
+     where  ($P{MATIEPDON} is null or td.TIEPDON_MA = $P{MATIEPDON})
+     AND ( tpk.THUOCPHONGKHAM_LOAI = 3 )
+     AND ( $P{PHONGKHAM} IS NULL OR tk.THAMKHAM_BANKHAM = $P{PHONGKHAM} )
+     group by thuoc.DMTHUOC_TEN,tpk.THUOCPHONGKHAM_DONGIA
+    ) tbl1
+) bang1,
+(
+    SELECT SUM(NVL(tbl2.THANHTIEN,0)) THANHTIENCLS
+    FROM
+
+    (
+      SELECT (clsk.CLSKHAM_DONGIA * SUM(clsk.CLSKHAM_LAN - NVL(clsk.CLSKHAM_TRA,0))) as THANHTIEN
+      FROM (((CLS_KHAM clsk
+      INNER join THAM_KHAM tk on (clsk.CLSKHAM_THAMKHAM = tk.THAMKHAM_MA))
+      INNER join TIEP_DON td on (tk.TIEPDON_MA = td.TIEPDON_MA))
+      INNER join DT_DM_CLS_BANG_GIA bg on (clsk.CLSKHAM_MAHANG = bg.DTDMCLSBG_MASO))
+      where ($P{MATIEPDON} is null or td.TIEPDON_MA = $P{MATIEPDON})
+      AND ( $P{PHONGKHAM} IS NULL OR tk.THAMKHAM_BANKHAM = $P{PHONGKHAM} )
+      group by bg.DTDMCLSBG_DIENGIAI,clsk.CLSKHAM_DONGIA
+    ) tbl2
+) bang2]]></queryString>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="139"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="2"
+						y="1"
+						width="119"
+						height="18"
+						key="textField-1"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SOYTE}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="2"
+						y="19"
+						width="119"
+						height="18"
+						key="textField-2"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{BENHVIEN}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="121"
+						y="19"
+						width="146"
+						height="24"
+						key="staticText-1"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" pdfFontName="timesbd.ttf" size="18" isBold="true" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<text><![CDATA[TOA THUỐC]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="2"
+						y="48"
+						width="52"
+						height="18"
+						key="staticText-2"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Bottom">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<text><![CDATA[Họ và tên:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="2"
+						y="66"
+						width="39"
+						height="18"
+						key="staticText-5"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Bottom">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<text><![CDATA[Địa chỉ:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="2"
+						y="84"
+						width="32"
+						height="18"
+						key="staticText-6"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Bottom">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<text><![CDATA[Mạch:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="121"
+						y="84"
+						width="54"
+						height="18"
+						key="staticText-7"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Bottom">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<text><![CDATA[Huyết áp:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="295"
+						y="84"
+						width="49"
+						height="18"
+						key="staticText-8"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Bottom">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<text><![CDATA[Nhiệt độ:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="54"
+						y="48"
+						width="197"
+						height="18"
+						key="textField-3"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Bottom">
+						<font fontName="Times New Roman" pdfFontName="timesbd.ttf" size="12" isBold="true" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[new String(( $P{HOTENBN} == null ? "" : $P{HOTENBN} ))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="251"
+						y="48"
+						width="148"
+						height="18"
+						key="textField-4"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Bottom">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Tuổi: " + ( $P{TUOI} == null ? " " : $P{TUOI} ) +
+" - Giới tính: " + ( $P{GIOITINH} == null ? " " : $P{GIOITINH} )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="41"
+						y="66"
+						width="358"
+						height="18"
+						key="textField-6"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Bottom">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{DIACHI}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="267"
+						y="19"
+						width="132"
+						height="18"
+						key="textField-7"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" pdfFontName="timesbd.ttf" size="12" isBold="false" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $P{MATHEBHYT} == null ? "" : $P{MATHEBHYT} )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="2"
+						y="102"
+						width="397"
+						height="18"
+						key="textField-8"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[new String("Chẩn đoán: ") + new String(( $P{CHANDOAN} == null ? "" : $P{CHANDOAN} ))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="34"
+						y="84"
+						width="40"
+						height="18"
+						key="textField-9"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{MACH}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="175"
+						y="84"
+						width="84"
+						height="18"
+						key="textField-10"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Bottom">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{HUYETAP}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="344"
+						y="84"
+						width="36"
+						height="18"
+						key="textField-11"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{NHIETDO}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="287"
+						y="1"
+						width="112"
+						height="18"
+						key="textField-12"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" pdfFontName="timesbd.ttf" size="12" isBold="false" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{MATIEPDON}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="259"
+						y="84"
+						width="36"
+						height="18"
+						key="staticText-9"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Bottom">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<text><![CDATA[mmHg]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="74"
+						y="84"
+						width="47"
+						height="18"
+						key="staticText-10"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Bottom">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<text><![CDATA[lần/phút]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="386"
+						y="84"
+						width="13"
+						height="18"
+						key="staticText-11"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Bottom">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<text><![CDATA[C]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="381"
+						y="81"
+						width="9"
+						height="18"
+						key="staticText-12"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<text><![CDATA[o]]></text>
+				</staticText>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="2"
+						y="120"
+						width="397"
+						height="8"
+						key="subreport-1"
+						positionType="Float">
+							<printWhenExpression><![CDATA[($P{IS_PRINTCLS}.equals("1") ? Boolean.TRUE : Boolean.FALSE)]]></printWhenExpression>
+						</reportElement>
+					<subreportParameter  name="MATIEPDON">
+						<subreportParameterExpression><![CDATA[$P{MATIEPDON}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="PHONGKHAM">
+						<subreportParameterExpression><![CDATA[$P{PHONGKHAM}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "toathuoc_cls_sub.jasper"]]></subreportExpression>
+				</subreport>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="2"
+						y="128"
+						width="397"
+						height="10"
+						key="subreport-2"
+						positionType="Float"/>
+					<subreportParameter  name="MATIEPDON">
+						<subreportParameterExpression><![CDATA[$P{MATIEPDON}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="PHONGKHAM">
+						<subreportParameterExpression><![CDATA[$P{PHONGKHAM}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "toathuoc_thuoc_sub.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="113"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="6"
+						y="87"
+						width="87"
+						height="16"
+						key="staticText-13"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isBold="false" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<text><![CDATA[Dược cấp thuốc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="165"
+						y="87"
+						width="88"
+						height="16"
+						key="staticText-14"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isBold="false" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<text><![CDATA[Kế toán viện phí]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="328"
+						y="87"
+						width="65"
+						height="16"
+						key="staticText-16"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isBold="false" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<text><![CDATA[Bệnh nhân]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="251"
+						y="17"
+						width="148"
+						height="16"
+						key="staticText-17"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isBold="false" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<text><![CDATA[Bác sĩ điều trị]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="251"
+						y="2"
+						width="148"
+						height="15"
+						backcolor="#CCCCCC"
+						key="textField-13"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[new String("Ngày ") + new SimpleDateFormat("dd").format($P{NGAYKHAMBENH})
++ new String(" tháng ") + new SimpleDateFormat("MM").format($P{NGAYKHAMBENH})
++ new String(" năm ") + new SimpleDateFormat("yyyy").format($P{NGAYKHAMBENH})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="6"
+						y="2"
+						width="245"
+						height="80"
+						key="textField-14"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Times New Roman" pdfFontName="times.ttf" size="12" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[new String("Lời dặn: ") + new String(( $P{LOIDAN} == null ? "" : $P{LOIDAN} ))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="251"
+						y="64"
+						width="148"
+						height="18"
+						key="textField-15"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" pdfFontName="timesbd.ttf" size="12" isBold="true" isPdfEmbedded ="false" pdfEncoding ="Identity-H"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $P{BASIKHAMBENH} == null ? "" : "BS. "+ $P{BASIKHAMBENH} )]]></textFieldExpression>
+				</textField>
+			</band>
+		</summary>
+</jasperReport>

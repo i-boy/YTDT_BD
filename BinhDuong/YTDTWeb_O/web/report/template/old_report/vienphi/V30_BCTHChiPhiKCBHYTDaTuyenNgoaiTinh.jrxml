@@ -1,0 +1,1506 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="V30_BCTHChiPhiKCBHYTDaTuyenNgoaiTinh"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="832"
+		 columnSpacing="0"
+		 leftMargin="5"
+		 rightMargin="5"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isFloatColumnFooter="true"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<import value="com.iesvn.commaseparator.*" />
+	<reportFont name="Times New Roman" isDefault="true" fontName="Times New Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<parameter name="soyte" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="benhvien" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="sodt" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="TuNgay" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="DenNgay" isForPrompting="false" class="java.util.Date"/>
+	<parameter name="NoiTinh" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="TenKCBBHYT" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="MaKCBBHYT" isForPrompting="false" class="java.lang.String"/>
+	<queryString><![CDATA[SELECT 
+ ( SELECT SUM( IF(HS.HSTHTOAN_TONGCHI IS NULL,0, HS.HSTHTOAN_TONGCHI)) 
+					
+			
+				FROM ((((((( (HSBA HSBA1 JOIN HS_THTOAN HS ON HS.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)
+				
+				JOIN HSBA_BHYT HSBABHYT ON HSBABHYT.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)	
+				LEFT JOIN DT_DM_KCB_BHYT KCBBHYT ON HSBABHYT.HSBABHYT_MAKCB LIKE KCBBHYT.DTDMKCBBHYT_MASO)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO LIKE HSBA1.HSBA_MACHDOANTUYENT)					
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE HSBA1.BENHNHAN_MA)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = HSBABHYT.HSBABHYT_TINHBH)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON HSBABHYT.HSBABHYT_KHOIBH LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MASO)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+		WHERE  ($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND	 PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'BB'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+  ) NOITRU_BATBUOC_ST,  
+   ( SELECT SUM( IF(HS.HSTHTOAN_TONGCHI IS NULL,0, HS.HSTHTOAN_TONGCHI)) 
+					
+			
+				FROM ((((((( (HSBA HSBA1 JOIN HS_THTOAN HS ON HS.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)
+				
+				JOIN HSBA_BHYT HSBABHYT ON HSBABHYT.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)	
+				LEFT JOIN DT_DM_KCB_BHYT KCBBHYT ON HSBABHYT.HSBABHYT_MAKCB LIKE KCBBHYT.DTDMKCBBHYT_MASO)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO LIKE HSBA1.HSBA_MACHDOANTUYENT)					
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE HSBA1.BENHNHAN_MA)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = HSBABHYT.HSBABHYT_TINHBH)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON HSBABHYT.HSBABHYT_KHOIBH LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MASO)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+		WHERE  ($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND	 PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'NG'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+  ) NOITRU_NGUOINGHEO_ST,  
+   ( SELECT SUM( IF(HS.HSTHTOAN_TONGCHI IS NULL,0, HS.HSTHTOAN_TONGCHI)) 
+					
+			
+				FROM ((((((( (HSBA HSBA1 JOIN HS_THTOAN HS ON HS.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)
+				
+				JOIN HSBA_BHYT HSBABHYT ON HSBABHYT.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)	
+				LEFT JOIN DT_DM_KCB_BHYT KCBBHYT ON HSBABHYT.HSBABHYT_MAKCB LIKE KCBBHYT.DTDMKCBBHYT_MASO)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO LIKE HSBA1.HSBA_MACHDOANTUYENT)					
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE HSBA1.BENHNHAN_MA)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = HSBABHYT.HSBABHYT_TINHBH)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON HSBABHYT.HSBABHYT_KHOIBH LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MASO)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+		WHERE 	($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'HS'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+  ) NOITRU_HSSV_ST,  
+  ( SELECT SUM( IF(HS.HSTHTOAN_TONGCHI IS NULL,0, HS.HSTHTOAN_TONGCHI)) 
+					
+			
+				FROM ((((((( (HSBA HSBA1 JOIN HS_THTOAN HS ON HS.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)
+				
+				JOIN HSBA_BHYT HSBABHYT ON HSBABHYT.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)	
+				LEFT JOIN DT_DM_KCB_BHYT KCBBHYT ON HSBABHYT.HSBABHYT_MAKCB LIKE KCBBHYT.DTDMKCBBHYT_MASO)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO LIKE HSBA1.HSBA_MACHDOANTUYENT)					
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE HSBA1.BENHNHAN_MA)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = HSBABHYT.HSBABHYT_TINHBH)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON HSBABHYT.HSBABHYT_KHOIBH LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MASO)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+		WHERE 	($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'TN'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+  ) NOITRU_TNND_ST,  
+  ( SELECT COUNT(HSBA1.HSBA_SOVAOVIEN)  
+					
+			
+				FROM ((((((( (HSBA HSBA1 JOIN HS_THTOAN HS ON HS.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)
+				
+				JOIN HSBA_BHYT HSBABHYT ON HSBABHYT.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)	
+				LEFT JOIN DT_DM_KCB_BHYT KCBBHYT ON HSBABHYT.HSBABHYT_MAKCB LIKE KCBBHYT.DTDMKCBBHYT_MASO)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO LIKE HSBA1.HSBA_MACHDOANTUYENT)					
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE HSBA1.BENHNHAN_MA)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = HSBABHYT.HSBABHYT_TINHBH)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON HSBABHYT.HSBABHYT_KHOIBH LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MASO)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+		WHERE 	($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'BB'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+  ) NOITRU_BATBUOC_SL, 
+  ( SELECT COUNT(HSBA1.HSBA_SOVAOVIEN)  
+					
+			
+				FROM ((((((( (HSBA HSBA1 JOIN HS_THTOAN HS ON HS.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)
+				
+				JOIN HSBA_BHYT HSBABHYT ON HSBABHYT.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)	
+				LEFT JOIN DT_DM_KCB_BHYT KCBBHYT ON HSBABHYT.HSBABHYT_MAKCB LIKE KCBBHYT.DTDMKCBBHYT_MASO)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO LIKE HSBA1.HSBA_MACHDOANTUYENT)					
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE HSBA1.BENHNHAN_MA)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = HSBABHYT.HSBABHYT_TINHBH)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON HSBABHYT.HSBABHYT_KHOIBH LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MASO)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+		WHERE 	($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'NG'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+  ) NOITRU_NGUOINGHEO_SL, 
+    ( SELECT COUNT(HSBA1.HSBA_SOVAOVIEN)  
+					
+			
+				FROM ((((((( (HSBA HSBA1 JOIN HS_THTOAN HS ON HS.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)
+				
+				JOIN HSBA_BHYT HSBABHYT ON HSBABHYT.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)	
+				LEFT JOIN DT_DM_KCB_BHYT KCBBHYT ON HSBABHYT.HSBABHYT_MAKCB LIKE KCBBHYT.DTDMKCBBHYT_MASO)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO LIKE HSBA1.HSBA_MACHDOANTUYENT)					
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE HSBA1.BENHNHAN_MA)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = HSBABHYT.HSBABHYT_TINHBH)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON HSBABHYT.HSBABHYT_KHOIBH LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MASO)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+		WHERE 	($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND  PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'HS'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+  ) NOITRU_HSSV_SL,
+  ( SELECT COUNT(HSBA1.HSBA_SOVAOVIEN)  
+					
+			
+				FROM ((((((( (HSBA HSBA1 JOIN HS_THTOAN HS ON HS.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)
+				
+				JOIN HSBA_BHYT HSBABHYT ON HSBABHYT.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)	
+				LEFT JOIN DT_DM_KCB_BHYT KCBBHYT ON HSBABHYT.HSBABHYT_MAKCB LIKE KCBBHYT.DTDMKCBBHYT_MASO)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO LIKE HSBA1.HSBA_MACHDOANTUYENT)					
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE HSBA1.BENHNHAN_MA)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = HSBABHYT.HSBABHYT_TINHBH)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON HSBABHYT.HSBABHYT_KHOIBH LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MASO)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+		WHERE 	($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND  PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'TN'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+  ) NOITRU_TNND_SL,  
+  (	
+		SELECT SUM(IF (HS.HSTHTOANK_TONGCHI IS NULL,0,HS.HSTHTOANK_TONGCHI)) NGOAITRU_BATBUOC_ST
+		
+		FROM 
+				(((((((TIEP_DON TD1 JOIN HS_THTOANK HS ON HS.TIEPDON_MA = TD1.TIEPDON_MA)
+				JOIN DT_DM_KCB_BHYT KCBBHYT ON 	KCBBHYT.DTDMKCBBHYT_MA LIKE TD1.KCBBHYT_MA)
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE TD1.BENHNHAN_MA)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO = TD1.TIEPDON_MACHDOANBD)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = TD1.TINHBHYT_MA)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON TD1.KHOIBHYT_MA LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MA)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+
+	    WHERE  ($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'BB'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+	) NGOAITRU_BATBUOC_ST,
+	 (	
+		SELECT SUM(IF (HS.HSTHTOANK_TONGCHI IS NULL,0,HS.HSTHTOANK_TONGCHI)) NGOAITRU_BATBUOC_ST
+		
+		FROM 
+				(((((((TIEP_DON TD1 JOIN HS_THTOANK HS ON HS.TIEPDON_MA = TD1.TIEPDON_MA)
+				JOIN DT_DM_KCB_BHYT KCBBHYT ON 	KCBBHYT.DTDMKCBBHYT_MA LIKE TD1.KCBBHYT_MA)
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE TD1.BENHNHAN_MA)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO = TD1.TIEPDON_MACHDOANBD)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = TD1.TINHBHYT_MA)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON TD1.KHOIBHYT_MA LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MA)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+
+	    WHERE  ($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'NG'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+	) NGOAITRU_NGUOINGHE0_ST,
+	 (	
+		SELECT SUM(IF (HS.HSTHTOANK_TONGCHI IS NULL,0,HS.HSTHTOANK_TONGCHI)) NGOAITRU_BATBUOC_ST
+		
+		FROM 
+				(((((((TIEP_DON TD1 JOIN HS_THTOANK HS ON HS.TIEPDON_MA = TD1.TIEPDON_MA)
+				JOIN DT_DM_KCB_BHYT KCBBHYT ON 	KCBBHYT.DTDMKCBBHYT_MA LIKE TD1.KCBBHYT_MA)
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE TD1.BENHNHAN_MA)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO = TD1.TIEPDON_MACHDOANBD)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = TD1.TINHBHYT_MA)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON TD1.KHOIBHYT_MA LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MA)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+
+	    WHERE  ($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'HS'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+	) NGOAITRU_HSSV_ST,
+	 (	
+		SELECT SUM(IF (HS.HSTHTOANK_TONGCHI IS NULL,0,HS.HSTHTOANK_TONGCHI)) NGOAITRU_BATBUOC_ST
+		
+		FROM 
+				(((((((TIEP_DON TD1 JOIN HS_THTOANK HS ON HS.TIEPDON_MA = TD1.TIEPDON_MA)
+				JOIN DT_DM_KCB_BHYT KCBBHYT ON 	KCBBHYT.DTDMKCBBHYT_MA LIKE TD1.KCBBHYT_MA)
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE TD1.BENHNHAN_MA)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO = TD1.TIEPDON_MACHDOANBD)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = TD1.TINHBHYT_MA)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON TD1.KHOIBHYT_MA LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MA)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+
+	    WHERE  ($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'TN'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+	) NGOAITRU_TNND_ST,
+	(	
+		SELECT COUNT(TD1.TIEPDON_MA)  
+		
+		FROM 
+				(((((((TIEP_DON TD1 JOIN HS_THTOANK HS ON HS.TIEPDON_MA = TD1.TIEPDON_MA)
+				JOIN DT_DM_KCB_BHYT KCBBHYT ON 	KCBBHYT.DTDMKCBBHYT_MA LIKE TD1.KCBBHYT_MA)
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE TD1.BENHNHAN_MA)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO = TD1.TIEPDON_MACHDOANBD)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = TD1.TINHBHYT_MA)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON TD1.KHOIBHYT_MA LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MA)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+
+	    WHERE 	($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'BB'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+	) NGOAITRU_BATBUOC_SL,
+	(	
+		SELECT COUNT(TD1.TIEPDON_MA)  
+		
+		FROM 
+				(((((((TIEP_DON TD1 JOIN HS_THTOANK HS ON HS.TIEPDON_MA = TD1.TIEPDON_MA)
+				JOIN DT_DM_KCB_BHYT KCBBHYT ON 	KCBBHYT.DTDMKCBBHYT_MA LIKE TD1.KCBBHYT_MA)
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE TD1.BENHNHAN_MA)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO = TD1.TIEPDON_MACHDOANBD)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = TD1.TINHBHYT_MA)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON TD1.KHOIBHYT_MA LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MA)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+
+	    WHERE 	 ($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'NG'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+	) NGOAITRU_NGUOINGHEO_SL,
+	(	
+		SELECT COUNT(TD1.TIEPDON_MA)  
+		
+		FROM 
+				(((((((TIEP_DON TD1 JOIN HS_THTOANK HS ON HS.TIEPDON_MA = TD1.TIEPDON_MA)
+				JOIN DT_DM_KCB_BHYT KCBBHYT ON 	KCBBHYT.DTDMKCBBHYT_MA LIKE TD1.KCBBHYT_MA)
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE TD1.BENHNHAN_MA)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO = TD1.TIEPDON_MACHDOANBD)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = TD1.TINHBHYT_MA)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON TD1.KHOIBHYT_MA LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MA)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+
+	    WHERE 	 ($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'HSSV'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+	) NGOAITRU_HSSV_SL,
+	(	
+		SELECT COUNT(TD1.TIEPDON_MA)  
+		
+		FROM 
+				(((((((TIEP_DON TD1 JOIN HS_THTOANK HS ON HS.TIEPDON_MA = TD1.TIEPDON_MA)
+				JOIN DT_DM_KCB_BHYT KCBBHYT ON 	KCBBHYT.DTDMKCBBHYT_MA LIKE TD1.KCBBHYT_MA)
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE TD1.BENHNHAN_MA)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO = TD1.TIEPDON_MACHDOANBD)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = TD1.TINHBHYT_MA)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON TD1.KHOIBHYT_MA LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MA)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+
+	    WHERE 	 ($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND PLBHYT.DTDMPHLOAIBHYT_MA LIKE 'TN'
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+	) NGOAITRU_TNND_SL, 
+	
+	
+	KCBBHYT1.DTDMKCBBHYT_TEN KCBBHYT_TEN
+FROM 	DT_DM_KCB_BHYT KCBBHYT1
+
+WHERE 
+ ($P{MaKCBBHYT} IS NULL OR KCBBHYT1.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND 
+			(
+(
+SELECT COUNT(TD1.TIEPDON_MA)  
+		
+		FROM 
+				(((((((TIEP_DON TD1 JOIN HS_THTOANK HS ON HS.TIEPDON_MA = TD1.TIEPDON_MA)
+				JOIN DT_DM_KCB_BHYT KCBBHYT ON 	KCBBHYT.DTDMKCBBHYT_MA LIKE TD1.KCBBHYT_MA)
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE TD1.BENHNHAN_MA)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO = TD1.TIEPDON_MACHDOANBD)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = TD1.TINHBHYT_MA)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON TD1.KHOIBHYT_MA LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MA)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+
+	    WHERE  ($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+) > 0 OR
+
+ ( SELECT COUNT(HSBA1.HSBA_SOVAOVIEN)  
+					
+			
+				FROM ((((((( (HSBA HSBA1 JOIN HS_THTOAN HS ON HS.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)
+				
+				JOIN HSBA_BHYT HSBABHYT ON HSBABHYT.HSBA_SOVAOVIEN LIKE HSBA1.HSBA_SOVAOVIEN)	
+				LEFT JOIN DT_DM_KCB_BHYT KCBBHYT ON HSBABHYT.HSBABHYT_MAKCB LIKE KCBBHYT.DTDMKCBBHYT_MASO)
+				LEFT JOIN DM_BENH_ICD BENH ON BENH.DMBENHICD_MASO LIKE HSBA1.HSBA_MACHDOANTUYENT)					
+				LEFT JOIN BENH_NHAN BN ON BN.BENHNHAN_MA LIKE HSBA1.BENHNHAN_MA)
+				LEFT JOIN DT_DM_TINH_BHYT TINHBHYT ON TINHBHYT.DTDMTINHBHYT_MASO = HSBABHYT.HSBABHYT_TINHBH)
+				LEFT JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON HSBABHYT.HSBABHYT_KHOIBH LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_MASO)
+				LEFT JOIN DT_DM_PL_BHYT PLBHYT ON PLBHYT.DTDMPHLOAIBHYT_MASO LIKE DTDMKHOIBHYT.DTDMKHOIBHYT_PHANLOAI)
+		WHERE 	 ($P{NoiTinh} IS NULL OR TINHBHYT.DTDMTINHBHYT_MA NOT LIKE $P{NoiTinh})		
+			and ($P{MaKCBBHYT} IS NULL OR KCBBHYT.DTDMKCBBHYT_MA LIKE $P{MaKCBBHYT})
+			AND KCBBHYT1.DTDMKCBBHYT_MASO =  KCBBHYT.DTDMKCBBHYT_MASO
+  ) > 0
+)
+;]]></queryString>
+
+	<field name="NOITRU_BATBUOC_ST" class="java.lang.Double"/>
+	<field name="NOITRU_NGUOINGHEO_ST" class="java.lang.Double"/>
+	<field name="NOITRU_HSSV_ST" class="java.lang.Double"/>
+	<field name="NOITRU_TNND_ST" class="java.lang.Double"/>
+	<field name="NOITRU_BATBUOC_SL" class="java.lang.Long"/>
+	<field name="NOITRU_NGUOINGHEO_SL" class="java.lang.Long"/>
+	<field name="NOITRU_HSSV_SL" class="java.lang.Long"/>
+	<field name="NOITRU_TNND_SL" class="java.lang.Long"/>
+	<field name="NGOAITRU_BATBUOC_ST" class="java.lang.Double"/>
+	<field name="NGOAITRU_NGUOINGHE0_ST" class="java.lang.Double"/>
+	<field name="NGOAITRU_HSSV_ST" class="java.lang.Double"/>
+	<field name="NGOAITRU_TNND_ST" class="java.lang.Double"/>
+	<field name="NGOAITRU_BATBUOC_SL" class="java.lang.Long"/>
+	<field name="NGOAITRU_NGUOINGHEO_SL" class="java.lang.Long"/>
+	<field name="NGOAITRU_HSSV_SL" class="java.lang.Long"/>
+	<field name="NGOAITRU_TNND_SL" class="java.lang.Long"/>
+	<field name="KCBBHYT_TEN" class="java.lang.String"/>
+
+	<variable name="Tong_NgoaiTru_BatBuoc_SL" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NGOAITRU_BATBUOC_SL}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NgoaiTru_BatBuoc_ST" class="java.lang.Double" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NGOAITRU_BATBUOC_ST}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NgoaiTru_NguoiNgheo_SL" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NGOAITRU_NGUOINGHEO_SL}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NgoaiTru_NguoiNgheo_ST" class="java.lang.Double" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NGOAITRU_NGUOINGHE0_ST}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NgoaiTru_HSSV_SL" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NGOAITRU_HSSV_SL}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NgoaiTru_HSSV_ST" class="java.lang.Double" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NGOAITRU_HSSV_ST}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NgoaiTru_TNND_SL" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NGOAITRU_TNND_SL}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NgoaiTru_TNND_ST" class="java.lang.Double" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NGOAITRU_TNND_ST}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NoiTru_BatBuoc_SL" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NOITRU_BATBUOC_SL}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NoiTru_BatBuoc_ST" class="java.lang.Double" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NOITRU_BATBUOC_ST}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NoiTru_NguoiNgheo_SL" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NOITRU_NGUOINGHEO_SL}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NoiTru_NguoiNgheo_ST" class="java.lang.Double" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NOITRU_NGUOINGHEO_ST}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NoiTru_HSSV_SL" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NOITRU_HSSV_SL}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NoiTru_HSSV_ST" class="java.lang.Double" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NOITRU_HSSV_ST}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NoiTru_TNND_SL" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NOITRU_TNND_SL}]]></variableExpression>
+	</variable>
+	<variable name="Tong_NoiTru_TNND_ST" class="java.lang.Double" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{NOITRU_TNND_ST}]]></variableExpression>
+	</variable>
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="85"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="284"
+						y="1"
+						width="265"
+						height="16"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="349"
+						y="17"
+						width="134"
+						height="14"
+						key="staticText-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Độc lập - Tự do - Hạnh phúc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="249"
+						y="31"
+						width="335"
+						height="20"
+						key="staticText-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[BÁO CÁO TỔNG HỢP CHI PHÍ KCB BHYT ĐA TUYẾN NGOẠI TỈNH]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="709"
+						y="13"
+						width="96"
+						height="14"
+						key="staticText-6"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Mẫu số 18/GĐYT]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="9"
+						y="6"
+						width="129"
+						height="15"
+						key="textField-21"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{soyte}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="9"
+						y="21"
+						width="129"
+						height="15"
+						key="textField-22"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{benhvien}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="9"
+						y="36"
+						width="129"
+						height="15"
+						key="textField-23"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[new String("ĐT:  ") + $P{sodt}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="358"
+						y="51"
+						width="54"
+						height="15"
+						key="textField-24"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{TuNgay}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="416"
+						y="51"
+						width="22"
+						height="15"
+						key="staticText-46"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[đến]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="329"
+						y="51"
+						width="26"
+						height="15"
+						key="staticText-47"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Từ : ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="441"
+						y="51"
+						width="54"
+						height="15"
+						key="textField-26"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{DenNgay}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="242"
+						y="66"
+						width="339"
+						height="15"
+						key="textField-29"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[new String("Nơi đăng ký KCB ban đầu: " + ($P{TenKCBBHYT} == null? "Tất cả cơ sở KCB" :$P{TenKCBBHYT} ))]]></textFieldExpression>
+				</textField>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="67"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="0"
+						y="0"
+						width="127"
+						height="67"
+						key="staticText-8"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Đơn vị]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="127"
+						y="23"
+						width="88"
+						height="22"
+						key="staticText-10"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Bắt buộc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="215"
+						y="23"
+						width="88"
+						height="22"
+						key="staticText-11"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Người nghèo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="303"
+						y="23"
+						width="88"
+						height="22"
+						key="staticText-12"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[HSSV]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="391"
+						y="23"
+						width="88"
+						height="22"
+						key="staticText-13"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Tự Nguyện ND]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="127"
+						y="0"
+						width="352"
+						height="23"
+						key="staticText-55"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Ngoại Trú]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="479"
+						y="0"
+						width="352"
+						height="23"
+						key="staticText-56"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Nội Trú]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="127"
+						y="45"
+						width="27"
+						height="22"
+						key="staticText-61"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[SL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="154"
+						y="45"
+						width="61"
+						height="22"
+						key="staticText-62"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[ST]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="215"
+						y="45"
+						width="27"
+						height="22"
+						key="staticText-63"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[SL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="242"
+						y="45"
+						width="61"
+						height="22"
+						key="staticText-64"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[ST]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="303"
+						y="45"
+						width="27"
+						height="22"
+						key="staticText-65"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[SL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="330"
+						y="45"
+						width="61"
+						height="22"
+						key="staticText-66"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[ST]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="391"
+						y="45"
+						width="27"
+						height="22"
+						key="staticText-67"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[SL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="418"
+						y="45"
+						width="61"
+						height="22"
+						key="staticText-68"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[ST]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="479"
+						y="23"
+						width="88"
+						height="22"
+						key="staticText-69"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Bắt buộc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="567"
+						y="23"
+						width="88"
+						height="22"
+						key="staticText-70"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Người nghèo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="655"
+						y="23"
+						width="88"
+						height="22"
+						key="staticText-71"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[HSSV]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="743"
+						y="23"
+						width="88"
+						height="22"
+						key="staticText-72"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Tự Nguyện ND]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="479"
+						y="45"
+						width="27"
+						height="22"
+						key="staticText-73"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[SL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="506"
+						y="45"
+						width="61"
+						height="22"
+						key="staticText-74"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[ST]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="567"
+						y="45"
+						width="27"
+						height="22"
+						key="staticText-75"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[SL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="594"
+						y="45"
+						width="61"
+						height="22"
+						key="staticText-76"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[ST]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="655"
+						y="45"
+						width="27"
+						height="22"
+						key="staticText-77"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[SL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="682"
+						y="45"
+						width="61"
+						height="22"
+						key="staticText-78"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[ST]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="743"
+						y="45"
+						width="27"
+						height="22"
+						key="staticText-79"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[SL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="770"
+						y="45"
+						width="61"
+						height="22"
+						key="staticText-80"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="1" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[ST]]></text>
+				</staticText>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="15"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="127"
+						height="15"
+						key="textField-9"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="3" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{KCBBHYT_TEN}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="127"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-11"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{NGOAITRU_BATBUOC_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="154"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-41"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal($F{NGOAITRU_BATBUOC_ST} == null ? new Double(0.0) : $F{NGOAITRU_BATBUOC_ST} )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="215"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-42"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{NGOAITRU_NGUOINGHEO_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="242"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-43"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal( $F{NOITRU_NGUOINGHEO_ST} == null ? new Double(0.0) : $F{NOITRU_NGUOINGHEO_ST} )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="303"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-44"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{NGOAITRU_HSSV_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="330"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-45"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal( $F{NOITRU_HSSV_ST} == null ? new Double(0.0) : $F{NOITRU_HSSV_ST} )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="391"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-46"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{NGOAITRU_TNND_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="418"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-47"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal( $F{NGOAITRU_TNND_ST} == null ? new Double(0.0) : $F{NGOAITRU_TNND_ST} )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="479"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-48"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{NOITRU_BATBUOC_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="506"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-49"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal( $F{NOITRU_BATBUOC_ST} == null ? new Double(0.0) : $F{NOITRU_BATBUOC_ST})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="567"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-50"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{NOITRU_NGUOINGHEO_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="594"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-51"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal( $F{NOITRU_NGUOINGHEO_ST} == null ? new Double(0.0) : $F{NOITRU_NGUOINGHEO_ST})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="655"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-52"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{NOITRU_HSSV_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="682"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-53"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal( $F{NOITRU_HSSV_ST} == null ? new Double(0.0) : $F{NOITRU_HSSV_ST})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="743"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-54"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{NOITRU_TNND_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="770"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-55"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal($F{NOITRU_TNND_ST} == null ? new Double(0.0) : $F{NOITRU_TNND_ST})]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="70"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="0"
+						y="0"
+						width="127"
+						height="15"
+						key="staticText-29"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="3" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Tổng cộng]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="61"
+						y="23"
+						width="95"
+						height="15"
+						key="staticText-38"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Lập biểu]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="61"
+						y="38"
+						width="95"
+						height="15"
+						key="staticText-39"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[(Ký, ghi rõ họ tên)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="255"
+						y="23"
+						width="119"
+						height="15"
+						key="staticText-40"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Trưởng phòng KHTH]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="268"
+						y="38"
+						width="95"
+						height="15"
+						key="staticText-41"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[(Ký, ghi rõ họ tên)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="471"
+						y="23"
+						width="119"
+						height="15"
+						key="staticText-42"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Trưởng phòng TCKT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="484"
+						y="38"
+						width="95"
+						height="15"
+						key="staticText-43"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[(Ký, ghi rõ họ tên)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="664"
+						y="23"
+						width="119"
+						height="15"
+						key="staticText-44"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[Giám đốc Bệnh viện]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="677"
+						y="38"
+						width="95"
+						height="15"
+						key="staticText-45"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="10"/>
+					</textElement>
+				<text><![CDATA[(Ký tên, đóng dấu)]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="127"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-56"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{Tong_NgoaiTru_BatBuoc_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="154"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-57"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal( $V{Tong_NgoaiTru_BatBuoc_ST} == null ? new Double(0.0) : $V{Tong_NgoaiTru_BatBuoc_ST})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="215"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-58"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{Tong_NgoaiTru_NguoiNgheo_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="242"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-59"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal( $V{Tong_NgoaiTru_NguoiNgheo_ST} == null ? new Double(0.0) : $V{Tong_NgoaiTru_NguoiNgheo_ST} )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="303"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-60"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{Tong_NoiTru_HSSV_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="330"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-61"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal( $V{Tong_NgoaiTru_HSSV_ST} == null ? new Double(0.0) : $V{Tong_NgoaiTru_HSSV_ST} )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="391"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-62"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{Tong_NgoaiTru_TNND_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="418"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-63"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal( $V{Tong_NgoaiTru_TNND_ST} == null ? new Double(0.0) : $V{Tong_NgoaiTru_TNND_ST} )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="479"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-64"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{Tong_NoiTru_NguoiNgheo_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="506"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-65"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal( $V{Tong_NoiTru_BatBuoc_ST} == null ? new Double(0.0) : $V{Tong_NoiTru_BatBuoc_ST} )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="567"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-66"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{Tong_NoiTru_NguoiNgheo_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="594"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-67"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal( $V{Tong_NoiTru_NguoiNgheo_ST} == null ? new Double(0.0) : $V{Tong_NoiTru_NguoiNgheo_ST} )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="655"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-68"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{Tong_NoiTru_HSSV_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="682"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-69"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal($V{Tong_NoiTru_HSSV_ST} == null ? new Double(0.0) : $V{Tong_NoiTru_HSSV_ST})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="743"
+						y="0"
+						width="27"
+						height="15"
+						key="textField-70"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{Tong_NoiTru_TNND_SL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="770"
+						y="0"
+						width="61"
+						height="15"
+						key="textField-71"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSepratorHavingDecimal($V{Tong_NoiTru_TNND_ST} == null ? new Double(0.0) : $V{Tong_NoiTru_TNND_ST})]]></textFieldExpression>
+				</textField>
+			</band>
+		</summary>
+</jasperReport>

@@ -1,0 +1,453 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <rich:panel>
+        <f:facet name="header">Đơn vị Chi tiết</f:facet>
+
+
+        <s:decorate id="dmdonviChon" template="layout/display.xhtml">
+            <ui:define name="label">Chọn</ui:define>
+            <h:outputText value="#{dmDonViHome.instance.dmdonviChon}"/>
+        </s:decorate>
+
+        <s:decorate id="dmdonviDienthoai" template="layout/display.xhtml">
+            <ui:define name="label">Điện thoại</ui:define>
+            <h:outputText value="#{dmDonViHome.instance.dmdonviDienthoai}"/>
+        </s:decorate>
+
+        <s:decorate id="dmdonviDvquanlytructiep" template="layout/display.xhtml">
+            <ui:define name="label">Đơn vị quản lý trực tiếp</ui:define>
+            <h:outputText value="#{dmDonViHome.instance.dmdonviDvquanlytructiep}"/>
+        </s:decorate>
+
+        <s:decorate id="dmdonviMa" template="layout/display.xhtml">
+            <ui:define name="label">Mã đơn vị</ui:define>
+            <h:outputText value="#{dmDonViHome.instance.dmdonviMa}"/>
+        </s:decorate>
+
+        <s:decorate id="dmdonviNgaygiocn" template="layout/display.xhtml">
+            <ui:define name="label">Ngày giờ cập nhật</ui:define>
+            <h:outputText value="#{dmDonViHome.instance.dmdonviNgaygiocn}"/>
+        </s:decorate>
+
+        <s:decorate id="dmdonviSonhatuyenduong" template="layout/display.xhtml">
+            <ui:define name="label">Số nhà tuyến đường</ui:define>
+            <h:outputText value="#{dmDonViHome.instance.dmdonviSonhatuyenduong}"/>
+        </s:decorate>
+
+        <s:decorate id="dmdonviTen" template="layout/display.xhtml">
+            <ui:define name="label">Tên đơn vị</ui:define>
+            <h:outputText value="#{dmDonViHome.instance.dmdonviTen}"/>
+        </s:decorate>
+
+        <s:decorate id="dmdonviTenbaocao" template="layout/display.xhtml">
+            <ui:define name="label">Tên báo cáo</ui:define>
+            <h:outputText value="#{dmDonViHome.instance.dmdonviTenbaocao}"/>
+        </s:decorate>
+
+        <s:decorate id="dmdonviUrl" template="layout/display.xhtml">
+            <ui:define name="label">Đơn vị URL</ui:define>
+            <h:outputText value="#{dmDonViHome.instance.dmdonviUrl}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/DmDonViEdit.xhtml"
+                    id="edit"
+                 value="Sửa"/>
+
+        <s:button view="/#{empty dmDonViFrom ? 'DmDonViList' : dmDonViFrom}.xhtml"
+                    id="done"
+                 value="Hoàn thành"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Huyện</h:panelGroup>
+        </f:facet>
+    <div class="association" id="dmHuyenParent">
+
+        <h:outputText value="Không tìm thấy dmHuyen phù hợp với dmDonVi."
+                   rendered="#{dmDonViHome.instance.dmHuyen == null}"/>
+
+        <rich:dataTable var="_dmHuyen"
+                   value="#{dmDonViHome.instance.dmHuyen}"
+                rendered="#{dmDonViHome.instance.dmHuyen != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dmHuyenTable">
+            <h:column>
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dmHuyen.dmhuyenMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã tỉnh</f:facet>
+                <h:outputText value="#{_dmHuyen.dmTinh.dmtinhMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Chọn</f:facet>
+                <h:outputText value="#{_dmHuyen.dmhuyenChon}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mặc định</f:facet>
+                <h:outputText value="#{_dmHuyen.dmhuyenDefa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã huyện</f:facet>
+                <h:outputText value="#{_dmHuyen.dmhuyenMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmHuyen.dmhuyenNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên Huyện</f:facet>
+                <h:outputText value="#{_dmHuyen.dmhuyenTen}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="viewdmHuyen"
+                     value="Xem"
+                      view="/DmHuyen.xhtml">
+                    <f:param name="dmHuyenDmhuyenMaso"
+                           value="#{_dmHuyen.dmhuyenMaso}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Tỉnh</h:panelGroup>
+        </f:facet>
+    <div class="association" id="dmTinhParent">
+
+        <h:outputText value="Không tìm thấy dmTinh phù hợp với dmDonVi."
+                   rendered="#{dmDonViHome.instance.dmTinh == null}"/>
+
+        <rich:dataTable var="_dmTinh"
+                   value="#{dmDonViHome.instance.dmTinh}"
+                rendered="#{dmDonViHome.instance.dmTinh != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dmTinhTable">
+            <h:column>
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dmTinh.dmtinhMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã huyện</f:facet>
+                <h:outputText value="#{_dmTinh.dmhuyenMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Chọn</f:facet>
+                <h:outputText value="#{_dmTinh.dmtinhChon}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mặc định</f:facet>
+                <h:outputText value="#{_dmTinh.dmtinhDefa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã tỉnh</f:facet>
+                <h:outputText value="#{_dmTinh.dmtinhMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã BHYT</f:facet>
+                <h:outputText value="#{_dmTinh.dmtinhMabhyt}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmTinh.dmtinhNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên tỉnh</f:facet>
+                <h:outputText value="#{_dmTinh.dmtinhTen}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã xã</f:facet>
+                <h:outputText value="#{_dmTinh.dmxaMa}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="viewdmTinh"
+                     value="Xem"
+                      view="/DmTinh.xhtml">
+                    <f:param name="dmTinhDmtinhMaso"
+                           value="#{_dmTinh.dmtinhMaso}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Tuyến</h:panelGroup>
+        </f:facet>
+    <div class="association" id="dmTuyenParent">
+
+        <h:outputText value="Không tìm thấy dmTuyen phù hợp với dmDonVi."
+                   rendered="#{dmDonViHome.instance.dmTuyen == null}"/>
+
+        <rich:dataTable var="_dmTuyen"
+                   value="#{dmDonViHome.instance.dmTuyen}"
+                rendered="#{dmDonViHome.instance.dmTuyen != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dmTuyenTable">
+            <h:column>
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dmTuyen.dmtuyenMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc dự phòng</f:facet>
+                <h:outputText value="#{_dmTuyen.dmtuyenDp}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc điều trị</f:facet>
+                <h:outputText value="#{_dmTuyen.dmtuyenDt}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã tuyến</f:facet>
+                <h:outputText value="#{_dmTuyen.dmtuyenMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmTuyen.dmtuyenNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc quản lý</f:facet>
+                <h:outputText value="#{_dmTuyen.dmtuyenQl}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên tuyến</f:facet>
+                <h:outputText value="#{_dmTuyen.dmtuyenTen}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="viewdmTuyen"
+                     value="Xem"
+                      view="/DmTuyen.xhtml">
+                    <f:param name="dmTuyenDmtuyenMaso"
+                           value="#{_dmTuyen.dmtuyenMaso}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+<ui:remove>
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Tuyến don vis</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="dmTuyenDonVisChildren">
+
+        <h:outputText value="Không có  dmTuyenDonVis phù hợp với dmDonVi."
+                   rendered="#{empty dmDonViHome.dmTuyenDonVis}"/>
+
+        <rich:dataTable value="#{dmDonViHome.dmTuyenDonVis}"
+                       var="_dmTuyenDonVi"
+                  rendered="#{not empty dmDonViHome.dmTuyenDonVis}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="dmTuyenDonVisTable">
+            <rich:column sortBy="#{_dmTuyenDonVi.id.dmdonviMaso}">
+                <f:facet name="header">Mã đơn vịso</f:facet>
+                <h:outputText value="#{_dmTuyenDonVi.id.dmdonviMaso}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dmTuyenDonVi.id.dmtuyenMaso}">
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dmTuyenDonVi.id.dmtuyenMaso}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dmTuyenDonVi.dmtuyenMa}">
+                <f:facet name="header">Mã tuyến</f:facet>
+                <h:outputText value="#{_dmTuyenDonVi.dmtuyenMa}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dmTuyenDonVi.dmtuyendonviDp}">
+                <f:facet name="header">Thuộc DP</f:facet>
+                <h:outputText value="#{_dmTuyenDonVi.dmtuyendonviDp}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dmTuyenDonVi.dmtuyendonviDt}">
+                <f:facet name="header">Thuộc ĐT</f:facet>
+                <h:outputText value="#{_dmTuyenDonVi.dmtuyendonviDt}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dmTuyenDonVi.dmtuyendonviNgaygiocn}">
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmTuyenDonVi.dmtuyendonviNgaygiocn}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dmTuyenDonVi.dmtuyendonviQl}">
+                <f:facet name="header">Thuộc QL</f:facet>
+                <h:outputText value="#{_dmTuyenDonVi.dmtuyendonviQl}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="selectdmTuyenDonVi"
+                     value="Chọn"
+                      view="/DmTuyenDonVi.xhtml">
+                    <f:param name="dmTuyenDonViDmdonviMaso"
+                            value="#{_dmTuyenDonVi.id.dmdonviMaso}"/>
+                    <f:param name="dmTuyenDonViDmtuyenMaso"
+                            value="#{_dmTuyenDonVi.id.dmtuyenMaso}"/>
+                    <f:param name="dmTuyenDonViFrom" value="DmDonVi"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Thêm dmTuyenDonVi"
+                view="/DmTuyenDonViEdit.xhtml">
+            <f:param name="dmDonViDmdonviMaso"
+                    value="#{dmDonViHome.instance.dmdonviMaso}"/>
+            <f:param name="dmTuyenDonViFrom" value="DmDonVi"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</ui:remove>
+<ui:remove>
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Tuyến don vis_1</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="dmTuyenDonVis_1Children">
+
+        <h:outputText value="Không có  dmTuyenDonVis_1 phù hợp với dmDonVi."
+                   rendered="#{empty dmDonViHome.dmTuyenDonVis_1}"/>
+
+        <rich:dataTable value="#{dmDonViHome.dmTuyenDonVis_1}"
+                       var="_dmTuyenDonVi"
+                  rendered="#{not empty dmDonViHome.dmTuyenDonVis_1}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="dmTuyenDonVis_1Table">
+            <rich:column sortBy="#{_dmTuyenDonVi.id.dmdonviMaso}">
+                <f:facet name="header">Mã đơn vịso</f:facet>
+                <h:outputText value="#{_dmTuyenDonVi.id.dmdonviMaso}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dmTuyenDonVi.id.dmtuyenMaso}">
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dmTuyenDonVi.id.dmtuyenMaso}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dmTuyenDonVi.dmtuyenMa}">
+                <f:facet name="header">Mã tuyến</f:facet>
+                <h:outputText value="#{_dmTuyenDonVi.dmtuyenMa}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dmTuyenDonVi.dmtuyendonviDp}">
+                <f:facet name="header">Thuộc DP</f:facet>
+                <h:outputText value="#{_dmTuyenDonVi.dmtuyendonviDp}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dmTuyenDonVi.dmtuyendonviDt}">
+                <f:facet name="header">Thuộc ĐT</f:facet>
+                <h:outputText value="#{_dmTuyenDonVi.dmtuyendonviDt}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dmTuyenDonVi.dmtuyendonviNgaygiocn}">
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmTuyenDonVi.dmtuyendonviNgaygiocn}"/>
+            </rich:column>
+            <rich:column sortBy="#{_dmTuyenDonVi.dmtuyendonviQl}">
+                <f:facet name="header">Thuộc QL</f:facet>
+                <h:outputText value="#{_dmTuyenDonVi.dmtuyendonviQl}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="selectdmTuyenDonVi"
+                     value="Chọn"
+                      view="/DmTuyenDonVi.xhtml">
+                    <f:param name="dmTuyenDonViDmdonviMaso"
+                            value="#{_dmTuyenDonVi.id.dmdonviMaso}"/>
+                    <f:param name="dmTuyenDonViDmtuyenMaso"
+                            value="#{_dmTuyenDonVi.id.dmtuyenMaso}"/>
+                    <f:param name="dmTuyenDonViFrom" value="DmDonVi"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Thêm dmTuyenDonVi"
+                view="/DmTuyenDonViEdit.xhtml">
+            <f:param name="dmDonViDmdonviMaso"
+                    value="#{dmDonViHome.instance.dmdonviMaso}"/>
+            <f:param name="dmTuyenDonViFrom" value="DmDonVi"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</ui:remove>
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Xã</h:panelGroup>
+        </f:facet>
+    <div class="association" id="dmXaParent">
+
+        <h:outputText value="Không tìm thấy dmXa phù hợp với dmDonVi."
+                   rendered="#{dmDonViHome.instance.dmXa == null}"/>
+
+        <rich:dataTable var="_dmXa"
+                   value="#{dmDonViHome.instance.dmXa}"
+                rendered="#{dmDonViHome.instance.dmXa != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dmXaTable">
+            <h:column>
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dmXa.dmxaMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Huyện Mã số</f:facet>
+                <h:outputText value="#{_dmXa.dmHuyen.dmhuyenMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Chọn</f:facet>
+                <h:outputText value="#{_dmXa.dmxaChon}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mặc định</f:facet>
+                <h:outputText value="#{_dmXa.dmxaDefa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã xã</f:facet>
+                <h:outputText value="#{_dmXa.dmxaMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmXa.dmxaNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên xã</f:facet>
+                <h:outputText value="#{_dmXa.dmxaTen}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="viewdmXa"
+                     value="Xem"
+                      view="/DmXa.xhtml">
+                    <f:param name="dmXaDmxaMaso"
+                           value="#{_dmXa.dmxaMaso}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

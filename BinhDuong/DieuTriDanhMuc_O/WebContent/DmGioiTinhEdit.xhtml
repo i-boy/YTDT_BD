@@ -1,0 +1,122 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmGioiTinh" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmGioiTinhHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Giới tính</f:facet>
+
+
+
+            <s:decorate id="dmgtChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dmgtChon"
+                                   required="true"
+                                      value="#{dmGioiTinhHome.instance.dmgtChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmgtDefaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mặc định</ui:define>
+                <h:selectBooleanCheckbox id="dmgtDefa"
+                                      value="#{dmGioiTinhHome.instance.dmgtDefa}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmgtGhichuField" template="layout/edit.xhtml">
+                <ui:define name="label">Ghi chú</ui:define>
+                <h:inputText id="dmgtGhichu"
+                           size="50"
+                      maxlength="50"
+                          value="#{dmGioiTinhHome.instance.dmgtGhichu}">
+                    <a:support event="onblur" reRender="dmgtGhichuField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmgtMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dmgtMa"
+                       required="true"
+                           size="15"
+                      maxlength="15"
+                          value="#{dmGioiTinhHome.instance.dmgtMa}">
+                    <a:support event="onblur" reRender="dmgtMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmgtNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmgtNgaygiocn"
+                          value="#{dmGioiTinhHome.instance.dmgtNgaygiocn}">
+                    <a:support event="onblur" reRender="dmgtNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmgtTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dmgtTen"
+                       required="true"
+                           size="50"
+                      maxlength="50"
+                          value="#{dmGioiTinhHome.instance.dmgtTen}">
+                    <a:support event="onblur" reRender="dmgtTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmGioiTinhHome.persist}"
+                       disabled="#{!dmGioiTinhHome.wired}"
+                       rendered="#{!dmGioiTinhHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmGioiTinhHome.update}"
+                       rendered="#{dmGioiTinhHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmGioiTinhHome.remove}"
+                      immediate="true"
+                       rendered="#{dmGioiTinhHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmGioiTinh.xhtml"
+                rendered="#{dmGioiTinhHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmGioiTinhFrom ? 'DmGioiTinhList' : dmGioiTinhFrom}.xhtml"
+                rendered="#{!dmGioiTinhHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

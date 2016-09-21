@@ -1,0 +1,234 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="nguoiDung" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{nguoiDungHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Người dùng</f:facet>
+
+
+
+
+            <s:decorate id="ndMadangnhapField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã đăng nhập</ui:define>
+                <h:inputText id="ndMadangnhap"
+                           size="100"
+                      maxlength="128"
+                          value="#{nguoiDungHome.instance.ndMadangnhap}">
+                    <a:support event="onblur" reRender="ndMadangnhapField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="ndTendangnhapField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên đăng nhập</ui:define>
+                <h:inputText id="ndTendangnhap"
+                       required="true"
+                           size="100"
+                      maxlength="128"
+                          value="#{nguoiDungHome.instance.ndTendangnhap}">
+                    <a:support event="onblur" reRender="ndTendangnhapField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{nguoiDungHome.persist}"
+                       disabled="#{!nguoiDungHome.wired}"
+                       rendered="#{!nguoiDungHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{nguoiDungHome.update}"
+                       rendered="#{nguoiDungHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{nguoiDungHome.remove}"
+                      immediate="true"
+                       rendered="#{nguoiDungHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/NguoiDung.xhtml"
+                rendered="#{nguoiDungHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty nguoiDungFrom ? 'NguoiDungList' : nguoiDungFrom}.xhtml"
+                rendered="#{!nguoiDungHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+<ui:remove>
+    <rich:tab label="Nhân viêns">
+        <h:form styleClass="association" id="dtDmNhanViensChildren">
+
+            <h:outputText value="Không có  dtDmNhanViens phù hợp với nguoiDung."
+                       rendered="#{empty nguoiDungHome.dtDmNhanViens}"/>
+
+            <rich:dataTable value="#{nguoiDungHome.dtDmNhanViens}"
+                           var="_dtDmNhanVien"
+                      rendered="#{not empty nguoiDungHome.dtDmNhanViens}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dtDmNhanViensTable">
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMaso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienBienche}">
+                    <f:facet name="header">Biên chế</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienBienche}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienChon}">
+                    <f:facet name="header">Chọn</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienChon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienDiachi}">
+                    <f:facet name="header">Địa chỉ</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienDiachi}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienDuyet}">
+                    <f:facet name="header">Được duyệt phiếu</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienDuyet}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienEmail}">
+                    <f:facet name="header">Email</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienEmail}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienGioitinh}">
+                    <f:facet name="header">Giới tính</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienGioitinh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienKyphieu}">
+                    <f:facet name="header">Được ký phiếu</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienKyphieu}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMa}">
+                    <f:facet name="header">Mật mã</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMahh}">
+                    <f:facet name="header">Mã HH</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMahh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMatma}">
+                    <f:facet name="header">Mật mã</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMatma}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMo}">
+                    <f:facet name="header">Được quyền mổ</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMo}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienMobile}">
+                    <f:facet name="header">Số di động</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienMobile}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienNgaysinh}">
+                    <f:facet name="header">Ngày sinh</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienNgaysinh}">
+                        <s:convertDateTime type="date" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienNghiviec}">
+                    <f:facet name="header">Đã nghỉ việc</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienNghiviec}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienSobhxh}">
+                    <f:facet name="header">Số BHXH</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienSobhxh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienTen}">
+                    <f:facet name="header">Tên bác sĩ</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienTen}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.dtdmnhanvienTkatm}">
+                    <f:facet name="header">Tài khoản ATM</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.dtdmnhanvienTkatm}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmNhanVien.nhomMa}">
+                    <f:facet name="header">Mã nhóm</f:facet>
+                    <h:outputText value="#{_dtDmNhanVien.nhomMa}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{nguoiDungHome.managed}" id="dtDmNhanViens">
+        <div class="actionButtons">
+            <s:button id="adddtDmNhanVien"
+                   value="Thêm dtDmNhanVien"
+                    view="/DtDmNhanVienEdit.xhtml"
+             propagation="none">
+                 <f:param name="nguoiDungNdMaso"
+                         value="#{nguoiDungHome.instance.ndMaso}"/>
+                 <f:param name="dtDmNhanVienFrom" value="NguoiDung"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Người dùng vai tros">
+        <h:form styleClass="association" id="nguoiDungVaiTrosChildren">
+
+            <h:outputText value="Không có  nguoiDungVaiTros phù hợp với nguoiDung."
+                       rendered="#{empty nguoiDungHome.nguoiDungVaiTros}"/>
+
+            <rich:dataTable value="#{nguoiDungHome.nguoiDungVaiTros}"
+                           var="_nguoiDungVaiTro"
+                      rendered="#{not empty nguoiDungHome.nguoiDungVaiTros}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="nguoiDungVaiTrosTable">
+                <rich:column sortBy="#{_nguoiDungVaiTro.ndvaitroMaso}">
+                    <f:facet name="header">Ndvaitro maso</f:facet>
+                    <h:outputText value="#{_nguoiDungVaiTro.ndvaitroMaso}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{nguoiDungHome.managed}" id="nguoiDungVaiTros">
+        <div class="actionButtons">
+            <s:button id="addnguoiDungVaiTro"
+                   value="Thêm nguoiDungVaiTro"
+                    view="/NguoiDungVaiTroEdit.xhtml"
+             propagation="none">
+                 <f:param name="nguoiDungNdMaso"
+                         value="#{nguoiDungHome.instance.ndMaso}"/>
+                 <f:param name="nguoiDungVaiTroFrom" value="NguoiDung"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab></ui:remove>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

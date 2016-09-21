@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="BaoCaoSanPhamDinhDuong_subreport0"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="535"
+		 pageHeight="802"
+		 columnWidth="535"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="0"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<reportFont name="Times New Roman" isDefault="true" fontName="Times New Roman" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<parameter name="tungay" isForPrompting="false" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="denngay" isForPrompting="false" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[Select
+       unionNhaSX.`DTDMNSX_TEN` AS NHASX_TEN,
+       tonnhap.`Title` AS Title,
+       tonnhap.`SOLUONG` AS SOLUONG
+FROM
+(Select dmnsx.`DTDMNSX_MASO` AS DTDMNSX_MASO,
+       dmnsx.`DTDMNSX_TEN` AS DTDMNSX_TEN
+FROM nhap_kho_dinh_duong nk LEFT JOIN dt_dm_nha_sx_spdd dmnsx ON nk.`DTDMNSX_MASO` = dmnsx.`DTDMNSX_MASO`
+WHERE nk.`DTDMLA2_MASO` = 5 AND nk.`NKDD_NGAYNHAP` BETWEEN $P{tungay} AND $P{denngay}
+GROUP BY nk.`DTDMNSX_MASO`
+Union
+Select dmnsx.`DTDMNSX_MASO` AS DTDMNSX_MASO,
+       dmnsx.`DTDMNSX_TEN` AS DTDMNSX_TEN
+FROM xuat_kho_dinh_duong xk LEFT JOIN dt_dm_nha_sx_spdd dmnsx ON xk.`DTDMNSX_MASO` = dmnsx.`DTDMNSX_MASO`
+WHERE xk.`DTDMLA2_MASO` = 5 AND xk.`XKDD_NGAYXUAT` BETWEEN $P{tungay} AND $P{denngay}
+GROUP BY xk.`DTDMNSX_MASO`
+) unionNhaSX LEFT JOIN
+
+(Select ' TỒN CŨ' as Title,
+       dmnsx.`DTDMNSX_MASO` AS NHASX_MASO,
+       tk.`TKDD_SOLUONG` AS SOLUONG
+FROM ton_kho_dinh_duong tk LEFT JOIN dt_dm_nha_sx_spdd dmnsx ON tk.`DTDMNSX_MASO` = dmnsx.`DTDMNSX_MASO`
+WHERE tk.`DTDMLA_MASO` = 2 AND tk.`DTDMLA2_MASO` = 5 AND tk.`TKDD_MASO` IN (Select MAX(tk1.`TKDD_MASO`) From
+    ton_kho_dinh_duong tk1 where tk1.`TKDD_NGAYTON` < $P{tungay} AND tk1.`DTDMLA2_MASO` = 5 GROUP BY tk1.`DTDMNSX_MASO`)
+UNION ALL
+Select 'NHẬP' as Title,
+        dmnsx.`DTDMNSX_MASO` AS NHASX_MASO,
+       SUM(nk.`NKDD_SOLUONG`) AS SOLUONG
+FROM nhap_kho_dinh_duong nk LEFT JOIN dt_dm_nha_sx_spdd dmnsx ON nk.`DTDMNSX_MASO` = dmnsx.`DTDMNSX_MASO`
+WHERE nk.`DTDMLA_MASO` = 2 AND nk.`DTDMLA2_MASO` = 5 AND nk.`NKDD_NGAYNHAP` BETWEEN $P{tungay} AND $P{denngay}
+GROUP BY nk.`DTDMNSX_MASO`) tonnhap ON unionNhaSX.`DTDMNSX_MASO` = tonnhap.`NHASX_MASO`
+ORDER BY unionNhaSX.`DTDMNSX_TEN`]]></queryString>
+
+	<field name="NHASX_TEN" class="java.lang.String"/>
+	<field name="Title" class="java.lang.String"/>
+	<field name="SOLUONG" class="java.lang.Double"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="19"  isSplitAllowed="true" >
+				<crosstab >
+					<reportElement
+						x="0"
+						y="0"
+						width="531"
+						height="19"
+						key="crosstab-1"
+						positionType="Float"/>
+					<crosstabHeaderCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabHeaderCell>					<rowGroup name="Title" width="109" totalPosition="End">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{Title}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="NHASX_TEN" height="25" totalPosition="End" headerPosition="Center">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{NHASX_TEN}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="79"
+						height="25"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["SỮA ĐẶC\n" + $V{NHASX_TEN}.toUpperCase()]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="70"
+						height="25"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["GHI CHÚ"]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+
+					<measure name="SOLUONG_Sum" class="java.lang.Double" calculation="Sum">
+						<measureExpression><![CDATA[$F{SOLUONG}]]></measureExpression>
+					</measure>
+					<crosstabCell width="80" height="25">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="79"
+						height="25"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{SOLUONG_Sum}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="70" height="25" columnTotalGroup="NHASX_TEN">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="80" height="25" rowTotalGroup="Title">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="79"
+						height="25"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{SOLUONG_Sum}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="70" height="25" rowTotalGroup="Title" columnTotalGroup="NHASX_TEN">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<whenNoDataCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</whenNoDataCell>					</crosstab>
+			</band>
+		</summary>
+</jasperReport>

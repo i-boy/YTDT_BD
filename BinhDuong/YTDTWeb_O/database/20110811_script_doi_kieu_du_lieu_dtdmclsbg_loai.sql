@@ -1,0 +1,1 @@
+﻿ALTER TABLE `db_ytdt_bd`.`dt_dm_cls_bang_gia` MODIFY COLUMN `DMCLSBG_LOAI` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="toathuoc_sub2"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="421"
+		 pageHeight="595"
+		 columnWidth="421"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="0"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isFloatColumnFooter="true"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<import value="com.iesvn.commaseparator.*" />
+	<reportFont name="Times New Roman" isDefault="false" fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+	<reportFont name="Times New Roman bold" isDefault="false" fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+	<reportFont name="Times New Roman bu" isDefault="false" fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="true" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+	<reportFont name="Times New Roman bui" isDefault="false" fontName="Times New Roman" size="12" isBold="true" isItalic="true" isUnderline="true" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<style 
+		name="Triet_Style"
+		isDefault="true"
+		fontName="Times New Roman"
+		fontSize="12"
+		pdfFontName="times.ttf"
+		pdfEncoding="Identity-H"
+		isPdfEmbedded="true"
+	/>
+
+	<parameter name="MATIEPDON" isForPrompting="true" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{MATIEPDON}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SOYTE" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{SOYTE}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="BENHVIEN" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{BENHVIEN}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DIENTHOAI" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{DIENTHOAI}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HOTENBN" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{HOTENBN}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DIACHI" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{DIACHI}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="GTTU" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{GTTU}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="GTDEN" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{GTDEN}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="MATHEBHYT" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{MATHEBHYT}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NGAYKHAMBENH" isForPrompting="false" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[$P{NGAYKHAMBENH}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CHANDOAN" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{CHANDOAN}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PHONGKHAM" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[$P{PHONGKHAM}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SOTHETEKSCS" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{SOTHETEKSCS}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tuoi" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{tuoi}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="GIOITINH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{GIOITINH}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="MATHAMKHAM" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[$P{MATHAMKHAM}]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[SELECT thuoc.DMTHUOC_TEN,SUM(tpk.THUOCPHONGKHAM_SOLUONG),
+tpk.THUOCPHONGKHAM_DONGIA as THUOCPHONGKHAM_DONGIABAN,(SUM(tpk.THUOCPHONGKHAM_SOLUONG)*tpk.THUOCPHONGKHAM_DONGIA) as
+THANHTIEN ,
+tpk.THUOCPHONGKHAM_NGAYUONG,tpk.THUOCPHONGKHAM_SOLUONGUONG
+,tpk.THUOCPHONGKHAM_CHIDAN chidan
+,donvi.DMDONVITINH_TEN donviten
+FROM (((THUOC_PHONG_KHAM tpk
+left join THAM_KHAM tk on (tpk.THUOCPHONGKHAM_THAMKHAM = tk.THAMKHAM_MA))
+left join TIEP_DON td on (tk.TIEPDON_MA = td.TIEPDON_MA))
+left join DM_THUOC thuoc on (tpk.THUOCPHONGKHAM_MATHUOC = thuoc.DMTHUOC_MASO))
+
+left join DM_DON_VI_TINH donvi on thuoc.DMDONVITINH_MASO = donvi.DMDONVITINH_MASO
+where ($P{MATIEPDON} is null or td.TIEPDON_MA = $P{MATIEPDON})
+AND ( tpk.THUOCPHONGKHAM_LOAI = 3 )
+AND ( $P{MATHAMKHAM} IS NULL OR tk.THAMKHAM_MA = $P{MATHAMKHAM})
+AND ( $P{PHONGKHAM} IS NULL OR tk.THAMKHAM_BANKHAM = $P{PHONGKHAM} )
+group by tpk.THUOCPHONGKHAM_MA, thuoc.DMTHUOC_TEN,tpk.THUOCPHONGKHAM_DONGIA,tpk.THUOCPHONGKHAM_CHIDAN
+order by tpk.THUOCPHONGKHAM_MA]]></queryString>
+
+	<field name="DMTHUOC_TEN" class="java.lang.String"/>
+	<field name="SUM(tpk.THUOCPHONGKHAM_SOLUONG)" class="java.lang.Double"/>
+	<field name="THUOCPHONGKHAM_DONGIABAN" class="java.lang.Double"/>
+	<field name="THANHTIEN" class="java.lang.Double"/>
+	<field name="THUOCPHONGKHAM_NGAYUONG" class="java.lang.String"/>
+	<field name="THUOCPHONGKHAM_SOLUONGUONG" class="java.lang.String"/>
+	<field name="chidan" class="java.lang.String"/>
+	<field name="donviten" class="java.lang.String"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="17"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="7"
+						y="1"
+						width="97"
+						height="14"
+						key="staticText-22"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Bottom">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" isBold="true" isUnderline="true"/>
+					</textElement>
+				<text><![CDATA[Chỉ định thuốc:]]></text>
+				</staticText>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="35"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="Triet_Style"
+						x="341"
+						y="0"
+						width="35"
+						height="13"
+						key="textField-1"
+						stretchType="RelativeToBandHeight"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[CommaSeparator.formatDoubleWithSeprator($F{SUM(tpk.THUOCPHONGKHAM_SOLUONG)})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="Triet_Style"
+						x="31"
+						y="0"
+						width="310"
+						height="13"
+						key="textField-3"
+						stretchType="RelativeToBandHeight"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DMTHUOC_TEN}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="Triet_Style"
+						x="4"
+						y="0"
+						width="27"
+						height="13"
+						key="textField-5"
+						stretchType="RelativeToBandHeight"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[new String(String.valueOf($V{REPORT_COUNT}) + ":")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="Triet_Style"
+						x="4"
+						y="13"
+						width="406"
+						height="15"
+						key="textField-6"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{chidan}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="Triet_Style"
+						x="376"
+						y="0"
+						width="35"
+						height="13"
+						key="textField-7"
+						stretchType="RelativeToBandHeight"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{donviten}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="Triet_Style"
+						x="4"
+						y="26"
+						width="406"
+						height="8"
+						forecolor="#666666"
+						key="textField-8"
+						stretchType="RelativeToBandHeight"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="5"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[new String("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

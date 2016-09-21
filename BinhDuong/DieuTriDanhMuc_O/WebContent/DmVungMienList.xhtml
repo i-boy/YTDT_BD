@@ -1,0 +1,168 @@
+﻿<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmVungMienSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Vùng miền tìm kiếm" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Mã vùng miền</ui:define>
+                <h:inputText id="dmvungmienMa" value="#{dmVungMienList.dmVungMien.dmvungmienMa}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Tên vùng miền</ui:define>
+                <h:inputText id="dmvungmienTen" value="#{dmVungMienList.dmVungMien.dmvungmienTen}"/>
+            </s:decorate>
+
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Tìm kiếm" action="/DmVungMienList.xhtml"/>
+            <s:button id="reset" value="Nhập lại" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Vùng miền Kết quả</f:facet>
+    <div class="results" id="dmVungMienList">
+
+    <h:outputText value="Không tìm thấy kết quả nào."
+               rendered="#{empty dmVungMienList.resultList}"/>
+
+    <rich:dataTable id="dmVungMienList"
+                var="_dmVungMien"
+              value="#{dmVungMienList.resultList}"
+           rendered="#{not empty dmVungMienList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmVungMienList}"/>
+                    <ui:param name="propertyLabel" value="Mã số"/>
+                    <ui:param name="propertyPath" value="dmVungMien.dmvungmienMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmVungMien.dmvungmienMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmVungMienList}"/>
+                    <ui:param name="propertyLabel" value="Chọn"/>
+                    <ui:param name="propertyPath" value="dmVungMien.dmvungmienChon"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmVungMien.dmvungmienChon}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmVungMienList}"/>
+                    <ui:param name="propertyLabel" value="Dmvungmien ma"/>
+                    <ui:param name="propertyPath" value="dmVungMien.dmvungmienMa"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmVungMien.dmvungmienMa}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmVungMienList}"/>
+                    <ui:param name="propertyLabel" value="Ngày giờ cập nhật"/>
+                    <ui:param name="propertyPath" value="dmVungMien.dmvungmienNgaygiocn"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmVungMien.dmvungmienNgaygiocn}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmVungMienList}"/>
+                    <ui:param name="propertyLabel" value="Tên vùng miền"/>
+                    <ui:param name="propertyPath" value="dmVungMien.dmvungmienTen"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmVungMien.dmvungmienTen}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Thao tác</f:facet>
+            <s:link view="/#{empty from ? 'DmVungMien' : from}.xhtml"
+                   value="#{empty from ? 'Xem' : 'Chọn'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="dmVungMien">
+                <f:param name="dmVungMienDmvungmienMaso"
+                        value="#{_dmVungMien.dmvungmienMaso}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/DmVungMienEdit.xhtml"
+                   value="Sửa"
+             propagation="none"
+                      id="dmVungMienEdit"
+                rendered="#{empty from}">
+                <f:param name="dmVungMienDmvungmienMaso"
+                        value="#{_dmVungMien.dmvungmienMaso}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/DmVungMienList.xhtml"
+            rendered="#{dmVungMienList.previousExists}"
+               value="#{messages.left}#{messages.left} Trang đầu"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/DmVungMienList.xhtml"
+            rendered="#{dmVungMienList.previousExists}"
+               value="#{messages.left} Trang trước"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{dmVungMienList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DmVungMienList.xhtml"
+            rendered="#{dmVungMienList.nextExists}"
+               value="Trang sau #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{dmVungMienList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DmVungMienList.xhtml"
+            rendered="#{dmVungMienList.nextExists}"
+               value="Trang cuối #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{dmVungMienList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/DmVungMienEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Thêm mới Vùng miền">
+            <f:param name="dmVungMienDmvungmienMaso"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,126 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmBaiThuoc" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmBaiThuocHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Bài thuốc</f:facet>
+
+
+
+            <s:decorate id="dmbaithuocDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc dự phòng</ui:define>
+                <h:selectBooleanCheckbox id="dmbaithuocDp"
+                                      value="#{dmBaiThuocHome.instance.dmbaithuocDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmbaithuocDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc điều trị</ui:define>
+                <h:selectBooleanCheckbox id="dmbaithuocDt"
+                                      value="#{dmBaiThuocHome.instance.dmbaithuocDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmbaithuocGhichuField" template="layout/edit.xhtml">
+                <ui:define name="label">Ghi chú</ui:define>
+                <h:inputTextarea id="dmbaithuocGhichu"
+                               cols="80"
+                               rows="3"
+                              value="#{dmBaiThuocHome.instance.dmbaithuocGhichu}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmbaithuocMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã bài thuốc</ui:define>
+                <h:inputText id="dmbaithuocMa"
+                       required="true"
+                           size="10"
+                      maxlength="10"
+                          value="#{dmBaiThuocHome.instance.dmbaithuocMa}">
+                    <a:support event="onblur" reRender="dmbaithuocMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmbaithuocNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmbaithuocNgaygiocn"
+                          value="#{dmBaiThuocHome.instance.dmbaithuocNgaygiocn}">
+                    <a:support event="onblur" reRender="dmbaithuocNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmbaithuocQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc quản lý</ui:define>
+                <h:selectBooleanCheckbox id="dmbaithuocQl"
+                                      value="#{dmBaiThuocHome.instance.dmbaithuocQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmbaithuocTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên bài thuốc</ui:define>
+                <h:inputText id="dmbaithuocTen"
+                       required="true"
+                           size="36"
+                      maxlength="36"
+                          value="#{dmBaiThuocHome.instance.dmbaithuocTen}">
+                    <a:support event="onblur" reRender="dmbaithuocTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmBaiThuocHome.persist}"
+                       disabled="#{!dmBaiThuocHome.wired}"
+                       rendered="#{!dmBaiThuocHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmBaiThuocHome.update}"
+                       rendered="#{dmBaiThuocHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmBaiThuocHome.remove}"
+                      immediate="true"
+                       rendered="#{dmBaiThuocHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmBaiThuoc.xhtml"
+                rendered="#{dmBaiThuocHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmBaiThuocFrom ? 'DmBaiThuocList' : dmBaiThuocFrom}.xhtml"
+                rendered="#{!dmBaiThuocHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

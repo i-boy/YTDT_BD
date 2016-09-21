@@ -1,0 +1,114 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmLoaiThietBi" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmLoaiThietBiHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Loại thiết bị</f:facet>
+
+
+
+            <s:decorate id="dmloaithietbiDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc DP</ui:define>
+                <h:selectBooleanCheckbox id="dmloaithietbiDp"
+                                      value="#{dmLoaiThietBiHome.instance.dmloaithietbiDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmloaithietbiDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc ĐT</ui:define>
+                <h:selectBooleanCheckbox id="dmloaithietbiDt"
+                                      value="#{dmLoaiThietBiHome.instance.dmloaithietbiDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmloaithietbiMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dmloaithietbiMa"
+                           size="10"
+                      maxlength="10"
+                          value="#{dmLoaiThietBiHome.instance.dmloaithietbiMa}">
+                    <a:support event="onblur" reRender="dmloaithietbiMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmloaithietbiNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmloaithietbiNgaygiocn"
+                          value="#{dmLoaiThietBiHome.instance.dmloaithietbiNgaygiocn}">
+                    <a:support event="onblur" reRender="dmloaithietbiNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmloaithietbiQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc QL</ui:define>
+                <h:selectBooleanCheckbox id="dmloaithietbiQl"
+                                      value="#{dmLoaiThietBiHome.instance.dmloaithietbiQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmloaithietbiTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputTextarea id="dmloaithietbiTen"
+                               cols="80"
+                               rows="2"
+                           required="true"
+                              value="#{dmLoaiThietBiHome.instance.dmloaithietbiTen}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmLoaiThietBiHome.persist}"
+                       disabled="#{!dmLoaiThietBiHome.wired}"
+                       rendered="#{!dmLoaiThietBiHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmLoaiThietBiHome.update}"
+                       rendered="#{dmLoaiThietBiHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmLoaiThietBiHome.remove}"
+                      immediate="true"
+                       rendered="#{dmLoaiThietBiHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmLoaiThietBi.xhtml"
+                rendered="#{dmLoaiThietBiHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmLoaiThietBiFrom ? 'DmLoaiThietBiList' : dmLoaiThietBiFrom}.xhtml"
+                rendered="#{!dmLoaiThietBiHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

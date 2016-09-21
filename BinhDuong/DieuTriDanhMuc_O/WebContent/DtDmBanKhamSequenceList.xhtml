@@ -1,0 +1,163 @@
+﻿<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmBanKhamSequenceSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="DtDmBanKhamSequence tìm kiếm" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="ma" value="#{dtDmBanKhamSequenceList.dtDmBanKhamSequence.ma}"/>
+            </s:decorate>
+
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Tìm kiếm" action="/DtDmBanKhamSequenceList.xhtml"/>
+            <s:button id="reset" value="Nhập lại" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">DtDmBanKhamSequence Kết quả</f:facet>
+    <div class="results" id="dtDmBanKhamSequenceList">
+
+    <h:outputText value="Không tìm thấy kết quả nào."
+               rendered="#{empty dtDmBanKhamSequenceList.resultList}"/>
+
+    <rich:dataTable id="dtDmBanKhamSequenceList"
+                var="_dtDmBanKhamSequence"
+              value="#{dtDmBanKhamSequenceList.resultList}"
+           rendered="#{not empty dtDmBanKhamSequenceList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmBanKhamSequenceList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="dtDmBanKhamSequence.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmBanKhamSequence.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmBanKhamSequenceList}"/>
+                    <ui:param name="propertyLabel" value="Current next"/>
+                    <ui:param name="propertyPath" value="dtDmBanKhamSequence.currentNext"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmBanKhamSequence.currentNext}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmBanKhamSequenceList}"/>
+                    <ui:param name="propertyLabel" value="Current value"/>
+                    <ui:param name="propertyPath" value="dtDmBanKhamSequence.currentValue"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmBanKhamSequence.currentValue}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmBanKhamSequenceList}"/>
+                    <ui:param name="propertyLabel" value="Ma"/>
+                    <ui:param name="propertyPath" value="dtDmBanKhamSequence.ma"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmBanKhamSequence.ma}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmBanKhamSequenceList}"/>
+                    <ui:param name="propertyLabel" value="Step"/>
+                    <ui:param name="propertyPath" value="dtDmBanKhamSequence.step"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmBanKhamSequence.step}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Thao tác</f:facet>
+            <s:link view="/#{empty from ? 'DtDmBanKhamSequence' : from}.xhtml"
+                   value="#{empty from ? 'Xem' : 'Chọn'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="dtDmBanKhamSequence">
+                <f:param name="dtDmBanKhamSequenceId"
+                        value="#{_dtDmBanKhamSequence.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/DtDmBanKhamSequenceEdit.xhtml"
+                   value="Sửa"
+             propagation="none"
+                      id="dtDmBanKhamSequenceEdit"
+                rendered="#{empty from}">
+                <f:param name="dtDmBanKhamSequenceId"
+                        value="#{_dtDmBanKhamSequence.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/DtDmBanKhamSequenceList.xhtml"
+            rendered="#{dtDmBanKhamSequenceList.previousExists}"
+               value="#{messages.left}#{messages.left} Trang đầu"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/DtDmBanKhamSequenceList.xhtml"
+            rendered="#{dtDmBanKhamSequenceList.previousExists}"
+               value="#{messages.left} Trang trước"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{dtDmBanKhamSequenceList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DtDmBanKhamSequenceList.xhtml"
+            rendered="#{dtDmBanKhamSequenceList.nextExists}"
+               value="Trang sau #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{dtDmBanKhamSequenceList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DtDmBanKhamSequenceList.xhtml"
+            rendered="#{dtDmBanKhamSequenceList.nextExists}"
+               value="Trang cuối #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{dtDmBanKhamSequenceList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/DtDmBanKhamSequenceEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Thêm mới dtDmBanKhamSequence">
+            <f:param name="dtDmBanKhamSequenceId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

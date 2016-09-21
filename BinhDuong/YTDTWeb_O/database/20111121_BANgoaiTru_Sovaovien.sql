@@ -1,0 +1,1 @@
+﻿ALTER TABLE `db_ytdt_bd`.`benh_an_ngoai_tru` ADD COLUMN `BANT_SOVAOVIEN` VARCHAR(17) AFTER `BANT_BANKHAM`;

@@ -1,0 +1,117 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <rich:panel>
+        <f:facet name="header">Người dùng vai tro Chi tiết</f:facet>
+
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/NguoiDungVaiTroEdit.xhtml"
+                    id="edit"
+                 value="Sửa"/>
+
+        <s:button view="/#{empty nguoiDungVaiTroFrom ? 'NguoiDungVaiTroList' : nguoiDungVaiTroFrom}.xhtml"
+                    id="done"
+                 value="Hoàn thành"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Người dùng</h:panelGroup>
+        </f:facet>
+    <div class="association" id="nguoiDungParent">
+
+        <h:outputText value="Không tìm thấy nguoiDung phù hợp với nguoiDungVaiTro."
+                   rendered="#{nguoiDungVaiTroHome.instance.nguoiDung == null}"/>
+
+        <rich:dataTable var="_nguoiDung"
+                   value="#{nguoiDungVaiTroHome.instance.nguoiDung}"
+                rendered="#{nguoiDungVaiTroHome.instance.nguoiDung != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="nguoiDungTable">
+            <h:column>
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_nguoiDung.ndMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã đăng nhập</f:facet>
+                <h:outputText value="#{_nguoiDung.ndMadangnhap}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên đăng nhập</f:facet>
+                <h:outputText value="#{_nguoiDung.ndTendangnhap}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="viewnguoiDung"
+                     value="Xem"
+                      view="/NguoiDung.xhtml">
+                    <f:param name="nguoiDungNdMaso"
+                           value="#{_nguoiDung.ndMaso}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Vai tro</h:panelGroup>
+        </f:facet>
+    <div class="association" id="vaiTroParent">
+
+        <h:outputText value="Không tìm thấy vaiTro phù hợp với nguoiDungVaiTro."
+                   rendered="#{nguoiDungVaiTroHome.instance.vaiTro == null}"/>
+
+        <rich:dataTable var="_vaiTro"
+                   value="#{nguoiDungVaiTroHome.instance.vaiTro}"
+                rendered="#{nguoiDungVaiTroHome.instance.vaiTro != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="vaiTroTable">
+            <h:column>
+                <f:facet name="header">Vaitro maso</f:facet>
+                <h:outputText value="#{_vaiTro.vaitroMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Vaitro ma</f:facet>
+                <h:outputText value="#{_vaiTro.vaitroMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Vaitro ten</f:facet>
+                <h:outputText value="#{_vaiTro.vaitroTen}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="viewvaiTro"
+                     value="Xem"
+                      view="/VaiTro.xhtml">
+                    <f:param name="vaiTroVaitroMaso"
+                           value="#{_vaiTro.vaitroMaso}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

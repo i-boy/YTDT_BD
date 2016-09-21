@@ -1,0 +1,188 @@
+﻿<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmLoaiSinhSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Loại sinh tìm kiếm" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dmloaisinhMa" value="#{dmLoaiSinhList.dmLoaiSinh.dmloaisinhMa}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dmloaisinhTen" value="#{dmLoaiSinhList.dmLoaiSinh.dmloaisinhTen}"/>
+            </s:decorate>
+
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Tìm kiếm" action="/DmLoaiSinhList.xhtml"/>
+            <s:button id="reset" value="Nhập lại" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Loại sinh Kết quả</f:facet>
+    <div class="results" id="dmLoaiSinhList">
+
+    <h:outputText value="Không tìm thấy kết quả nào."
+               rendered="#{empty dmLoaiSinhList.resultList}"/>
+
+    <rich:dataTable id="dmLoaiSinhList"
+                var="_dmLoaiSinh"
+              value="#{dmLoaiSinhList.resultList}"
+           rendered="#{not empty dmLoaiSinhList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmLoaiSinhList}"/>
+                    <ui:param name="propertyLabel" value="Mã số"/>
+                    <ui:param name="propertyPath" value="dmLoaiSinh.dmloaisinhMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmLoaiSinh.dmloaisinhMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmLoaiSinhList}"/>
+                    <ui:param name="propertyLabel" value="Thuộc DP"/>
+                    <ui:param name="propertyPath" value="dmLoaiSinh.dmloaisinhDp"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmLoaiSinh.dmloaisinhDp}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmLoaiSinhList}"/>
+                    <ui:param name="propertyLabel" value="Thuộc ĐT"/>
+                    <ui:param name="propertyPath" value="dmLoaiSinh.dmloaisinhDt"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmLoaiSinh.dmloaisinhDt}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmLoaiSinhList}"/>
+                    <ui:param name="propertyLabel" value="Mã"/>
+                    <ui:param name="propertyPath" value="dmLoaiSinh.dmloaisinhMa"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmLoaiSinh.dmloaisinhMa}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmLoaiSinhList}"/>
+                    <ui:param name="propertyLabel" value="Ngày giờ cập nhật"/>
+                    <ui:param name="propertyPath" value="dmLoaiSinh.dmloaisinhNgaygiocn"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmLoaiSinh.dmloaisinhNgaygiocn}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmLoaiSinhList}"/>
+                    <ui:param name="propertyLabel" value="Thuộc QL"/>
+                    <ui:param name="propertyPath" value="dmLoaiSinh.dmloaisinhQl"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmLoaiSinh.dmloaisinhQl}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmLoaiSinhList}"/>
+                    <ui:param name="propertyLabel" value="Tên"/>
+                    <ui:param name="propertyPath" value="dmLoaiSinh.dmloaisinhTen"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmLoaiSinh.dmloaisinhTen}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Thao tác</f:facet>
+            <s:link view="/#{empty from ? 'DmLoaiSinh' : from}.xhtml"
+                   value="#{empty from ? 'Xem' : 'Chọn'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="dmLoaiSinh">
+                <f:param name="dmLoaiSinhDmloaisinhMaso"
+                        value="#{_dmLoaiSinh.dmloaisinhMaso}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/DmLoaiSinhEdit.xhtml"
+                   value="Sửa"
+             propagation="none"
+                      id="dmLoaiSinhEdit"
+                rendered="#{empty from}">
+                <f:param name="dmLoaiSinhDmloaisinhMaso"
+                        value="#{_dmLoaiSinh.dmloaisinhMaso}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/DmLoaiSinhList.xhtml"
+            rendered="#{dmLoaiSinhList.previousExists}"
+               value="#{messages.left}#{messages.left} Trang đầu"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/DmLoaiSinhList.xhtml"
+            rendered="#{dmLoaiSinhList.previousExists}"
+               value="#{messages.left} Trang trước"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{dmLoaiSinhList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DmLoaiSinhList.xhtml"
+            rendered="#{dmLoaiSinhList.nextExists}"
+               value="Trang sau #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{dmLoaiSinhList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DmLoaiSinhList.xhtml"
+            rendered="#{dmLoaiSinhList.nextExists}"
+               value="Trang cuối #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{dmLoaiSinhList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/DmLoaiSinhEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Thêm mới Loại sinh">
+            <f:param name="dmLoaiSinhDmloaisinhMaso"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

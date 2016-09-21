@@ -1,0 +1,128 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmKetQuaDieuTri" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmKetQuaDieuTriHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Kết quả điều trị</f:facet>
+
+
+
+            <s:decorate id="dmkqdtDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc DP</ui:define>
+                <h:selectBooleanCheckbox id="dmkqdtDp"
+                                      value="#{dmKetQuaDieuTriHome.instance.dmkqdtDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmkqdtDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc ĐT</ui:define>
+                <h:selectBooleanCheckbox id="dmkqdtDt"
+                                      value="#{dmKetQuaDieuTriHome.instance.dmkqdtDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmkqdtGhichuField" template="layout/edit.xhtml">
+                <ui:define name="label">Ghi chú</ui:define>
+                <h:inputText id="dmkqdtGhichu"
+                           size="100"
+                      maxlength="100"
+                          value="#{dmKetQuaDieuTriHome.instance.dmkqdtGhichu}">
+                    <a:support event="onblur" reRender="dmkqdtGhichuField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmkqdtMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dmkqdtMa"
+                       required="true"
+                           size="15"
+                      maxlength="15"
+                          value="#{dmKetQuaDieuTriHome.instance.dmkqdtMa}">
+                    <a:support event="onblur" reRender="dmkqdtMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmkqdtNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmkqdtNgaygiocn"
+                          value="#{dmKetQuaDieuTriHome.instance.dmkqdtNgaygiocn}">
+                    <a:support event="onblur" reRender="dmkqdtNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmkqdtQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc QL</ui:define>
+                <h:selectBooleanCheckbox id="dmkqdtQl"
+                                      value="#{dmKetQuaDieuTriHome.instance.dmkqdtQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmkqdtTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dmkqdtTen"
+                       required="true"
+                           size="100"
+                      maxlength="100"
+                          value="#{dmKetQuaDieuTriHome.instance.dmkqdtTen}">
+                    <a:support event="onblur" reRender="dmkqdtTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmKetQuaDieuTriHome.persist}"
+                       disabled="#{!dmKetQuaDieuTriHome.wired}"
+                       rendered="#{!dmKetQuaDieuTriHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmKetQuaDieuTriHome.update}"
+                       rendered="#{dmKetQuaDieuTriHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmKetQuaDieuTriHome.remove}"
+                      immediate="true"
+                       rendered="#{dmKetQuaDieuTriHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmKetQuaDieuTri.xhtml"
+                rendered="#{dmKetQuaDieuTriHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmKetQuaDieuTriFrom ? 'DmKetQuaDieuTriList' : dmKetQuaDieuTriFrom}.xhtml"
+                rendered="#{!dmKetQuaDieuTriHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,108 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmTramYTeBhyt" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmTramYTeBhytHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Trạm y tế BHYT</f:facet>
+
+
+
+            <s:decorate id="dtdmtramytebhytChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dtdmtramytebhytChon"
+                                      value="#{dtDmTramYTeBhytHome.instance.dtdmtramytebhytChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmtramytebhytDefaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mặc định</ui:define>
+                <h:selectBooleanCheckbox id="dtdmtramytebhytDefa"
+                                      value="#{dtDmTramYTeBhytHome.instance.dtdmtramytebhytDefa}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmtramytebhytMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dtdmtramytebhytMa"
+                       required="true"
+                           size="6"
+                      maxlength="6"
+                          value="#{dtDmTramYTeBhytHome.instance.dtdmtramytebhytMa}">
+                    <a:support event="onblur" reRender="dtdmtramytebhytMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmtramytebhytNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dtdmtramytebhytNgaygiocn"
+                          value="#{dtDmTramYTeBhytHome.instance.dtdmtramytebhytNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmtramytebhytNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmtramytebhytTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputTextarea id="dtdmtramytebhytTen"
+                               cols="80"
+                               rows="6"
+                           required="true"
+                              value="#{dtDmTramYTeBhytHome.instance.dtdmtramytebhytTen}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmTramYTeBhytHome.persist}"
+                       disabled="#{!dtDmTramYTeBhytHome.wired}"
+                       rendered="#{!dtDmTramYTeBhytHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmTramYTeBhytHome.update}"
+                       rendered="#{dtDmTramYTeBhytHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmTramYTeBhytHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmTramYTeBhytHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmTramYTeBhyt.xhtml"
+                rendered="#{dtDmTramYTeBhytHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmTramYTeBhytFrom ? 'DtDmTramYTeBhytList' : dtDmTramYTeBhytFrom}.xhtml"
+                rendered="#{!dtDmTramYTeBhytHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

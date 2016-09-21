@@ -1,0 +1,104 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmLoiDan" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmLoiDanHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Lời dặn</f:facet>
+
+
+
+            <s:decorate id="dtdmldChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:inputText id="dtdmldChon"
+                          value="#{dtDmLoiDanHome.instance.dtdmldChon}">
+                    <a:support event="onblur" reRender="dtdmldChonField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmldMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dtdmldMa"
+                       required="true"
+                           size="100"
+                      maxlength="100"
+                          value="#{dtDmLoiDanHome.instance.dtdmldMa}">
+                    <a:support event="onblur" reRender="dtdmldMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmldNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dtdmldNgaygiocn"
+                       required="true"
+                          value="#{dtDmLoiDanHome.instance.dtdmldNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmldNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmldTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputTextarea id="dtdmldTen"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dtDmLoiDanHome.instance.dtdmldTen}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmLoiDanHome.persist}"
+                       disabled="#{!dtDmLoiDanHome.wired}"
+                       rendered="#{!dtDmLoiDanHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmLoiDanHome.update}"
+                       rendered="#{dtDmLoiDanHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmLoiDanHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmLoiDanHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmLoiDan.xhtml"
+                rendered="#{dtDmLoiDanHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmLoiDanFrom ? 'DtDmLoiDanList' : dtDmLoiDanFrom}.xhtml"
+                rendered="#{!dtDmLoiDanHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,102 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmQuy" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmQuyHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Quỹ</f:facet>
+
+
+
+            <s:decorate id="dmquyChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dmquyChon"
+                                      value="#{dmQuyHome.instance.dmquyChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmquyMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dmquyMa"
+                       required="true"
+                           size="4"
+                      maxlength="4"
+                          value="#{dmQuyHome.instance.dmquyMa}">
+                    <a:support event="onblur" reRender="dmquyMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmquyNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmquyNgaygiocn"
+                          value="#{dmQuyHome.instance.dmquyNgaygiocn}">
+                    <a:support event="onblur" reRender="dmquyNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmquyTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dmquyTen"
+                           size="50"
+                      maxlength="50"
+                          value="#{dmQuyHome.instance.dmquyTen}">
+                    <a:support event="onblur" reRender="dmquyTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmQuyHome.persist}"
+                       disabled="#{!dmQuyHome.wired}"
+                       rendered="#{!dmQuyHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmQuyHome.update}"
+                       rendered="#{dmQuyHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmQuyHome.remove}"
+                      immediate="true"
+                       rendered="#{dmQuyHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmQuy.xhtml"
+                rendered="#{dmQuyHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmQuyFrom ? 'DmQuyList' : dmQuyFrom}.xhtml"
+                rendered="#{!dmQuyHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

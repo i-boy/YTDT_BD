@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="B3142_GiaoBanKhoaDinhDuong_subreport2"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="565"
+		 pageHeight="802"
+		 columnWidth="565"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="0"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<reportFont name="Tiimes New Roman" isDefault="true" fontName="Times New Roman" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<parameter name="ngayan" isForPrompting="false" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="loaian_spdd_maso" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer("2")]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[Select bnSpdd.KHOA_TEN AS KHOA_TEN,
+ bnSpdd.COUNT_SPDD AS COUNT_SPDD,
+ bnSpddPt.COUNT_SPDD_PHUTROI AS COUNT_SPDD_PHUTROI
+FROM
+(Select dmkhoa.DMKHOA_MASO AS KHOA_MASO, dmkhoa.DMKHOA_TEN AS KHOA_TEN,
+ Count(bnpba.BNPBA_MASO) AS COUNT_SPDD
+FROM phieu_bao_an pba 
+LEFT JOIN dm_khoa dmkhoa ON pba.KHOA_MASO=dmkhoa.DMKHOA_MASO
+LEFT JOIN benh_nhan_phieu_bao_an bnpba ON pba.PHIEUBAOAN_MASO=bnpba.PHIEUBAOAN_MASO
+WHERE bnpba.DTDMLA_MASO=$P{loaian_spdd_maso} AND pba.PHIEUBAOAN_NGAYAN=$P{ngayan}
+GROUP BY dmkhoa.DMKHOA_MASO,dmkhoa.DMKHOA_TEN) bnSpdd 
+
+LEFT JOIN (Select dmkhoa.DMKHOA_MASO AS KHOA_MASO,
+ Count(bnpba.BNPBA_MASO) AS COUNT_SPDD_PHUTROI
+ FROM phieu_bao_an pba 
+ LEFT JOIN dm_khoa dmkhoa ON pba.KHOA_MASO=dmkhoa.DMKHOA_MASO
+ LEFT JOIN benh_nhan_phieu_bao_an bnpba ON pba.PHIEUBAOAN_MASO=bnpba.PHIEUBAOAN_MASO
+WHERE bnpba.DTDMLA_MASO=$P{loaian_spdd_maso} AND bnpba.BNPBA_PHUTROI=1 AND pba.PHIEUBAOAN_NGAYAN=$P{ngayan}
+GROUP BY dmkhoa.DMKHOA_MASO) bnSpddPt ON bnSpdd.KHOA_MASO=bnSpddPt.KHOA_MASO]]></queryString>
+
+	<field name="KHOA_TEN" class="java.lang.String"/>
+	<field name="COUNT_SPDD" class="java.lang.Long"/>
+	<field name="COUNT_SPDD_PHUTROI" class="java.lang.Long"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="40"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="15"
+						y="0"
+						width="140"
+						height="17"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Tiimes New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<text><![CDATA[3) SPDD:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="23"
+						width="213"
+						height="17"
+						key="staticText-2"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Tiimes New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<text><![CDATA[KHOA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="219"
+						y="23"
+						width="112"
+						height="17"
+						key="staticText-3"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Tiimes New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<text><![CDATA[SỐ LƯỢNG]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="331"
+						y="23"
+						width="116"
+						height="17"
+						key="staticText-4"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Tiimes New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<text><![CDATA[PHỤ TRỘI]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="447"
+						y="23"
+						width="116"
+						height="17"
+						key="staticText-5"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Tiimes New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TỔNG CỘNG]]></text>
+				</staticText>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="19"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="6"
+						y="0"
+						width="213"
+						height="19"
+						key="textField-1"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="7" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Tiimes New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{KHOA_TEN}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="219"
+						y="0"
+						width="112"
+						height="19"
+						key="textField-2"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Tiimes New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[( $F{COUNT_SPDD} == null ? null : ( $F{COUNT_SPDD_PHUTROI} == null ? $F{COUNT_SPDD} : new Long($F{COUNT_SPDD}.longValue() - $F{COUNT_SPDD_PHUTROI}.longValue()) ) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="331"
+						y="0"
+						width="116"
+						height="19"
+						key="textField-3"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Tiimes New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{COUNT_SPDD_PHUTROI}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="447"
+						y="0"
+						width="116"
+						height="19"
+						key="textField-4"
+						stretchType="RelativeToTallestObject"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Tiimes New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{COUNT_SPDD}]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

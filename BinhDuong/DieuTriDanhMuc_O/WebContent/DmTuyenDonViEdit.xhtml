@@ -1,0 +1,259 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmTuyenDonVi" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmTuyenDonViHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Tuyến don vi</f:facet>
+
+
+            <s:decorate id="dmdonviMasoField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã đơn vịso</ui:define>
+                <h:inputText id="dmdonviMaso"
+                       required="true"
+                       disabled="#{dmTuyenDonViHome.managed}"
+                          value="#{dmTuyenDonViHome.instance.id.dmdonviMaso}">
+                    <a:support event="onblur" reRender="dmdonviMasoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="dmtuyenMasoField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã số</ui:define>
+                <h:inputText id="dmtuyenMaso"
+                       required="true"
+                       disabled="#{dmTuyenDonViHome.managed}"
+                          value="#{dmTuyenDonViHome.instance.id.dmtuyenMaso}">
+                    <a:support event="onblur" reRender="dmtuyenMasoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+
+            <s:decorate id="dmtuyenMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã tuyến</ui:define>
+                <h:inputText id="dmtuyenMa"
+                       required="true"
+                           size="10"
+                      maxlength="10"
+                          value="#{dmTuyenDonViHome.instance.dmtuyenMa}">
+                    <a:support event="onblur" reRender="dmtuyenMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmtuyendonviDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc DP</ui:define>
+                <h:selectBooleanCheckbox id="dmtuyendonviDp"
+                                      value="#{dmTuyenDonViHome.instance.dmtuyendonviDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmtuyendonviDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc ĐT</ui:define>
+                <h:selectBooleanCheckbox id="dmtuyendonviDt"
+                                      value="#{dmTuyenDonViHome.instance.dmtuyendonviDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmtuyendonviNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmtuyendonviNgaygiocn"
+                          value="#{dmTuyenDonViHome.instance.dmtuyendonviNgaygiocn}">
+                    <a:support event="onblur" reRender="dmtuyendonviNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmtuyendonviQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc QL</ui:define>
+                <h:selectBooleanCheckbox id="dmtuyendonviQl"
+                                      value="#{dmTuyenDonViHome.instance.dmtuyendonviQl}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmTuyenDonViHome.persist}"
+                       disabled="#{!dmTuyenDonViHome.wired}"
+                       rendered="#{!dmTuyenDonViHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmTuyenDonViHome.update}"
+                       rendered="#{dmTuyenDonViHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmTuyenDonViHome.remove}"
+                      immediate="true"
+                       rendered="#{dmTuyenDonViHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmTuyenDonVi.xhtml"
+                rendered="#{dmTuyenDonViHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmTuyenDonViFrom ? 'DmTuyenDonViList' : dmTuyenDonViFrom}.xhtml"
+                rendered="#{!dmTuyenDonViHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Đơn vị *" labelClass="required">
+    <div class="association" id="dmDonViParent">
+
+        <h:outputText value="Không tìm thấy dmDonVi phù hợp với dmTuyenDonVi."
+                   rendered="#{dmTuyenDonViHome.instance.dmDonVi == null}"/>
+
+        <rich:dataTable var="_dmDonVi"
+                   value="#{dmTuyenDonViHome.instance.dmDonVi}"
+                rendered="#{dmTuyenDonViHome.instance.dmDonVi != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dmDonViTable">
+            <h:column>
+                <f:facet name="header">Mã đơn vịso</f:facet>
+                <h:outputText value="#{_dmDonVi.dmdonviMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Huyện Mã số</f:facet>
+                <h:outputText value="#{_dmDonVi.dmHuyen.dmhuyenMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã tỉnh</f:facet>
+                <h:outputText value="#{_dmDonVi.dmTinh.dmtinhMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tuyến mã số</f:facet>
+                <h:outputText value="#{_dmDonVi.dmTuyen.dmtuyenMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Xã mã số</f:facet>
+                <h:outputText value="#{_dmDonVi.dmXa.dmxaMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Chọn</f:facet>
+                <h:outputText value="#{_dmDonVi.dmdonviChon}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Điện thoại</f:facet>
+                <h:outputText value="#{_dmDonVi.dmdonviDienthoai}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Đơn vị quản lý trực tiếp</f:facet>
+                <h:outputText value="#{_dmDonVi.dmdonviDvquanlytructiep}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã đơn vị</f:facet>
+                <h:outputText value="#{_dmDonVi.dmdonviMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmDonVi.dmdonviNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Số nhà tuyến đường</f:facet>
+                <h:outputText value="#{_dmDonVi.dmdonviSonhatuyenduong}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên đơn vị</f:facet>
+                <h:outputText value="#{_dmDonVi.dmdonviTen}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên báo cáo</f:facet>
+                <h:outputText value="#{_dmDonVi.dmdonviTenbaocao}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Đơn vị URL</f:facet>
+                <h:outputText value="#{_dmDonVi.dmdonviUrl}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{dmTuyenDonViHome.instance.dmDonVi != null ? 'Thay đổi' : 'Chọn'} dmDonVi"
+                       view="/DmDonViList.xhtml">
+                <f:param name="from" value="DmTuyenDonViEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Tuyến *" labelClass="required">
+    <div class="association" id="dmTuyenParent">
+
+        <h:outputText value="Không tìm thấy dmTuyen phù hợp với dmTuyenDonVi."
+                   rendered="#{dmTuyenDonViHome.instance.dmTuyen == null}"/>
+
+        <rich:dataTable var="_dmTuyen"
+                   value="#{dmTuyenDonViHome.instance.dmTuyen}"
+                rendered="#{dmTuyenDonViHome.instance.dmTuyen != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dmTuyenTable">
+            <h:column>
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dmTuyen.dmtuyenMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc dự phòng</f:facet>
+                <h:outputText value="#{_dmTuyen.dmtuyenDp}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc điều trị</f:facet>
+                <h:outputText value="#{_dmTuyen.dmtuyenDt}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã tuyến</f:facet>
+                <h:outputText value="#{_dmTuyen.dmtuyenMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmTuyen.dmtuyenNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc quản lý</f:facet>
+                <h:outputText value="#{_dmTuyen.dmtuyenQl}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên tuyến</f:facet>
+                <h:outputText value="#{_dmTuyen.dmtuyenTen}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{dmTuyenDonViHome.instance.dmTuyen != null ? 'Thay đổi' : 'Chọn'} dmTuyen"
+                       view="/DmTuyenList.xhtml">
+                <f:param name="from" value="DmTuyenDonViEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

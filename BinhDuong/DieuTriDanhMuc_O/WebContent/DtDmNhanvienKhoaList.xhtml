@@ -1,0 +1,158 @@
+﻿<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmNhanvienKhoaSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Nhân viên điều trị tìm kiếm" switchType="ajax">
+
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Tìm kiếm" action="/DtDmNhanvienKhoaList.xhtml"/>
+            <s:button id="reset" value="Nhập lại" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Nhân viên điều trị Kết quả</f:facet>
+    <div class="results" id="dtDmNhanvienKhoaList">
+
+    <h:outputText value="Không tìm thấy kết quả nào."
+               rendered="#{empty dtDmNhanvienKhoaList.resultList}"/>
+
+    <rich:dataTable id="dtDmNhanvienKhoaList"
+                var="_dtDmNhanvienKhoa"
+              value="#{dtDmNhanvienKhoaList.resultList}"
+           rendered="#{not empty dtDmNhanvienKhoaList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmNhanvienKhoaList}"/>
+                    <ui:param name="propertyLabel" value="Mã số"/>
+                    <ui:param name="propertyPath" value="dtDmNhanvienKhoa.dtdmnhanvienkhoaMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmNhanvienKhoa.dtdmnhanvienkhoaMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmNhanvienKhoaList}"/>
+                    <ui:param name="propertyLabel" value="Mã Khoa con"/>
+                    <ui:param name="propertyPath" value="dtDmNhanvienKhoa.dmKhoa.dmkhoaMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmNhanvienKhoa.dmKhoa.dmkhoaMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmNhanvienKhoaList}"/>
+                    <ui:param name="propertyLabel" value="Nhân viên mã số"/>
+                    <ui:param name="propertyPath" value="dtDmNhanvienKhoa.dtDmNhanVien.dtdmnhanvienMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmNhanvienKhoa.dtDmNhanVien.dtdmnhanvienMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmNhanvienKhoaList}"/>
+                    <ui:param name="propertyLabel" value="Chọn"/>
+                    <ui:param name="propertyPath" value="dtDmNhanvienKhoa.dtdmnvkhoaChon"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmNhanvienKhoa.dtdmnvkhoaChon}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmNhanvienKhoaList}"/>
+                    <ui:param name="propertyLabel" value="Ngày giờ cập nhật"/>
+                    <ui:param name="propertyPath" value="dtDmNhanvienKhoa.dtdmnvkhoaNgaygiocn"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmNhanvienKhoa.dtdmnvkhoaNgaygiocn}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Thao tác</f:facet>
+            <s:link view="/#{empty from ? 'DtDmNhanvienKhoa' : from}.xhtml"
+                   value="#{empty from ? 'Xem' : 'Chọn'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="dtDmNhanvienKhoa">
+                <f:param name="dtDmNhanvienKhoaDtdmnhanvienkhoaMaso"
+                        value="#{_dtDmNhanvienKhoa.dtdmnhanvienkhoaMaso}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/DtDmNhanvienKhoaEdit.xhtml"
+                   value="Sửa"
+             propagation="none"
+                      id="dtDmNhanvienKhoaEdit"
+                rendered="#{empty from}">
+                <f:param name="dtDmNhanvienKhoaDtdmnhanvienkhoaMaso"
+                        value="#{_dtDmNhanvienKhoa.dtdmnhanvienkhoaMaso}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/DtDmNhanvienKhoaList.xhtml"
+            rendered="#{dtDmNhanvienKhoaList.previousExists}"
+               value="#{messages.left}#{messages.left} Trang đầu"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/DtDmNhanvienKhoaList.xhtml"
+            rendered="#{dtDmNhanvienKhoaList.previousExists}"
+               value="#{messages.left} Trang trước"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{dtDmNhanvienKhoaList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DtDmNhanvienKhoaList.xhtml"
+            rendered="#{dtDmNhanvienKhoaList.nextExists}"
+               value="Trang sau #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{dtDmNhanvienKhoaList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DtDmNhanvienKhoaList.xhtml"
+            rendered="#{dtDmNhanvienKhoaList.nextExists}"
+               value="Trang cuối #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{dtDmNhanvienKhoaList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/DtDmNhanvienKhoaEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Thêm mới Nhân viên điều trị">
+            <f:param name="dtDmNhanvienKhoaDtdmnhanvienkhoaMaso"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

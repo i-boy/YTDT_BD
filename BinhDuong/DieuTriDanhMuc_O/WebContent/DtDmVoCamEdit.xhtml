@@ -1,0 +1,132 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmVoCam" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmVoCamHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Vô cảm</f:facet>
+
+
+
+            <s:decorate id="dtdmvocamChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dtdmvocamChon"
+                                      value="#{dtDmVoCamHome.instance.dtdmvocamChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmvocamDiengiaiField" template="layout/edit.xhtml">
+                <ui:define name="label">Diễn giải</ui:define>
+                <h:inputTextarea id="dtdmvocamDiengiai"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dtDmVoCamHome.instance.dtdmvocamDiengiai}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmvocamGhichuField" template="layout/edit.xhtml">
+                <ui:define name="label">Ghi chú</ui:define>
+                <h:inputTextarea id="dtdmvocamGhichu"
+                               cols="80"
+                               rows="3"
+                              value="#{dtDmVoCamHome.instance.dtdmvocamGhichu}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmvocamMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dtdmvocamMa"
+                       required="true"
+                           size="3"
+                      maxlength="3"
+                          value="#{dtDmVoCamHome.instance.dtdmvocamMa}">
+                    <a:support event="onblur" reRender="dtdmvocamMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmvocamMaphuField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã phụ</ui:define>
+                <h:inputText id="dtdmvocamMaphu"
+                           size="3"
+                      maxlength="3"
+                          value="#{dtDmVoCamHome.instance.dtdmvocamMaphu}">
+                    <a:support event="onblur" reRender="dtdmvocamMaphuField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmvocamNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dtdmvocamNgaygiocn"
+                          value="#{dtDmVoCamHome.instance.dtdmvocamNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmvocamNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmvocamPhanloaiField" template="layout/edit.xhtml">
+                <ui:define name="label">Phân loại</ui:define>
+                <h:inputText id="dtdmvocamPhanloai"
+                           size="5"
+                      maxlength="5"
+                          value="#{dtDmVoCamHome.instance.dtdmvocamPhanloai}">
+                    <a:support event="onblur" reRender="dtdmvocamPhanloaiField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmVoCamHome.persist}"
+                       disabled="#{!dtDmVoCamHome.wired}"
+                       rendered="#{!dtDmVoCamHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmVoCamHome.update}"
+                       rendered="#{dtDmVoCamHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmVoCamHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmVoCamHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmVoCam.xhtml"
+                rendered="#{dtDmVoCamHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmVoCamFrom ? 'DtDmVoCamList' : dtDmVoCamFrom}.xhtml"
+                rendered="#{!dtDmVoCamHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

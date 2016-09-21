@@ -1,0 +1,142 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmChucVu" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmChucVuHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Chức vụ</f:facet>
+
+
+
+            <s:decorate id="dmchucvuDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc dự phòng</ui:define>
+                <h:selectBooleanCheckbox id="dmchucvuDp"
+                                      value="#{dmChucVuHome.instance.dmchucvuDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmchucvuDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc điều trị</ui:define>
+                <h:selectBooleanCheckbox id="dmchucvuDt"
+                                      value="#{dmChucVuHome.instance.dmchucvuDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmchucvuHesopcField" template="layout/edit.xhtml">
+                <ui:define name="label">Hệ số phụ cấp</ui:define>
+                <h:inputText id="dmchucvuHesopc"
+                          value="#{dmChucVuHome.instance.dmchucvuHesopc}">
+                    <a:support event="onblur" reRender="dmchucvuHesopcField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmchucvuMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã chức vụ</ui:define>
+                <h:inputText id="dmchucvuMa"
+                           size="10"
+                      maxlength="10"
+                          value="#{dmChucVuHome.instance.dmchucvuMa}">
+                    <a:support event="onblur" reRender="dmchucvuMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmchucvuNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmchucvuNgaygiocn"
+                          value="#{dmChucVuHome.instance.dmchucvuNgaygiocn}">
+                    <a:support event="onblur" reRender="dmchucvuNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmchucvuQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc quản lý</ui:define>
+                <h:selectBooleanCheckbox id="dmchucvuQl"
+                                      value="#{dmChucVuHome.instance.dmchucvuQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmchucvuTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên chức vụ</ui:define>
+                <h:inputTextarea id="dmchucvuTen"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dmChucVuHome.instance.dmchucvuTen}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmchucvuTenbcField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên báo cáo</ui:define>
+                <h:inputTextarea id="dmchucvuTenbc"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dmChucVuHome.instance.dmchucvuTenbc}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmchucvuThutuField" template="layout/edit.xhtml">
+                <ui:define name="label">Thứ tự</ui:define>
+                <h:inputText id="dmchucvuThutu"
+                          value="#{dmChucVuHome.instance.dmchucvuThutu}">
+                    <a:support event="onblur" reRender="dmchucvuThutuField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmChucVuHome.persist}"
+                       disabled="#{!dmChucVuHome.wired}"
+                       rendered="#{!dmChucVuHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmChucVuHome.update}"
+                       rendered="#{dmChucVuHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmChucVuHome.remove}"
+                      immediate="true"
+                       rendered="#{dmChucVuHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmChucVu.xhtml"
+                rendered="#{dmChucVuHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmChucVuFrom ? 'DmChucVuList' : dmChucVuFrom}.xhtml"
+                rendered="#{!dmChucVuHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

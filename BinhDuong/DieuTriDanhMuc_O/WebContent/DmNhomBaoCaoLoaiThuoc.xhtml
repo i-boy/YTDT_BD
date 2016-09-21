@@ -1,0 +1,189 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <rich:panel>
+        <f:facet name="header">Nhóm báo cáo loại thuốc Chi tiết</f:facet>
+
+
+        <s:decorate id="dmnhombcthuocloaithuocDp" template="layout/display.xhtml">
+            <ui:define name="label">Thuộc dự phòng</ui:define>
+            <h:outputText value="#{dmNhomBaoCaoLoaiThuocHome.instance.dmnhombcthuocloaithuocDp}"/>
+        </s:decorate>
+
+        <s:decorate id="dmnhombcthuocloaithuocDt" template="layout/display.xhtml">
+            <ui:define name="label">Thuộc điều trị</ui:define>
+            <h:outputText value="#{dmNhomBaoCaoLoaiThuocHome.instance.dmnhombcthuocloaithuocDt}"/>
+        </s:decorate>
+
+        <s:decorate id="dmnhombcthuocloaithuocNgaygiocn" template="layout/display.xhtml">
+            <ui:define name="label">Ngày giờ cập nhật</ui:define>
+            <h:outputText value="#{dmNhomBaoCaoLoaiThuocHome.instance.dmnhombcthuocloaithuocNgaygiocn}"/>
+        </s:decorate>
+
+        <s:decorate id="dmnhombcthuocloaithuocQl" template="layout/display.xhtml">
+            <ui:define name="label">Thuộc quản lý</ui:define>
+            <h:outputText value="#{dmNhomBaoCaoLoaiThuocHome.instance.dmnhombcthuocloaithuocQl}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/DmNhomBaoCaoLoaiThuocEdit.xhtml"
+                    id="edit"
+                 value="Sửa"/>
+
+        <s:button view="/#{empty dmNhomBaoCaoLoaiThuocFrom ? 'DmNhomBaoCaoLoaiThuocList' : dmNhomBaoCaoLoaiThuocFrom}.xhtml"
+                    id="done"
+                 value="Hoàn thành"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Loại thuốc</h:panelGroup>
+        </f:facet>
+    <div class="association" id="dmLoaiThuocParent">
+
+        <h:outputText value="Không tìm thấy dmLoaiThuoc phù hợp với dmNhomBaoCaoLoaiThuoc."
+                   rendered="#{dmNhomBaoCaoLoaiThuocHome.instance.dmLoaiThuoc == null}"/>
+
+        <rich:dataTable var="_dmLoaiThuoc"
+                   value="#{dmNhomBaoCaoLoaiThuocHome.instance.dmLoaiThuoc}"
+                rendered="#{dmNhomBaoCaoLoaiThuocHome.instance.dmLoaiThuoc != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dmLoaiThuocTable">
+            <h:column>
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dmLoaiThuoc.dmloaithuocMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc dự phòng</f:facet>
+                <h:outputText value="#{_dmLoaiThuoc.dmloaithuocDp}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc điều trị</f:facet>
+                <h:outputText value="#{_dmLoaiThuoc.dmloaithuocDt}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã loại thuốc</f:facet>
+                <h:outputText value="#{_dmLoaiThuoc.dmloaithuocMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmLoaiThuoc.dmloaithuocNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc quản lý</f:facet>
+                <h:outputText value="#{_dmLoaiThuoc.dmloaithuocQl}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Quyền</f:facet>
+                <h:outputText value="#{_dmLoaiThuoc.dmloaithuocQuyen}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên loại thuốc</f:facet>
+                <h:outputText value="#{_dmLoaiThuoc.dmloaithuocTen}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="viewdmLoaiThuoc"
+                     value="Xem"
+                      view="/DmLoaiThuoc.xhtml">
+                    <f:param name="dmLoaiThuocDmloaithuocMaso"
+                           value="#{_dmLoaiThuoc.dmloaithuocMaso}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Nhóm BC Thuốc</h:panelGroup>
+        </f:facet>
+    <div class="association" id="dmNhomBaoCaoThuocParent">
+
+        <h:outputText value="Không tìm thấy dmNhomBaoCaoThuoc phù hợp với dmNhomBaoCaoLoaiThuoc."
+                   rendered="#{dmNhomBaoCaoLoaiThuocHome.instance.dmNhomBaoCaoThuoc == null}"/>
+
+        <rich:dataTable var="_dmNhomBaoCaoThuoc"
+                   value="#{dmNhomBaoCaoLoaiThuocHome.instance.dmNhomBaoCaoThuoc}"
+                rendered="#{dmNhomBaoCaoLoaiThuocHome.instance.dmNhomBaoCaoThuoc != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dmNhomBaoCaoThuocTable">
+            <h:column>
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dmNhomBaoCaoThuoc.dmnhombcthuocMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nhân viên cập nhật</f:facet>
+                <h:outputText value="#{_dmNhomBaoCaoThuoc.dmnhanvienCn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc DP</f:facet>
+                <h:outputText value="#{_dmNhomBaoCaoThuoc.dmnhombcthuocDp}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc ĐT</f:facet>
+                <h:outputText value="#{_dmNhomBaoCaoThuoc.dmnhombcthuocDt}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ghi chú</f:facet>
+                <h:outputText value="#{_dmNhomBaoCaoThuoc.dmnhombcthuocGhichu}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã</f:facet>
+                <h:outputText value="#{_dmNhomBaoCaoThuoc.dmnhombcthuocMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã phụ</f:facet>
+                <h:outputText value="#{_dmNhomBaoCaoThuoc.dmnhombcthuocMaphu}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmNhomBaoCaoThuoc.dmnhombcthuocNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc QL</f:facet>
+                <h:outputText value="#{_dmNhomBaoCaoThuoc.dmnhombcthuocQl}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên</f:facet>
+                <h:outputText value="#{_dmNhomBaoCaoThuoc.dmnhombcthuocTen}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thứ tự</f:facet>
+                <h:outputText value="#{_dmNhomBaoCaoThuoc.dmnhombcthuocThutu}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="viewdmNhomBaoCaoThuoc"
+                     value="Xem"
+                      view="/DmNhomBaoCaoThuoc.xhtml">
+                    <f:param name="dmNhomBaoCaoThuocDmnhombcthuocMaso"
+                           value="#{_dmNhomBaoCaoThuoc.dmnhombcthuocMaso}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

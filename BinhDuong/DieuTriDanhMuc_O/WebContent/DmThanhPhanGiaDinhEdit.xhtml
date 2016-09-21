@@ -1,0 +1,116 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmThanhPhanGiaDinh" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmThanhPhanGiaDinhHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Thành phần GD</f:facet>
+
+
+
+            <s:decorate id="dmtpgdDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc DP</ui:define>
+                <h:selectBooleanCheckbox id="dmtpgdDp"
+                                      value="#{dmThanhPhanGiaDinhHome.instance.dmtpgdDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmtpgdDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc ĐT</ui:define>
+                <h:selectBooleanCheckbox id="dmtpgdDt"
+                                      value="#{dmThanhPhanGiaDinhHome.instance.dmtpgdDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmtpgdMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dmtpgdMa"
+                       required="true"
+                           size="10"
+                      maxlength="10"
+                          value="#{dmThanhPhanGiaDinhHome.instance.dmtpgdMa}">
+                    <a:support event="onblur" reRender="dmtpgdMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmtpgdNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmtpgdNgaygiocn"
+                          value="#{dmThanhPhanGiaDinhHome.instance.dmtpgdNgaygiocn}">
+                    <a:support event="onblur" reRender="dmtpgdNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmtpgdQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc QL</ui:define>
+                <h:selectBooleanCheckbox id="dmtpgdQl"
+                                      value="#{dmThanhPhanGiaDinhHome.instance.dmtpgdQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmtpgdTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dmtpgdTen"
+                           size="100"
+                      maxlength="100"
+                          value="#{dmThanhPhanGiaDinhHome.instance.dmtpgdTen}">
+                    <a:support event="onblur" reRender="dmtpgdTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmThanhPhanGiaDinhHome.persist}"
+                       disabled="#{!dmThanhPhanGiaDinhHome.wired}"
+                       rendered="#{!dmThanhPhanGiaDinhHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmThanhPhanGiaDinhHome.update}"
+                       rendered="#{dmThanhPhanGiaDinhHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmThanhPhanGiaDinhHome.remove}"
+                      immediate="true"
+                       rendered="#{dmThanhPhanGiaDinhHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmThanhPhanGiaDinh.xhtml"
+                rendered="#{dmThanhPhanGiaDinhHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmThanhPhanGiaDinhFrom ? 'DmThanhPhanGiaDinhList' : dmThanhPhanGiaDinhFrom}.xhtml"
+                rendered="#{!dmThanhPhanGiaDinhHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

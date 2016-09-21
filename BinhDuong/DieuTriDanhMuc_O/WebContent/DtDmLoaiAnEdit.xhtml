@@ -1,0 +1,154 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmLoaiAn" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmLoaiAnHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Loại ăn</f:facet>
+
+
+
+
+            <s:decorate id="dtdmlaChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dtdmlaChon"
+                                      value="#{dtDmLoaiAnHome.instance.dtdmlaChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmlaMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dtdmlaMa"
+                       required="true"
+                           size="50"
+                      maxlength="50"
+                          value="#{dtDmLoaiAnHome.instance.dtdmlaMa}">
+                    <a:support event="onblur" reRender="dtdmlaMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmlaNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dtdmlaNgaygiocn"
+                          value="#{dtDmLoaiAnHome.instance.dtdmlaNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmlaNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmlaTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dtdmlaTen"
+                           size="100"
+                      maxlength="100"
+                          value="#{dtDmLoaiAnHome.instance.dtdmlaTen}">
+                    <a:support event="onblur" reRender="dtdmlaTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmLoaiAnHome.persist}"
+                       disabled="#{!dtDmLoaiAnHome.wired}"
+                       rendered="#{!dtDmLoaiAnHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmLoaiAnHome.update}"
+                       rendered="#{dtDmLoaiAnHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmLoaiAnHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmLoaiAnHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmLoaiAn.xhtml"
+                rendered="#{dtDmLoaiAnHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmLoaiAnFrom ? 'DtDmLoaiAnList' : dtDmLoaiAnFrom}.xhtml"
+                rendered="#{!dtDmLoaiAnHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+<ui:remove>
+    <rich:tab label="Loại ăn2s">
+        <h:form styleClass="association" id="dtDmLoaiAn2sChildren">
+
+            <h:outputText value="Không có  dtDmLoaiAn2s phù hợp với dtDmLoaiAn."
+                       rendered="#{empty dtDmLoaiAnHome.dtDmLoaiAn2s}"/>
+
+            <rich:dataTable value="#{dtDmLoaiAnHome.dtDmLoaiAn2s}"
+                           var="_dtDmLoaiAn2"
+                      rendered="#{not empty dtDmLoaiAnHome.dtDmLoaiAn2s}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dtDmLoaiAn2sTable">
+                <rich:column sortBy="#{_dtDmLoaiAn2.dtdmla2Maso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dtDmLoaiAn2.dtdmla2Maso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmLoaiAn2.dtdmla2Chon}">
+                    <f:facet name="header">Chọn</f:facet>
+                    <h:outputText value="#{_dtDmLoaiAn2.dtdmla2Chon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmLoaiAn2.dtdmla2Ma}">
+                    <f:facet name="header">Mã</f:facet>
+                    <h:outputText value="#{_dtDmLoaiAn2.dtdmla2Ma}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmLoaiAn2.dtdmla2Ngaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dtDmLoaiAn2.dtdmla2Ngaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmLoaiAn2.dtdmla2Ten}">
+                    <f:facet name="header">Tên</f:facet>
+                    <h:outputText value="#{_dtDmLoaiAn2.dtdmla2Ten}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dtDmLoaiAnHome.managed}" id="dtDmLoaiAn2s">
+        <div class="actionButtons">
+            <s:button id="adddtDmLoaiAn2"
+                   value="Thêm dtDmLoaiAn2"
+                    view="/DtDmLoaiAn2Edit.xhtml"
+             propagation="none">
+                 <f:param name="dtDmLoaiAnDtdmlaMaso"
+                         value="#{dtDmLoaiAnHome.instance.dtdmlaMaso}"/>
+                 <f:param name="dtDmLoaiAn2From" value="DtDmLoaiAn"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab></ui:remove>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

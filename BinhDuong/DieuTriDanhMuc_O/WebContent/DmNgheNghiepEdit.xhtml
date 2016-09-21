@@ -1,0 +1,198 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmNgheNghiep" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmNgheNghiepHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Nghề nghiệp</f:facet>
+
+
+
+
+            <s:decorate id="dmnghenghiepAgemaxField" template="layout/edit.xhtml">
+                <ui:define name="label">Tuổi tối đa</ui:define>
+                <h:inputText id="dmnghenghiepAgemax"
+                          value="#{dmNgheNghiepHome.instance.dmnghenghiepAgemax}">
+                    <a:support event="onblur" reRender="dmnghenghiepAgemaxField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmnghenghiepAgeminField" template="layout/edit.xhtml">
+                <ui:define name="label">Tuổi tối thiểu</ui:define>
+                <h:inputText id="dmnghenghiepAgemin"
+                          value="#{dmNgheNghiepHome.instance.dmnghenghiepAgemin}">
+                    <a:support event="onblur" reRender="dmnghenghiepAgeminField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmnghenghiepDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc DP</ui:define>
+                <h:selectBooleanCheckbox id="dmnghenghiepDp"
+                                      value="#{dmNgheNghiepHome.instance.dmnghenghiepDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmnghenghiepDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc ĐT</ui:define>
+                <h:selectBooleanCheckbox id="dmnghenghiepDt"
+                                      value="#{dmNgheNghiepHome.instance.dmnghenghiepDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmnghenghiepMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dmnghenghiepMa"
+                       required="true"
+                           size="10"
+                      maxlength="10"
+                          value="#{dmNgheNghiepHome.instance.dmnghenghiepMa}">
+                    <a:support event="onblur" reRender="dmnghenghiepMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmnghenghiepNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmnghenghiepNgaygiocn"
+                          value="#{dmNgheNghiepHome.instance.dmnghenghiepNgaygiocn}">
+                    <a:support event="onblur" reRender="dmnghenghiepNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmnghenghiepPhanloai2Field" template="layout/edit.xhtml">
+                <ui:define name="label">Phân loại</ui:define>
+                <h:inputText id="dmnghenghiepPhanloai2"
+                           size="2"
+                      maxlength="2"
+                          value="#{dmNgheNghiepHome.instance.dmnghenghiepPhanloai2}">
+                    <a:support event="onblur" reRender="dmnghenghiepPhanloai2Field" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmnghenghiepQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc QL</ui:define>
+                <h:selectBooleanCheckbox id="dmnghenghiepQl"
+                                      value="#{dmNgheNghiepHome.instance.dmnghenghiepQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmnghenghiepTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputTextarea id="dmnghenghiepTen"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dmNgheNghiepHome.instance.dmnghenghiepTen}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmNgheNghiepHome.persist}"
+                       disabled="#{!dmNgheNghiepHome.wired}"
+                       rendered="#{!dmNgheNghiepHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmNgheNghiepHome.update}"
+                       rendered="#{dmNgheNghiepHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmNgheNghiepHome.remove}"
+                      immediate="true"
+                       rendered="#{dmNgheNghiepHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmNgheNghiep.xhtml"
+                rendered="#{dmNgheNghiepHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmNgheNghiepFrom ? 'DmNgheNghiepList' : dmNgheNghiepFrom}.xhtml"
+                rendered="#{!dmNgheNghiepHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Nghề nghiệp BC">
+    <div class="association" id="dmNgheNghiepBaoCaoParent">
+
+        <h:outputText value="Không tìm thấy dmNgheNghiepBaoCao phù hợp với dmNgheNghiep."
+                   rendered="#{dmNgheNghiepHome.instance.dmNgheNghiepBaoCao == null}"/>
+
+        <rich:dataTable var="_dmNgheNghiepBaoCao"
+                   value="#{dmNgheNghiepHome.instance.dmNgheNghiepBaoCao}"
+                rendered="#{dmNgheNghiepHome.instance.dmNgheNghiepBaoCao != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dmNgheNghiepBaoCaoTable">
+            <h:column>
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dmNgheNghiepBaoCao.dmnghenghiepbcMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc DP</f:facet>
+                <h:outputText value="#{_dmNgheNghiepBaoCao.dmnghenghiepbcDp}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc ĐT</f:facet>
+                <h:outputText value="#{_dmNgheNghiepBaoCao.dmnghenghiepbcDt}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã</f:facet>
+                <h:outputText value="#{_dmNgheNghiepBaoCao.dmnghenghiepbcMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmNgheNghiepBaoCao.dmnghenghiepbcNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc QL</f:facet>
+                <h:outputText value="#{_dmNgheNghiepBaoCao.dmnghenghiepbcQl}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên</f:facet>
+                <h:outputText value="#{_dmNgheNghiepBaoCao.dmnghenghiepbcTen}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{dmNgheNghiepHome.instance.dmNgheNghiepBaoCao != null ? 'Thay đổi' : 'Chọn'} dmNgheNghiepBaoCao"
+                       view="/DmNgheNghiepBaoCaoList.xhtml">
+                <f:param name="from" value="DmNgheNghiepEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

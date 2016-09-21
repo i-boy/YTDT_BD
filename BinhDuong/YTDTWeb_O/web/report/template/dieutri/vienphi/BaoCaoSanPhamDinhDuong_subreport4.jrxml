@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="BaoCaoSanPhamDinhDuong_subreport4"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="535"
+		 pageHeight="802"
+		 columnWidth="535"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="0"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<reportFont name="Times New Roman" isDefault="true" fontName="Times New Roman" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<parameter name="tungay" isForPrompting="false" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="denngay" isForPrompting="false" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[Select skp.SKP AS SKP,
+ skp.DUONG_XK AS DUONG_XK,
+ nhapTon.DUONG_TON AS DUONG_TON,
+	nhapTon.DUONG_NHAP AS DUONG_NHAP
+FROM		
+(Select countSkp.SKP AS SKP,
+ xuatDuong.DUONG_XK AS DUONG_XK
+FROM phieu_bao_an pba LEFT JOIN dm_khoa dmkhoa ON pba.KHOA_MASO=dmkhoa.DMKHOA_MASO
+ LEFT JOIN
+(Select dmkhoa.DMKHOA_MASO AS DMKHOA_MASO,
+ COUNT(bnpba.BNPBA_MASO) AS SKP
+FROM phieu_bao_an pba LEFT JOIN dm_khoa dmkhoa ON pba.KHOA_MASO=dmkhoa.DMKHOA_MASO
+ LEFT JOIN benh_nhan_phieu_bao_an bnpba ON pba.PHIEUBAOAN_MASO=bnpba.PHIEUBAOAN_MASO
+WHERE bnpba.DTDMLA_MASO=2
+GROUP BY pba.KHOA_MASO,dmkhoa.DMKHOA_MASO) countSkp ON pba.KHOA_MASO=countSkp.DMKHOA_MASO
+LEFT JOIN
+(Select xk.DMKHOA_MASO AS DMKHOA_MASO,
+ SUM(xk.XKDD_SOLUONG) AS DUONG_XK
+FROM xuat_kho_dinh_duong xk
+WHERE xk.DTDMLA2_MASO=4
+GROUP BY xk.DMKHOA_MASO) xuatDuong ON pba.KHOA_MASO=xuatDuong.DMKHOA_MASO
+WHERE pba.PHIEUBAOAN_NGAYAN BETWEEN $P{tungay} AND $P{denngay}
+ORDER BY dmkhoa.DMKHOA_TEN) skp,
+(Select duongTon.DUONG_TON AS DUONG_TON,
+ duongNhap.DUONG_NHAP AS DUONG_NHAP
+FROM
+(Select tk.TKDD_SOLUONG as DUONG_TON
+FROM ton_kho_dinh_duong tk
+WHERE tk.TKDD_MASO=(Select MAX(tk1.TKDD_MASO) From
+ ton_kho_dinh_duong tk1 where tk1.DTDMLA_MASO=2 AND tk1.DTDMLA2_MASO=4 AND tk1.TKDD_NGAYTON< $P{tungay})) duongTon,
+
+(Select SUM(nk.NKDD_SOLUONG) AS DUONG_NHAP
+FROM nhap_kho_dinh_duong nk
+WHERE nk.DTDMLA_MASO=2 AND nk.DTDMLA2_MASO=4 AND nk.NKDD_NGAYNHAP BETWEEN $P{tungay} AND $P{denngay}) duongNhap) nhapTon]]></queryString>
+
+	<field name="SKP" class="java.lang.Long"/>
+	<field name="DUONG_XK" class="java.lang.Double"/>
+	<field name="DUONG_TON" class="java.lang.Float"/>
+	<field name="DUONG_NHAP" class="java.lang.Double"/>
+
+	<variable name="SUM_SKP" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{SKP}]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_SKP}]]></initialValueExpression>
+	</variable>
+	<variable name="SUM_DUONG_XUAT" class="java.lang.Double" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{DUONG_XK}]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{SUM_DUONG_XUAT}]]></initialValueExpression>
+	</variable>
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="50"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="1"
+						y="0"
+						width="141"
+						height="25"
+						key="staticText-3"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TỔNG CỘNG]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="142"
+						y="25"
+						width="55"
+						height="25"
+						key="textField-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="197"
+						y="25"
+						width="63"
+						height="25"
+						key="textField-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double(($F{DUONG_TON} != null ? $F{DUONG_TON}.floatValue() : 0) +
+	    ($F{DUONG_NHAP} != null ? $F{DUONG_NHAP}.doubleValue() : 0) -
+	    ($F{DUONG_XK} != null ? $F{DUONG_XK}.doubleValue() : 0)
+          )]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="1"
+						y="25"
+						width="141"
+						height="25"
+						key="staticText-5"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TỒN]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="142"
+						y="0"
+						width="55"
+						height="25"
+						key="textField-4"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{SUM_SKP}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="197"
+						y="0"
+						width="63"
+						height="25"
+						key="textField-5"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{SUM_DUONG_XUAT}]]></textFieldExpression>
+				</textField>
+			</band>
+		</summary>
+</jasperReport>

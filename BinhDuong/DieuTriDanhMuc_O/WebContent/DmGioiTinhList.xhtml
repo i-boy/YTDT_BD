@@ -1,0 +1,193 @@
+﻿<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmGioiTinhSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Giới tính tìm kiếm" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Ghi chú</ui:define>
+                <h:inputText id="dmgtGhichu" value="#{dmGioiTinhList.dmGioiTinh.dmgtGhichu}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dmgtMa" value="#{dmGioiTinhList.dmGioiTinh.dmgtMa}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dmgtTen" value="#{dmGioiTinhList.dmGioiTinh.dmgtTen}"/>
+            </s:decorate>
+
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Tìm kiếm" action="/DmGioiTinhList.xhtml"/>
+            <s:button id="reset" value="Nhập lại" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Giới tính Kết quả</f:facet>
+    <div class="results" id="dmGioiTinhList">
+
+    <h:outputText value="Không tìm thấy kết quả nào."
+               rendered="#{empty dmGioiTinhList.resultList}"/>
+
+    <rich:dataTable id="dmGioiTinhList"
+                var="_dmGioiTinh"
+              value="#{dmGioiTinhList.resultList}"
+           rendered="#{not empty dmGioiTinhList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmGioiTinhList}"/>
+                    <ui:param name="propertyLabel" value="Mã số"/>
+                    <ui:param name="propertyPath" value="dmGioiTinh.dmgtMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmGioiTinh.dmgtMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmGioiTinhList}"/>
+                    <ui:param name="propertyLabel" value="Chọn"/>
+                    <ui:param name="propertyPath" value="dmGioiTinh.dmgtChon"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmGioiTinh.dmgtChon}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmGioiTinhList}"/>
+                    <ui:param name="propertyLabel" value="Mặc định"/>
+                    <ui:param name="propertyPath" value="dmGioiTinh.dmgtDefa"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmGioiTinh.dmgtDefa}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmGioiTinhList}"/>
+                    <ui:param name="propertyLabel" value="Ghi chú"/>
+                    <ui:param name="propertyPath" value="dmGioiTinh.dmgtGhichu"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmGioiTinh.dmgtGhichu}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmGioiTinhList}"/>
+                    <ui:param name="propertyLabel" value="Mã"/>
+                    <ui:param name="propertyPath" value="dmGioiTinh.dmgtMa"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmGioiTinh.dmgtMa}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmGioiTinhList}"/>
+                    <ui:param name="propertyLabel" value="Ngày giờ cập nhật"/>
+                    <ui:param name="propertyPath" value="dmGioiTinh.dmgtNgaygiocn"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmGioiTinh.dmgtNgaygiocn}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmGioiTinhList}"/>
+                    <ui:param name="propertyLabel" value="Tên"/>
+                    <ui:param name="propertyPath" value="dmGioiTinh.dmgtTen"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmGioiTinh.dmgtTen}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Thao tác</f:facet>
+            <s:link view="/#{empty from ? 'DmGioiTinh' : from}.xhtml"
+                   value="#{empty from ? 'Xem' : 'Chọn'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="dmGioiTinh">
+                <f:param name="dmGioiTinhDmgtMaso"
+                        value="#{_dmGioiTinh.dmgtMaso}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/DmGioiTinhEdit.xhtml"
+                   value="Sửa"
+             propagation="none"
+                      id="dmGioiTinhEdit"
+                rendered="#{empty from}">
+                <f:param name="dmGioiTinhDmgtMaso"
+                        value="#{_dmGioiTinh.dmgtMaso}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/DmGioiTinhList.xhtml"
+            rendered="#{dmGioiTinhList.previousExists}"
+               value="#{messages.left}#{messages.left} Trang đầu"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/DmGioiTinhList.xhtml"
+            rendered="#{dmGioiTinhList.previousExists}"
+               value="#{messages.left} Trang trước"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{dmGioiTinhList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DmGioiTinhList.xhtml"
+            rendered="#{dmGioiTinhList.nextExists}"
+               value="Trang sau #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{dmGioiTinhList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DmGioiTinhList.xhtml"
+            rendered="#{dmGioiTinhList.nextExists}"
+               value="Trang cuối #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{dmGioiTinhList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/DmGioiTinhEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Thêm mới Giới tính">
+            <f:param name="dmGioiTinhDmgtMaso"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

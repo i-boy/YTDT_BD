@@ -1,0 +1,102 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmMucAn" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmMucAnHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Mức ăn</f:facet>
+
+
+
+            <s:decorate id="dtdmmaChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dtdmmaChon"
+                                      value="#{dtDmMucAnHome.instance.dtdmmaChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmmaMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dtdmmaMa"
+                       required="true"
+                           size="50"
+                      maxlength="50"
+                          value="#{dtDmMucAnHome.instance.dtdmmaMa}">
+                    <a:support event="onblur" reRender="dtdmmaMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmmaNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dtdmmaNgaygiocn"
+                          value="#{dtDmMucAnHome.instance.dtdmmaNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmmaNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmmaTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dtdmmaTen"
+                           size="100"
+                      maxlength="100"
+                          value="#{dtDmMucAnHome.instance.dtdmmaTen}">
+                    <a:support event="onblur" reRender="dtdmmaTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmMucAnHome.persist}"
+                       disabled="#{!dtDmMucAnHome.wired}"
+                       rendered="#{!dtDmMucAnHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmMucAnHome.update}"
+                       rendered="#{dtDmMucAnHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmMucAnHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmMucAnHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmMucAn.xhtml"
+                rendered="#{dtDmMucAnHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmMucAnFrom ? 'DtDmMucAnList' : dtDmMucAnFrom}.xhtml"
+                rendered="#{!dtDmMucAnHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

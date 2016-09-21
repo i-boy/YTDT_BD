@@ -1,0 +1,2042 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Baocaotainangiaothongcapcuutaibenhvien"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="812"
+		 columnSpacing="0"
+		 leftMargin="15"
+		 rightMargin="15"
+		 topMargin="15"
+		 bottomMargin="15"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<reportFont name="Times New Roman (times.ttf)" isDefault="true" fontName="Times New Roman" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<style 
+		name="boldStyle"
+		isDefault="true"
+		fontName="Times New Roman"
+		fontSize="11"
+		isBold="true"
+		isUnderline="true"
+		pdfFontName="times.ttf"
+		pdfEncoding="Identity-H"
+		isPdfEmbedded="true"
+	/>
+
+	<parameter name="soyte" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="benhvien" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="sodt" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="TuNgay" isForPrompting="true" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DenNgay" isForPrompting="true" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="diadiem" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="tieude" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="sub1" isForPrompting="false" class="net.sf.jasperreports.engine.JasperReport"/>
+	<queryString><![CDATA[select
+'ASố người tai nạn, thương tích' as cat,'Số người tai nạn, thương tích'as MIEUTA
+,SUM(MAC) as T
+,SUM(DECODE(benh_nhana.CHET,1,1,0)  ) as D
+,SUM(DECODE(benh_nhana.DMGT_MASO , 2,1,0)  )  as NamT 
+,SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 then 1 else 0 end   )  as NamD
+, SUM(DECODE(benh_nhana.DMGT_MASO , 1,1,0)  )  as NuT 
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO =1 then 1 else 0 end   )  as NuD 
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NamT0_4
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NamD0_4
+, SUM(case when benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NuT0_4
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NuD0_4
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT5_14
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD5_14
+, SUM(case when benh_nhana.DMGT_MASO = 1 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT5_14
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD5_14
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and   ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT15_60
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD15_60
+, SUM(case when benh_nhana.DMGT_MASO = 1 and   ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT15_60
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD15_60
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and   ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT60_100
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD60_100
+, SUM(case when benh_nhana.DMGT_MASO = 1 and   ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT60_100
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD60_100
+from
+(
+select benh_nhan.DMGT_MASO,benh_nhan.BENHNHAN_DONVITUOI, benh_nhan.BENHNHAN_TUOI, benh_nhan.BENHNHAN_MA
+,case when (tham_kham.THAMKHAM_KETQUA = 5 or tham_kham.THAMKHAM_DIEUTRI = 3 or tham_kham.THAMKHAM_DIEUTRI  = 7) then 1 else 0 end   as CHET , 1 as MAC
+from tham_kham left join tiep_don ON tham_kham.TIEPDON_MA = tiep_don.TIEPDON_MA
+left join benh_nhan ON tiep_don.BENHNHAN_MA = benh_nhan.BENHNHAN_MA
+where tiep_don.TAINAN_MA is not null  and tham_kham.THAMKHAM_NGAYGIO BETWEEN TO_DATE($P{TuNgay})  AND TO_DATE($P{DenNgay}+1)
+union all
+select benh_nhan.DMGT_MASO,benh_nhan.BENHNHAN_DONVITUOI , benh_nhan.BENHNHAN_TUOI,benh_nhan.BENHNHAN_MA,case when hsba_chuyen_mon.KETQUA_MA =5  then 1 else 0 end   as CHET , 1 as MAC
+from hsba_chuyen_mon left join hsba ON hsba_chuyen_mon.HSBA_SOVAOVIEN = hsba.HSBA_SOVAOVIEN
+left join benh_nhan ON hsba.BENHNHAN_MA = benh_nhan.BENHNHAN_MA
+where hsba.TAINAN_MA is not null  and hsba.HSBA_NGAYGIOVAOV BETWEEN TO_DATE($P{TuNgay})  AND TO_DATE($P{DenNgay}+1)
+) 
+benh_nhana
+
+union all
+
+select * from
+(select  'BNghề nghiệp' as cat,nghe_nghiep.DMNGHENGHIEP_TEN as MIEUTA
+,SUM(1) as T
+,SUM(DECODE(benh_nhana.CHET,1,1,0)  ) as D
+,SUM(DECODE(benh_nhana.DMGT_MASO , 2,1,0)  )  as NamT 
+,SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 then 1 else 0 end   )  as NamD
+, SUM(DECODE(benh_nhana.DMGT_MASO ,1,1,0)  )  as NuT 
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO =1 then 1 else 0 end   )  as NuD 
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NamT0_4
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NamD0_4
+, SUM(case when benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NuT0_4
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NuD0_4
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT5_14
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD5_14
+, SUM(case when benh_nhana.DMGT_MASO = 1 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT5_14
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD5_14
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and   ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT15_60
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD15_60
+, SUM(case when benh_nhana.DMGT_MASO = 1 and   ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT15_60
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD15_60
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and   ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT60_100
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD60_100
+, SUM(case when benh_nhana.DMGT_MASO = 1 and   ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT60_100
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD60_100
+
+from
+(select benh_nhan.BENHNHAN_MA,DECODE(benh_nhan.BENHNHAN_NGHE,null,21,benh_nhan.BENHNHAN_NGHE) as BENHNHAN_NGHE,benh_nhan.BENHNHAN_TUOI,benh_nhan.DMGT_MASO,benh_nhan.BENHNHAN_DONVITUOI ,1 as MAC, case when (tham_kham.THAMKHAM_KETQUA = 5 or tham_kham.THAMKHAM_DIEUTRI = 3 or tham_kham.THAMKHAM_DIEUTRI  = 7) then 1 else 0 end   as CHET 
+from tham_kham left join tiep_don ON tham_kham.TIEPDON_MA = tiep_don.TIEPDON_MA
+left join benh_nhan ON tiep_don.BENHNHAN_MA = benh_nhan.BENHNHAN_MA
+where tiep_don.TAINAN_MA is not null  and tham_kham.THAMKHAM_NGAYGIO BETWEEN TO_DATE($P{TuNgay})  AND TO_DATE($P{DenNgay}+1)
+union all
+select benh_nhan.BENHNHAN_MA,DECODE(benh_nhan.BENHNHAN_NGHE,null,21,benh_nhan.BENHNHAN_NGHE) as BENHNHAN_NGHE,benh_nhan.BENHNHAN_TUOI,benh_nhan.DMGT_MASO,benh_nhan.BENHNHAN_DONVITUOI ,1 as MAC, DECODE(hsba_chuyen_mon.KETQUA_MA ,5 , 1 , 0 )   as CHET 
+from hsba_chuyen_mon left join hsba ON hsba_chuyen_mon.HSBA_SOVAOVIEN = hsba.HSBA_SOVAOVIEN
+left join benh_nhan ON hsba.BENHNHAN_MA = benh_nhan.BENHNHAN_MA
+where hsba.TAINAN_MA is not null  and hsba.HSBA_NGAYGIOVAOV BETWEEN TO_DATE($P{TuNgay})  AND TO_DATE($P{DenNgay}+1)
+)benh_nhana
+left join 
+(
+select dm_nghe_nghiep.DMNGHENGHIEP_MASO,dm_nghe_nghiep.DMNGHENGHIEP_MA,dm_nghe_nghiep.DMNGHENGHIEP_TEN, dm_nghe_nghiep.DMNGHENGHIEP_MASO as NGHE_MASO from dm_nghe_nghiep where dmnghenghiep_maso in (8,5,6,2, 4) 
+union all  
+select dm_nghe_nghiep.DMNGHENGHIEP_MASO,dm_nghe_nghiep.DMNGHENGHIEP_MA,'Khác' as DMNGHENGHIEP_TEN, 30 as NGHE_MASO   from dm_nghe_nghiep where dmnghenghiep_maso not in (8,5,6,2, 4)  
+)
+nghe_nghiep ON  benh_nhana.BENHNHAN_NGHE = nghe_nghiep.DMNGHENGHIEP_MASO
+group by nghe_nghiep.NGHE_MASO, nghe_nghiep.DMNGHENGHIEP_TEN
+order by nghe_nghiep.NGHE_MASO
+) nghenghiepfull
+
+union all
+
+select diadiemfull.* from 
+(select 'CĐịa điểm xảy ra tai nạn' as cat
+,benh_nhana.DMDIADIEM_TEN as MIEUTA
+,SUM(MAC) as T
+,SUM(DECODE(benh_nhana.CHET,1,1,0)  ) as D
+,SUM(DECODE(benh_nhana.DMGT_MASO , 2,1,0)  )  as NamT 
+,SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 then 1 else 0 end   )  as NamD
+, SUM(DECODE(benh_nhana.DMGT_MASO ,1,1,0)  )  as NuT 
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO =1 then 1 else 0 end   )  as NuD 
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NamT0_4
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NamD0_4
+, SUM(case when benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NuT0_4
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NuD0_4
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT5_14
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD5_14
+, SUM(case when benh_nhana.DMGT_MASO = 1 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT5_14
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD5_14
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and   ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT15_60
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD15_60
+, SUM(case when benh_nhana.DMGT_MASO = 1 and   ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT15_60
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD15_60
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and   ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT60_100
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD60_100
+, SUM(case when benh_nhana.DMGT_MASO = 1 and   ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT60_100
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD60_100
+from
+(select 
+(case when dm_dia_diem.DMDIADIEM_MASO=7 or dm_dia_diem.DMDIADIEM_TEN is null then 'Khác' else dm_dia_diem.DMDIADIEM_TEN end) as DMDIADIEM_TEN
+,DECODE (dm_dia_diem.DMDIADIEM_MASO ,null, 7,dm_dia_diem.DMDIADIEM_MASO) as DMDIADIEM_MASO 
+,tiep_don.BENHNHAN_MA
+,benh_nhan.BENHNHAN_TUOI
+,benh_nhan.DMGT_MASO,benh_nhan.BENHNHAN_DONVITUOI
+,(case when (tham_kham.THAMKHAM_KETQUA = 5 or tham_kham.THAMKHAM_DIEUTRI = 3 or tham_kham.THAMKHAM_DIEUTRI  = 7) then 1 else 0 end)   as CHET 
+, 1 as MAC
+from tham_kham left join tiep_don ON tham_kham.TIEPDON_MA = tiep_don.TIEPDON_MA
+left join dm_dia_diem ON tiep_don.DIADIEM_MA = dm_dia_diem.DMDIADIEM_MASO
+left join benh_nhan ON tiep_don.BENHNHAN_MA = benh_nhan.BENHNHAN_MA
+where tiep_don.TAINAN_MA is not null  and tham_kham.THAMKHAM_NGAYGIO BETWEEN TO_DATE($P{TuNgay})  AND TO_DATE($P{DenNgay}+1)
+union all
+select 'Khác' as DMDIADIEM_TEN
+, 7 as DMDIADIEM_MASO
+,benh_nhan.BENHNHAN_MA
+, benh_nhan.BENHNHAN_TUOI
+,benh_nhan.DMGT_MASO
+,benh_nhan.BENHNHAN_DONVITUOI 
+, DECODE(hsba_chuyen_mon.KETQUA_MA ,5  , 1 , 0 )   as CHET , 1 as MAC
+from hsba_chuyen_mon left join hsba ON hsba_chuyen_mon.HSBA_SOVAOVIEN = hsba.HSBA_SOVAOVIEN
+left join benh_nhan ON hsba.BENHNHAN_MA = benh_nhan.BENHNHAN_MA
+where hsba.TAINAN_MA is not null  and hsba.HSBA_NGAYGIOVAOV BETWEEN TO_DATE($P{TuNgay})  AND TO_DATE($P{DenNgay}+1) 
+union all
+select ( case when dm_dia_diem.DMDIADIEM_MASO=7 or dm_dia_diem.DMDIADIEM_TEN is null then 'Khác' else dm_dia_diem.DMDIADIEM_TEN end) as DMDIADIEM_TEN
+,DECODE (dm_dia_diem.DMDIADIEM_MASO , null, 7,dm_dia_diem.DMDIADIEM_MASO) as DMDIADIEM_MASO 
+, '' as BENHNHAN_MA
+, 0 as BENHNHAN_TUOI
+, 0 as DMGT_MASO
+, 0 as BENHNHAN_DONVITUOI
+, 0 as CHET
+, 0 as MAC from dm_dia_diem
+) 
+benh_nhana
+group by benh_nhana.DMDIADIEM_TEN,benh_nhana.DMDIADIEM_MASO
+order by benh_nhana.DMDIADIEM_MASO) diadiemfull
+
+union all
+
+select * from
+(
+select
+'DBộ phận bị thương (xếp theo)' as cat
+,substr(benh_nhana.TIEUDE,2,(length(benh_nhana.TIEUDE)-1)) as MIEUTA
+
+,SUM(MAC) as T
+
+,SUM(DECODE(benh_nhana.CHET,1,1,0)  ) as D
+
+
+
+,SUM(DECODE(benh_nhana.DMGT_MASO , 2,1,0)  )  as NamT 
+
+
+
+,SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 then 1 else 0 end   )  as NamD
+, SUM(DECODE(benh_nhana.DMGT_MASO ,1,1,0)  )  as NuT 
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO =1 then 1 else 0 end   )  as NuD 
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NamT0_4
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NamD0_4
+, SUM(case when benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NuT0_4
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NuD0_4
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT5_14
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD5_14
+, SUM(case when benh_nhana.DMGT_MASO = 1 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT5_14
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD5_14
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and   ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT15_60
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD15_60
+, SUM(case when benh_nhana.DMGT_MASO = 1 and   ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT15_60
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD15_60
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and   ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT60_100
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD60_100
+, SUM(case when benh_nhana.DMGT_MASO = 1 and   ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT60_100
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD60_100
+from
+(
+select 
+(case when dm_benh_icd.DMBENHICD_MACHUNG = 'S00-S09' then '1Đầu mặt cổ (S00-S09)' else
+  case when dm_benh_icd.DMBENHICD_MACHUNG = 'S20-S29' then '2Thân mình (S20-S29)' else 
+    case when  dm_benh_icd.DMBENHICD_MACHUNG = 'S40-S99' then '3Các chi (S40-S99)' else
+      case when dm_benh_icd.DMBENHICD_MACHUNG = 'S40-S99' then '4Các chi (T00-T79)' else '5Không xác định'end 
+      end
+    end 
+  end
+ ) as TIEUDE
+,benh_nhan.BENHNHAN_MA,benh_nhan.BENHNHAN_TUOI
+,benh_nhan.DMGT_MASO,benh_nhan.BENHNHAN_DONVITUOI
+,case when (tham_kham.THAMKHAM_KETQUA = 5 or tham_kham.THAMKHAM_DIEUTRI = 3 or tham_kham.THAMKHAM_DIEUTRI  = 7) then 1 else 0 end   as CHET , 1 as MAC
+from tham_kham left join tiep_don ON tham_kham.TIEPDON_MA = tiep_don.TIEPDON_MA
+left join benh_nhan ON tiep_don.BENHNHAN_MA = benh_nhan.BENHNHAN_MA
+left join dm_benh_icd ON tham_kham.BENHICD10 = dm_benh_icd.DMBENHICD_MASO
+where tiep_don.TAINAN_MA is not null  and tham_kham.THAMKHAM_NGAYGIO BETWEEN TO_DATE($P{TuNgay})  AND TO_DATE($P{DenNgay}+1)
+union all
+select 
+(case when dm_benh_icd.DMBENHICD_MACHUNG = 'S00-S09' then '1Đầu mặt cổ (S00-S09)' else
+  case when dm_benh_icd.DMBENHICD_MACHUNG = 'S20-S29' then '2Thân mình (S20-S29)' else
+    case when dm_benh_icd.DMBENHICD_MACHUNG = 'S40-S99' then '3Các chi (S40-S99)' else
+      case when  dm_benh_icd.DMBENHICD_MACHUNG = 'S40-S99' then '4Các chi (T00-T79)' else '5Không xác định'  end
+      end
+    end
+  end
+ ) as TIEUDE
+,benh_nhan.BENHNHAN_MA
+,benh_nhan.BENHNHAN_TUOI
+,benh_nhan.DMGT_MASO
+,benh_nhan.BENHNHAN_DONVITUOI
+,DECODE(hsba_chuyen_mon.KETQUA_MA ,5 ,1,0)  as CHET 
+,1 as MAC
+from hsba_chuyen_mon left join hsba ON hsba_chuyen_mon.HSBA_SOVAOVIEN = hsba.HSBA_SOVAOVIEN
+left join benh_nhan ON hsba.BENHNHAN_MA = benh_nhan.BENHNHAN_MA
+left join dm_benh_icd on hsba_chuyen_mon.HSBACM_BENHCHINH = dm_benh_icd.DMBENHICD_MASO
+where hsba.TAINAN_MA is not null  and hsba.HSBA_NGAYGIOVAOV BETWEEN TO_DATE($P{TuNgay})  AND TO_DATE($P{DenNgay}+1)
+union all
+select * from (
+select '1Đầu, mặt, cổ (S00-S09)' as TIEUDE, '' as BENHNHAN_MA, 0 as BENHNHAN_TUOI, 0 as DMGT_MASO, 0 as BENHNHAN_DONVITUOI, 0 as CHET, 0 as MAC from dual
+union all
+select '2Thân mình (S20-S29)' as TIEUDE, '' as BENHNHAN_MA, 0 as BENHNHAN_TUOI, 0 as DMGT_MASO, 0 as BENHNHAN_DONVITUOI, 0 as CHET, 0 as MAC from dual
+union all
+select '3Các chi (S40-S99)' as TIEUDE, '' as BENHNHAN_MA, 0 as BENHNHAN_TUOI, 0 as DMGT_MASO, 0 as BENHNHAN_DONVITUOI, 0 as CHET, 0 as MAC from dual
+union all
+select '4Đa chấn thương (T00-T79)' as TIEUDE, '' as BENHNHAN_MA, 0 as BENHNHAN_TUOI, 0 as DMGT_MASO, 0 as BENHNHAN_DONVITUOI, 0 as CHET, 0 as MAC from dual
+union all
+select '5Không xác định' as TIEUDE, '' as BENHNHAN_MA, 0 as BENHNHAN_TUOI, 0 as DMGT_MASO, 0 as BENHNHAN_DONVITUOI, 0 as CHET, 0 as MAC from dual
+) dm_b
+) benh_nhana
+group by benh_nhana.TIEUDE
+order by benh_nhana.TIEUDE
+) bithuongfull
+
+union all
+
+select * from 
+(
+select 'ENguyên nhân TNTT (xếp theo)' as cat, dmpos.poss as MIEUTA,  benhnhanfull.T, benhnhanfull.D, benhnhanfull.NamT, benhnhanfull.NamD, benhnhanfull.NuT, benhnhanfull.NuD, benhnhanfull.NamT0_4, benhnhanfull.NamD0_4, benhnhanfull.NuT0_4, benhnhanfull.NuD0_4, benhnhanfull.NamT5_14, benhnhanfull.NamD5_14, benhnhanfull.NuT5_14, benhnhanfull.NuD5_14, benhnhanfull.NamT15_60, benhnhanfull.NamD15_60, benhnhanfull.NuT15_60, benhnhanfull.NuD15_60,  benhnhanfull.NamT60_100, benhnhanfull.NamD60_100, benhnhanfull.NuT60_100, benhnhanfull.NuD60_100 from
+(
+select
+benh_nhana.TIEUDE as MIEUTA
+,SUM(MAC) as T
+,SUM(DECODE(benh_nhana.CHET,1,1,0)  ) as D
+,SUM(DECODE(benh_nhana.DMGT_MASO , 2,1,0)  )  as NamT 
+,SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 then 1 else 0 end   )  as NamD
+, SUM(DECODE(benh_nhana.DMGT_MASO,1,1,0)  )  as NuT 
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO =1 then 1 else 0 end   )  as NuD 
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NamT0_4
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NamD0_4
+, SUM(case when benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NuT0_4
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=4 and benh_nhana.BENHNHAN_DONVITUOI=1) or  (benh_nhana.BENHNHAN_DONVITUOI!=1)) then 1 else 0 end  )  as NuD0_4
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT5_14
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD5_14
+, SUM(case when benh_nhana.DMGT_MASO = 1 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT5_14
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and  ((benh_nhana.BENHNHAN_TUOI<=14) and (benh_nhana.BENHNHAN_TUOI>4) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD5_14
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and   ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT15_60
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD15_60
+, SUM(case when benh_nhana.DMGT_MASO = 1 and   ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT15_60
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=60) and (benh_nhana.BENHNHAN_TUOI>14) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD15_60
+
+, SUM(case when benh_nhana.DMGT_MASO = 2 and   ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamT60_100
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 2 and ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NamD60_100
+, SUM(case when benh_nhana.DMGT_MASO = 1 and   ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuT60_100
+, SUM(case when benh_nhana.CHET=1 and benh_nhana.DMGT_MASO = 1 and ((benh_nhana.BENHNHAN_TUOI<=100) and (benh_nhana.BENHNHAN_TUOI>60) and (benh_nhana.BENHNHAN_DONVITUOI=1))  then 1 else 0 end  )  as NuD60_100
+from
+(
+select 
+DECODE(dm_tai_nan.DMTAINAN_TEN,null,'Khác',DEcode(dm_tai_nan.DMTAINAN_MASO,4,'-  Ngộ độc',dm_tai_nan.DMTAINAN_TEN)) as TIEUDE
+,benh_nhan.BENHNHAN_MA,benh_nhan.BENHNHAN_TUOI
+,benh_nhan.DMGT_MASO,benh_nhan.BENHNHAN_DONVITUOI
+,case when (tham_kham.THAMKHAM_KETQUA = 5 or tham_kham.THAMKHAM_DIEUTRI = 3 or tham_kham.THAMKHAM_DIEUTRI  = 7) then 1 else 0 end   as CHET , 1 as MAC
+from tham_kham left join tiep_don ON tham_kham.TIEPDON_MA = tiep_don.TIEPDON_MA
+left join benh_nhan ON tiep_don.BENHNHAN_MA = benh_nhan.BENHNHAN_MA
+left join dm_tai_nan ON tiep_don.TAINAN_MA = dm_tai_nan.DMTAINAN_MASO
+where tiep_don.TAINAN_MA is not null  and tham_kham.THAMKHAM_NGAYGIO BETWEEN TO_DATE($P{TuNgay})  AND TO_DATE($P{DenNgay}+1)
+union all
+select
+decode(dm_phuong_thuc_gay_tai_nan.DMPTGTN_TEN ,null,'- Khác','- '||dm_phuong_thuc_gay_tai_nan.DMPTGTN_TEN) as TIEUDE
+,benh_nhan.BENHNHAN_MA,benh_nhan.BENHNHAN_TUOI
+,benh_nhan.DMGT_MASO,benh_nhan.BENHNHAN_DONVITUOI
+,case when (tham_kham.THAMKHAM_KETQUA = 5 or tham_kham.THAMKHAM_DIEUTRI = 3 or tham_kham.THAMKHAM_DIEUTRI  = 7) then 1 else 0 end   as CHET , 1 as MAC
+from tham_kham left join tiep_don ON tham_kham.TIEPDON_MA = tiep_don.TIEPDON_MA
+left join benh_nhan ON tiep_don.BENHNHAN_MA = benh_nhan.BENHNHAN_MA
+left join dm_tai_nan ON tiep_don.TAINAN_MA = dm_tai_nan.DMTAINAN_MASO
+left join dm_phuong_thuc_gay_tai_nan ON tiep_don.DMPTGTN_MASO = dm_phuong_thuc_gay_tai_nan.DMPTGTN_MASO
+where tiep_don.TAINAN_MA = 4  and tham_kham.THAMKHAM_NGAYGIO BETWEEN TO_DATE($P{TuNgay})  AND TO_DATE($P{DenNgay}+1)
+
+union all
+
+select 
+decode(dm_tai_nan.DMTAINAN_TEN ,null,'Khác',decode(dm_tai_nan.DMTAINAN_MASO,4,'-  Ngộ độc',dm_tai_nan.DMTAINAN_TEN)) as TIEUDE
+,benh_nhan.BENHNHAN_MA,benh_nhan.BENHNHAN_TUOI
+,benh_nhan.DMGT_MASO,benh_nhan.BENHNHAN_DONVITUOI
+,DECODE(hsba_chuyen_mon.KETQUA_MA ,5  ,1,0) as CHET , 1 as MAC
+from hsba_chuyen_mon left join hsba ON hsba_chuyen_mon.HSBA_SOVAOVIEN = hsba.HSBA_SOVAOVIEN
+left join dm_tai_nan ON hsba.TAINAN_MA = dm_tai_nan.DMTAINAN_MASO
+left join benh_nhan ON hsba.BENHNHAN_MA = benh_nhan.BENHNHAN_MA
+where hsba.TAINAN_MA is not null  and hsba.HSBA_NGAYGIOVAOV BETWEEN TO_DATE($P{TuNgay})  AND TO_DATE($P{DenNgay}+1)
+
+union all
+select
+DECODE(dm_phuong_thuc_gay_tai_nan.DMPTGTN_TEN , null,'- Khác','- '||dm_phuong_thuc_gay_tai_nan.DMPTGTN_TEN) as TIEUDE
+,benh_nhan.BENHNHAN_MA,benh_nhan.BENHNHAN_TUOI
+,benh_nhan.DMGT_MASO,benh_nhan.BENHNHAN_DONVITUOI
+,DECODE(hsba_chuyen_mon.KETQUA_MA ,5,1,0)  as CHET 
+, 1 as MAC
+from hsba_chuyen_mon left join hsba ON hsba_chuyen_mon.HSBA_SOVAOVIEN = hsba.HSBA_SOVAOVIEN
+left join benh_nhan ON hsba.BENHNHAN_MA = benh_nhan.BENHNHAN_MA
+left join dm_tai_nan ON hsba.TAINAN_MA = dm_tai_nan.DMTAINAN_MASO
+left join dm_phuong_thuc_gay_tai_nan on hsba.DMPTGTN_MASO = dm_phuong_thuc_gay_tai_nan.DMPTGTN_MASO
+where hsba.TAINAN_MA = 4  and hsba.HSBA_NGAYGIOVAOV BETWEEN TO_DATE($P{TuNgay})  AND TO_DATE($P{DenNgay}+1)
+
+union all
+select Decode(dm_tai_nan.DMTAINAN_MASO,4,'-  Ngộ độc',dm_tai_nan.DMTAINAN_TEN)  as TIEUDE
+, '' as BENHNHANH_MA,0 as BENHNHAN_TUOI, 0 as DMGT_MASO, 0 as BENHNHANH_DONVITUOI, 0 as CHET, 0 as MAC
+from dm_tai_nan
+
+union all
+select ('- '||dm_phuong_thuc_gay_tai_nan.DMPTGTN_TEN) as TIEUDE
+, '' as BENHNHANH_MA,0 as BENHNHAN_TUOI, 0 as DMGT_MASO, 0 as BENHNHANH_DONVITUOI, 0 as CHET, 0 as MAC
+from dm_phuong_thuc_gay_tai_nan where dm_phuong_thuc_gay_tai_nan.DMTAINAN_MASO = 4
+) benh_nhana
+group by benh_nhana.TIEUDE
+)benhnhanfull
+left join 
+ (
+ select '-  Ngộ độc' as Name, 6 as pos , 0 as pos1, '6Ngộ độc' as poss from dual union all
+ select '- Động vật' as Name, 6 as pos , 3 as pos1, '-- Động vật' as poss  from dual union all
+ select '- Hóa chất' as Name, 6 as pos ,1 as pos1, '-- Hóa chất' as poss  from dual union all
+ select '- Khác' as Name, 6 as pos, 6 as pos1, '-- Khác' as poss  from dual union all
+ select '- Rượu' as Name, 6 as pos , 5 as pos1, '-- Rượu' as poss  from dual union all
+ select '- Thực phẩm' as Name, 6 as pos, 2 as pos1, '-- Thực phẩm' as poss  from dual union all
+ select '- Thực vật có độc' as Name, 6 as pos , 4 as pos1, '-- Thực vật có độc' as poss  from dual union all
+ select 'Bạo lực, xung đột (X85-Y90)' as Name, 8 as pos , 0 as pos1, '8Bạo lực, xung đột (X85-Y90)' as poss  from dual union all
+ select 'Bỏng (W85-W99,X00-X19)' as Name, 5 as pos , 0 as pos1, '5Bỏng (W85-W99,X00-X19)' as poss  from dual union all
+ select 'Đuối nước (W65-W84)' as Name, 4 as pos , 0 as pos1, '4Đuối nước (W65-W84)' as poss  from dual union all
+ select 'Khác' as Name, 9 as pos , 0 as pos1, '9Khác' as poss  from dual union all
+ select 'Ngã (W01-W19)' as Name, 1 as pos , 0 as pos1, '1Ngã (W01-W19)' as poss  from dual union all
+ select 'Súc vật, động vật (W50-W64)' as Name,3 as pos , 0 as pos1, '3Súc vật, động vật (W50-W64)' as poss  from dual union all
+ select 'Tai nạn giao thông (V01-V99)' as Name,0 as pos , 0 as pos1, '0Tai nạn giao thông (V01-V99)' as poss  from dual union all
+ select 'Tai nạn lao động (W20-W49)' as Name, 2 as pos , 0 as pos1, '2Tai nạn lao động (W20-W49)' as poss  from dual union all
+ select 'Tự tử (X60-X80)' as Name, 7 as pos  , 0 as pos1, '7Tự tử (X60-X80)' as poss from dual 
+) dmpos
+on benhnhanfull.MIEUTA = dmpos.Name
+order by dmpos.pos,dmpos.pos1, dmpos.Name
+) loaitainanfull
+
+union all
+
+select * from
+(
+select 'FDiễn biến sau khi tai nạn' as cat,'Tự chữa' as MIEUTA,  0 as T,0 as D,0 as NamT,0 as NamD,0 as NuT,0 as NuD,0 as NamT0_4,0 as NamD0_4,0 as NuT0_4,0 as NuD0_4,0 as NamT5_14,0 as NamD5_14,0 as NuT5_14,0 as NuD5_14,0 as NamT15_60,0 as NamD15_60,0 as NuT15_60,0 as NuD15_60,0 as NamT60_100,0 as NamD60_100,0 as NuT60_100,0 as NuD60_100  from dual union all
+select 'FDiễn biến sau khi tai nạn' as cat,'Được sơ cứu tại chỗ' as MIEUTA,  0 as T,0 as D,0 as NamT,0 as NamD,0 as NuT,0 as NuD,0 as NamT0_4,0 as NamD0_4,0 as NuT0_4,0 as NuD0_4,0 as NamT5_14,0 as NamD5_14,0 as NuT5_14,0 as NuD5_14,0 as NamT15_60,0 as NamD15_60,0 as NuT15_60,0 as NuD15_60,0 as NamT60_100,0 as NamD60_100,0 as NuT60_100,0 as NuD60_100  from dual union all
+select 'FDiễn biến sau khi tai nạn' as cat,'Đến cơ sở khám chữa bệnh tư'  as MIEUTA,  0 as T,0 as D,0 as NamT,0 as NamD,0 as NuT,0 as NuD,0 as NamT0_4,0 as NamD0_4,0 as NuT0_4,0 as NuD0_4,0 as NamT5_14,0 as NamD5_14,0 as NuT5_14,0 as NuD5_14,0 as NamT15_60,0 as NamD15_60,0 as NuT15_60,0 as NuD15_60,0 as NamT60_100,0 as NamD60_100,0 as NuT60_100,0 as NuD60_100  from dual union all
+select 'FDiễn biến sau khi tai nạn' as cat,'Đến trạm y tế xã' as MIEUTA , 0 as T,0 as D,0 as NamT,0 as NamD,0 as NuT,0 as NuD,0 as NamT0_4,0 as NamD0_4,0 as NuT0_4,0 as NuD0_4,0 as NamT5_14,0 as NamD5_14,0 as NuT5_14,0 as NuD5_14,0 as NamT15_60,0 as NamD15_60,0 as NuT15_60,0 as NuD15_60,0 as NamT60_100,0 as NamD60_100,0 as NuT60_100,0 as NuD60_100  from dual union all
+select 'FDiễn biến sau khi tai nạn' as cat,'Đến bệnh viện huyện, PKĐK' as MIEUTA, 0 as T,0 as D,0 as NamT,0 as NamD,0 as NuT,0 as NuD,0 as NamT0_4,0 as NamD0_4,0 as NuT0_4,0 as NuD0_4,0 as NamT5_14,0 as NamD5_14,0 as NuT5_14,0 as NuD5_14,0 as NamT15_60,0 as NamD15_60,0 as NuT15_60,0 as NuD15_60,0 as NamT60_100,0 as NamD60_100,0 as NuT60_100,0 as NuD60_100  from dual union all
+select 'FDiễn biến sau khi tai nạn' as cat,'Đến bệnh viện tỉnh' as MIEUTA ,  0 as T,0 as D,0 as NamT,0 as NamD,0 as NuT,0 as NuD,0 as NamT0_4,0 as NamD0_4,0 as NuT0_4,0 as NuD0_4,0 as NamT5_14,0 as NamD5_14,0 as NuT5_14,0 as NuD5_14,0 as NamT15_60,0 as NamD15_60,0 as NuT15_60,0 as NuD15_60,0 as NamT60_100,0 as NamD60_100,0 as NuT60_100,0 as NuD60_100  from dual union all
+select 'FDiễn biến sau khi tai nạn' as cat,'Đến bệnh viện trung ương' as MIEUTA ,  0 as T,0 as D,0 as NamT,0 as NamD,0 as NuT,0 as NuD,0 as NamT0_4,0 as NamD0_4,0 as NuT0_4,0 as NuD0_4,0 as NamT5_14,0 as NamD5_14,0 as NuT5_14,0 as NuD5_14,0 as NamT15_60,0 as NamD15_60,0 as NuT15_60,0 as NuD15_60,0 as NamT60_100,0 as NamD60_100,0 as NuT60_100,0 as NuD60_100  from dual union all
+select 'FDiễn biến sau khi tai nạn' as cat,'Khác' as MIEUTA ,  0 as T,0 as D,0 as NamT,0 as NamD,0 as NuT,0 as NuD,0 as NamT0_4,0 as NamD0_4,0 as NuT0_4,0 as NuD0_4,0 as NamT5_14,0 as NamD5_14,0 as NuT5_14,0 as NuD5_14,0 as NamT15_60,0 as NamD15_60,0 as NuT15_60,0 as NuD15_60,0 as NamT60_100,0 as NamD60_100,0 as NuT60_100,0 as NuD60_100 from dual 
+) dienbiensaufull]]></queryString>
+
+	<field name="cat" class="java.lang.String"/>
+	<field name="MIEUTA" class="java.lang.String"/>
+	<field name="T" class="java.math.BigDecimal"/>
+	<field name="D" class="java.math.BigDecimal"/>
+	<field name="NamT" class="java.math.BigDecimal"/>
+	<field name="NamD" class="java.math.BigDecimal"/>
+	<field name="NuT" class="java.math.BigDecimal"/>
+	<field name="NuD" class="java.math.BigDecimal"/>
+	<field name="NamT0_4" class="java.math.BigDecimal"/>
+	<field name="NamD0_4" class="java.math.BigDecimal"/>
+	<field name="NuT0_4" class="java.math.BigDecimal"/>
+	<field name="NuD0_4" class="java.math.BigDecimal"/>
+	<field name="NamT5_14" class="java.math.BigDecimal"/>
+	<field name="NamD5_14" class="java.math.BigDecimal"/>
+	<field name="NuT5_14" class="java.math.BigDecimal"/>
+	<field name="NuD5_14" class="java.math.BigDecimal"/>
+	<field name="NamT15_60" class="java.math.BigDecimal"/>
+	<field name="NamD15_60" class="java.math.BigDecimal"/>
+	<field name="NuT15_60" class="java.math.BigDecimal"/>
+	<field name="NuD15_60" class="java.math.BigDecimal"/>
+	<field name="NamT60_100" class="java.math.BigDecimal"/>
+	<field name="NamD60_100" class="java.math.BigDecimal"/>
+	<field name="NuT60_100" class="java.math.BigDecimal"/>
+	<field name="NuD60_100" class="java.math.BigDecimal"/>
+
+	<variable name="T_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{T}]]></variableExpression>
+	</variable>
+	<variable name="D_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{D}]]></variableExpression>
+	</variable>
+	<variable name="NamT_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NamT}]]></variableExpression>
+	</variable>
+	<variable name="NamD_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NamD}]]></variableExpression>
+	</variable>
+	<variable name="NuT_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NuT}]]></variableExpression>
+	</variable>
+	<variable name="NuD_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NuD}]]></variableExpression>
+	</variable>
+	<variable name="NamT0_4_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NamT0_4}]]></variableExpression>
+	</variable>
+	<variable name="NamD0_4_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NamD0_4}]]></variableExpression>
+	</variable>
+	<variable name="NuT0_4_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NuT0_4}]]></variableExpression>
+	</variable>
+	<variable name="NuD0_4_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NuD0_4}]]></variableExpression>
+	</variable>
+	<variable name="NamT5_14_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NamT5_14}]]></variableExpression>
+	</variable>
+	<variable name="NamD5_14_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NamD5_14}]]></variableExpression>
+	</variable>
+	<variable name="NuT5_14_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NuT5_14}]]></variableExpression>
+	</variable>
+	<variable name="NuD5_14_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NuD5_14}]]></variableExpression>
+	</variable>
+	<variable name="NamT15_60_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NamT15_60}]]></variableExpression>
+	</variable>
+	<variable name="NamD15_60_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NamD15_60}]]></variableExpression>
+	</variable>
+	<variable name="NuT15_60_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NuT15_60}]]></variableExpression>
+	</variable>
+	<variable name="NuD15_60_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NuD15_60}]]></variableExpression>
+	</variable>
+	<variable name="NamT60_100_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NamT60_100}]]></variableExpression>
+	</variable>
+	<variable name="NamD60_100_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NamD60_100}]]></variableExpression>
+	</variable>
+	<variable name="NuT60_100_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NuT60_100}]]></variableExpression>
+	</variable>
+	<variable name="NuD60_100_SUM" class="java.math.BigDecimal" resetType="Group" resetGroup="LOAI_TAI_NAN" calculation="Sum">
+		<variableExpression><![CDATA[$F{MIEUTA}.equals("6Ngộ độc")?new BigDecimal(0):$F{NuD60_100}]]></variableExpression>
+	</variable>
+
+		<group  name="LOAI_TAI_NAN" >
+			<groupExpression><![CDATA[$F{cat}]]></groupExpression>
+			<groupHeader>
+			<band height="20"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="0"
+						y="0"
+						width="12"
+						height="20"
+						key="textField-480"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{cat}.substring(0,1 )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="12"
+						y="0"
+						width="140"
+						height="20"
+						key="textField-483"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{cat}.substring(1 )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="152"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-486"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{T_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{T_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="182"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-510"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{D_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{D_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="212"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-511"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NamT_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NamT_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="242"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-512"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NamD_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NamD_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="272"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-513"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NuT_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NuT_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="302"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-514"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NuD_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NuD_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="332"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-515"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NamT0_4_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NamT0_4_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="362"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-516"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NamD0_4_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NamD0_4_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="392"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-517"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NuT0_4_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NuT0_4_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="422"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-518"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NuD0_4_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NuD0_4_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="452"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-519"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NamT5_14_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NamT5_14_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="482"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-520"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NamD5_14_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NamD5_14_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="512"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-521"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NuT5_14_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NuT5_14_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="542"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-522"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NuD5_14_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NuD5_14_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="572"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-523"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NamT15_60_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NamT15_60_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="602"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-524"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NamD15_60_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NamD15_60_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="632"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-525"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NuT15_60_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NuT15_60_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="662"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-526"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NuD15_60_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NuD15_60_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="692"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-527"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NamT60_100_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NamT60_100_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="722"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-528"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NamD60_100_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NamD60_100_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="752"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-529"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NuT60_100_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NuT60_100_SUM})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="LOAI_TAI_NAN"  hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="782"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-530"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{NuD60_100_SUM}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($V{NuD60_100_SUM})]]></textFieldExpression>
+				</textField>
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+			</groupFooter>
+		</group>
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="138"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="231"
+						y="56"
+						width="392"
+						height="20"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" isStyledText="true">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" size="14" isBold="true"/>
+					</textElement>
+				<text><![CDATA[BÁO CÁO THỐNG KÊ TAI NẠN THƯƠNG TÍCH ĐỊNH KỲ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="5"
+						y="5"
+						width="218"
+						height="15"
+						key="textField-38"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{soyte}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="5"
+						y="20"
+						width="218"
+						height="15"
+						key="textField-39"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{benhvien}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="231"
+						y="76"
+						width="392"
+						height="15"
+						key="textField-45"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{tieude}==null?"":"("+$P{tieude}+")"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="537"
+						y="5"
+						width="215"
+						height="15"
+						key="textField-478"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="537"
+						y="20"
+						width="215"
+						height="15"
+						key="textField-479"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Độc Lập - Tự Do - Hạnh Phúc"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						style="boldStyle"
+						x="0"
+						y="102"
+						width="535"
+						height="20"
+						key="staticText-55"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" isBold="true"/>
+					</textElement>
+				<text><![CDATA[THỐNG KÊ SỐ LIỆU TAI NẠN, THƯƠNG TÍCH]]></text>
+				</staticText>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="56"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="0"
+						y="0"
+						width="12"
+						height="56"
+						key="staticText-8"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[STT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="152"
+						y="0"
+						width="180"
+						height="16"
+						key="staticText-11"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[TỔNG CHUNG]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="152"
+						y="16"
+						width="30"
+						height="40"
+						key="staticText-13"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="182"
+						y="16"
+						width="30"
+						height="40"
+						key="staticText-56"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="212"
+						y="16"
+						width="60"
+						height="20"
+						key="staticText-57"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Nam]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="272"
+						y="16"
+						width="60"
+						height="20"
+						key="staticText-58"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Nữ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="212"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-59"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="242"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-60"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="272"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-61"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="302"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-62"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="332"
+						y="0"
+						width="120"
+						height="16"
+						key="staticText-63"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[TỪ 0 ĐẾN 4 TUỔI]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="332"
+						y="16"
+						width="60"
+						height="20"
+						key="staticText-64"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Nam]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="392"
+						y="16"
+						width="60"
+						height="20"
+						key="staticText-65"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Nữ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="332"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-66"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="362"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-67"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="392"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-68"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="422"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-69"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="452"
+						y="0"
+						width="120"
+						height="16"
+						key="staticText-70"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[TỪ 5 ĐẾN 14 TUỔI]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="452"
+						y="16"
+						width="60"
+						height="20"
+						key="staticText-71"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Nam]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="512"
+						y="16"
+						width="60"
+						height="20"
+						key="staticText-72"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Nữ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="452"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-73"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="482"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-74"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="512"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-75"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="542"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-76"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="572"
+						y="0"
+						width="120"
+						height="16"
+						key="staticText-77"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[TỪ 15 ĐẾN 60 TUỔI]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="572"
+						y="16"
+						width="60"
+						height="20"
+						key="staticText-78"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Nam]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="632"
+						y="16"
+						width="60"
+						height="20"
+						key="staticText-79"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Nữ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="572"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-80"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="602"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-81"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="632"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-82"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="662"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-83"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="692"
+						y="0"
+						width="120"
+						height="16"
+						key="staticText-84"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[TRÊN 60 TUỔI]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="692"
+						y="16"
+						width="60"
+						height="20"
+						key="staticText-85"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Nam]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="752"
+						y="16"
+						width="60"
+						height="20"
+						key="staticText-86"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Nữ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="692"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-87"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="722"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-88"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="752"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-89"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Mắc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="782"
+						y="36"
+						width="30"
+						height="20"
+						key="staticText-90"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[Chết]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="12"
+						y="0"
+						width="140"
+						height="56"
+						key="staticText-91"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" size="10"/>
+					</textElement>
+				<text><![CDATA[NỘI DUNG TỔNG HỢP 
+VÀ PHÂN TÍCH LOẠI TAI 
+NẠN THƯƠNG TÍCH]]></text>
+				</staticText>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="20"  isSplitAllowed="true" >
+				<printWhenExpression><![CDATA[new Boolean(!$F{cat}.equals("ASố người tai nạn, thương tích"))]]></printWhenExpression>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="0"
+						y="0"
+						width="12"
+						height="20"
+						key="textField-481"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{cat}.equals("ENguyên nhân TNTT (xếp theo)")?($F{MIEUTA}.substring(0,1).equals("-")?$F{MIEUTA}.substring(0,1):(((new Integer($F{MIEUTA}.substring(0,1))).intValue()+1)+"")):($V{LOAI_TAI_NAN_COUNT}+"")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="12"
+						y="0"
+						width="140"
+						height="20"
+						key="textField-484"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{cat}.equals("ENguyên nhân TNTT (xếp theo)")?$F{MIEUTA}.substring(1):$F{MIEUTA}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="152"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-488"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{T}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{T})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="182"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-489"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{D}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{D})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="212"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-490"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NamT}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NamT})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="242"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-491"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NamD}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NamD})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="272"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-492"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NuT}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NuT})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="302"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-493"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NuD}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NuD})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="332"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-494"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NamT0_4}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NamT0_4})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="362"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-495"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NamD0_4}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NamD0_4})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="392"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-496"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NuT0_4}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NuT0_4})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="422"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-497"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NuD0_4}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NuD0_4})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="452"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-498"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NamT5_14}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NamT5_14})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="482"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-499"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NamD5_14}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NamD5_14})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="512"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-500"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NuT5_14}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NuT5_14})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="542"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-501"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NuD5_14}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NuD5_14})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="572"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-502"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NamT15_60}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NamT15_60})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="602"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-503"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NamD15_60}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NamD15_60})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="632"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-504"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NuT15_60}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NuT15_60})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="662"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-505"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NuD15_60}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NuD15_60})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="692"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-506"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NamT60_100}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NamT60_100})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="722"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-507"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NamD60_100}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NamD60_100})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="752"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-508"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NuT60_100}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NuT60_100})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="782"
+						y="0"
+						width="30"
+						height="20"
+						key="textField-509"
+						stretchType="RelativeToBandHeight"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="Thin" rightBorderColor="#000000" rightPadding="2" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NuD60_100}.equals(new BigDecimal("0"))?"":(new DecimalFormat("###,###")).format($F{NuD60_100})]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="100"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="596"
+						y="36"
+						width="150"
+						height="18"
+						key="staticText-92"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" isBold="true"/>
+					</textElement>
+				<text><![CDATA[GIÁM ĐỐC]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						style="boldStyle"
+						x="567"
+						y="12"
+						width="208"
+						height="18"
+						key="textField-531"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[new String("Ngày ") + new SimpleDateFormat("dd").format(new Date())
++ new String(" tháng ") + new SimpleDateFormat("MM").format(new Date())
++ new String(" năm ") + new SimpleDateFormat("yyyy").format(new Date())]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="293"
+						y="36"
+						width="150"
+						height="18"
+						key="staticText-93"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TRƯỞNG PHÒNG KHTH]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="40"
+						y="36"
+						width="150"
+						height="18"
+						key="staticText-94"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" isBold="true"/>
+					</textElement>
+				<text><![CDATA[NGƯỜI LẬP BIỂU]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="40"
+						y="51"
+						width="150"
+						height="18"
+						key="staticText-95"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesi.ttf" size="10" isItalic="true"/>
+					</textElement>
+				<text><![CDATA[(Chức danh, ký tên)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="293"
+						y="51"
+						width="150"
+						height="18"
+						key="staticText-96"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesi.ttf" size="10" isItalic="true"/>
+					</textElement>
+				<text><![CDATA[(Chức danh, ký tên)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="596"
+						y="51"
+						width="150"
+						height="18"
+						key="staticText-97"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesi.ttf" size="10" isItalic="true"/>
+					</textElement>
+				<text><![CDATA[(Chức danh, ký tên)]]></text>
+				</staticText>
+			</band>
+		</summary>
+</jasperReport>

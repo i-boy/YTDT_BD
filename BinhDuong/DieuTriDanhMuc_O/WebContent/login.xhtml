@@ -1,0 +1,43 @@
+﻿<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+<script language="JavaScript" type="text/JavaScript" src="js/MD5.JS"></script>
+<script language="JavaScript" type="text/JavaScript">  
+	function hashPassword() {
+		document.getElementById("login:password").value = hex_md5(document.getElementById("login:password").value);		
+	}
+</script>	
+    <h:form id="login">
+
+        <rich:panel>
+            <f:facet name="header">Đăng nhập hệ thống</f:facet>
+            <div class="dialog">
+                <h:panelGrid columns="2" rowClasses="prop" columnClasses="name,value">
+                    <h:outputLabel for="username">Tên đăng nhập</h:outputLabel>
+                    <h:inputText id="username" style="text-transform: uppercase"
+                              value="#{credentials.username}"/>
+                    <h:outputLabel for="password">Mật khẩu</h:outputLabel>
+                    <h:inputSecret id="password"
+                                value="#{credentials.password}"/>                    
+                </h:panelGrid>
+            </div>
+        </rich:panel>
+
+        <div class="actionButtons">
+            <h:commandButton onclick="hashPassword()" value="Đăng nhập" action="#{identity.login}"/>
+        </div>
+
+    </h:form>
+	<script language="javascript">
+		document.getElementById(document.forms[0].id + ':username').focus();
+	</script>
+ </ui:define>
+</ui:composition>

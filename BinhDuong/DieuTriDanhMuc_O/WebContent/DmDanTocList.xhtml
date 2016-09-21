@@ -1,0 +1,188 @@
+﻿<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmDanTocSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Dân tộc tìm kiếm" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Mã dân tộc</ui:define>
+                <h:inputText id="dmdantocMa" value="#{dmDanTocList.dmDanToc.dmdantocMa}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Tên dân tộc</ui:define>
+                <h:inputText id="dmdantocTen" value="#{dmDanTocList.dmDanToc.dmdantocTen}"/>
+            </s:decorate>
+
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Tìm kiếm" action="/DmDanTocList.xhtml"/>
+            <s:button id="reset" value="Nhập lại" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Dân tộc Kết quả</f:facet>
+    <div class="results" id="dmDanTocList">
+
+    <h:outputText value="Không tìm thấy kết quả nào."
+               rendered="#{empty dmDanTocList.resultList}"/>
+
+    <rich:dataTable id="dmDanTocList"
+                var="_dmDanToc"
+              value="#{dmDanTocList.resultList}"
+           rendered="#{not empty dmDanTocList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmDanTocList}"/>
+                    <ui:param name="propertyLabel" value="Mã số"/>
+                    <ui:param name="propertyPath" value="dmDanToc.dmdantocMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmDanToc.dmdantocMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmDanTocList}"/>
+                    <ui:param name="propertyLabel" value="Chọn"/>
+                    <ui:param name="propertyPath" value="dmDanToc.dmdantocChon"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmDanToc.dmdantocChon}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmDanTocList}"/>
+                    <ui:param name="propertyLabel" value="Mặc định"/>
+                    <ui:param name="propertyPath" value="dmDanToc.dmdantocDefa"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmDanToc.dmdantocDefa}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmDanTocList}"/>
+                    <ui:param name="propertyLabel" value="Mã dân tộc"/>
+                    <ui:param name="propertyPath" value="dmDanToc.dmdantocMa"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmDanToc.dmdantocMa}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmDanTocList}"/>
+                    <ui:param name="propertyLabel" value="Miễn phí"/>
+                    <ui:param name="propertyPath" value="dmDanToc.dmdantocMienphi"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmDanToc.dmdantocMienphi}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmDanTocList}"/>
+                    <ui:param name="propertyLabel" value="Ngày giờ cập nhật"/>
+                    <ui:param name="propertyPath" value="dmDanToc.dmdantocNgaygiocn"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmDanToc.dmdantocNgaygiocn}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmDanTocList}"/>
+                    <ui:param name="propertyLabel" value="Tên dân tộc"/>
+                    <ui:param name="propertyPath" value="dmDanToc.dmdantocTen"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmDanToc.dmdantocTen}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Thao tác</f:facet>
+            <s:link view="/#{empty from ? 'DmDanToc' : from}.xhtml"
+                   value="#{empty from ? 'Xem' : 'Chọn'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="dmDanToc">
+                <f:param name="dmDanTocDmdantocMaso"
+                        value="#{_dmDanToc.dmdantocMaso}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/DmDanTocEdit.xhtml"
+                   value="Sửa"
+             propagation="none"
+                      id="dmDanTocEdit"
+                rendered="#{empty from}">
+                <f:param name="dmDanTocDmdantocMaso"
+                        value="#{_dmDanToc.dmdantocMaso}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/DmDanTocList.xhtml"
+            rendered="#{dmDanTocList.previousExists}"
+               value="#{messages.left}#{messages.left} Trang đầu"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/DmDanTocList.xhtml"
+            rendered="#{dmDanTocList.previousExists}"
+               value="#{messages.left} Trang trước"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{dmDanTocList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DmDanTocList.xhtml"
+            rendered="#{dmDanTocList.nextExists}"
+               value="Trang sau #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{dmDanTocList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DmDanTocList.xhtml"
+            rendered="#{dmDanTocList.nextExists}"
+               value="Trang cuối #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{dmDanTocList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/DmDanTocEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Thêm mới Dân tộc">
+            <f:param name="dmDanTocDmdantocMaso"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

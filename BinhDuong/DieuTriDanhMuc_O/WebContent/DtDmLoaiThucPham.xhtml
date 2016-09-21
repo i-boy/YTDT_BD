@@ -1,0 +1,121 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <rich:panel>
+        <f:facet name="header">Loại thực phẩm Chi tiết</f:facet>
+
+
+        <s:decorate id="dtdmltpChon" template="layout/display.xhtml">
+            <ui:define name="label">Chọn</ui:define>
+            <h:outputText value="#{dtDmLoaiThucPhamHome.instance.dtdmltpChon}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmltpMa" template="layout/display.xhtml">
+            <ui:define name="label">Mã</ui:define>
+            <h:outputText value="#{dtDmLoaiThucPhamHome.instance.dtdmltpMa}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmltpNgaygiocn" template="layout/display.xhtml">
+            <ui:define name="label">Ngày giờ cập nhật</ui:define>
+            <h:outputText value="#{dtDmLoaiThucPhamHome.instance.dtdmltpNgaygiocn}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmltpTen" template="layout/display.xhtml">
+            <ui:define name="label">Tên</ui:define>
+            <h:outputText value="#{dtDmLoaiThucPhamHome.instance.dtdmltpTen}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/DtDmLoaiThucPhamEdit.xhtml"
+                    id="edit"
+                 value="Sửa"/>
+
+        <s:button view="/#{empty dtDmLoaiThucPhamFrom ? 'DtDmLoaiThucPhamList' : dtDmLoaiThucPhamFrom}.xhtml"
+                    id="done"
+                 value="Hoàn thành"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Đơn vị tính</h:panelGroup>
+        </f:facet>
+    <div class="association" id="dmDonViTinhParent">
+
+        <h:outputText value="Không tìm thấy dmDonViTinh phù hợp với dtDmLoaiThucPham."
+                   rendered="#{dtDmLoaiThucPhamHome.instance.dmDonViTinh == null}"/>
+
+        <rich:dataTable var="_dmDonViTinh"
+                   value="#{dtDmLoaiThucPhamHome.instance.dmDonViTinh}"
+                rendered="#{dtDmLoaiThucPhamHome.instance.dmDonViTinh != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dmDonViTinhTable">
+            <h:column>
+                <f:facet name="header">Mã số đơn vị tính</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Đặc điểm</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhDacdiem}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc dự phòng</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhDp}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc điều trị</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhDt}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Dung tích</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhDtich}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã đơn vị tính</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc quản lý</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhQl}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên đơn vị tính</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhTen}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="viewdmDonViTinh"
+                     value="Xem"
+                      view="/DmDonViTinh.xhtml">
+                    <f:param name="dmDonViTinhDmdonvitinhMaso"
+                           value="#{_dmDonViTinh.dmdonvitinhMaso}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

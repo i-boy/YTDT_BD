@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="phieuxuatTH"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="595"
+		 pageHeight="421"
+		 columnWidth="595"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="0"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isFloatColumnFooter="true"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<reportFont name="Times New Roman" isDefault="true" fontName="Times New Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<parameter name="maPhieuXuat" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[Ma phieu xuat]]></parameterDescription>
+	</parameter>
+	<parameter name="ngayXuat" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[Ngay xuat phieu]]></parameterDescription>
+	</parameter>
+	<parameter name="tenBenhNhan" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[Ho ten benh nhan]]></parameterDescription>
+	</parameter>
+	<parameter name="diaChiBenhNhan" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[Dia chi benh nhan]]></parameterDescription>
+	</parameter>
+	<parameter name="chanDoan" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[Chan doan]]></parameterDescription>
+	</parameter>
+	<parameter name="nguoiLapPhieu" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[Nguoi lap phieu]]></parameterDescription>
+	</parameter>
+	<parameter name="namSinh" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="soTheBH" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="kyHieuBS" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="xuatTaiKho" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="tongCong" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="tienKham" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="tienThuoc" isForPrompting="false" class="java.lang.Double"/>
+	<parameter name="ngay" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="thang" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="nam" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="nguoiPhat" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="nguoiNhan" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="gioiTinh" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="gioXuat" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="diaPhuong" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="SOYTE" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="BENHVIEN" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="DIENTHOAI" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="SubPhieuXuatBHYT" isForPrompting="false" class="net.sf.jasperreports.engine.JasperReport"/>
+	<parameter name="TIENBANGCHU" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="HOTEN" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{HOTEN}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NOIDUNG" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{NOIDUNG}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DIACHI" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{DIACHI}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="UBNDTINH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{UBNDTINH}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DONVI" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="MASODONVI" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="SOTIEN" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[$P{SOTIEN}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" isForPrompting="true" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[".\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sub1" isForPrompting="false" class="net.sf.jasperreports.engine.JasperReport"/>
+	<parameter name="sub2" isForPrompting="false" class="net.sf.jasperreports.engine.JasperReport"/>
+	<queryString><![CDATA[select ctx.CTXUATBH_THUTU as stt,
+	dmt.DMTHUOC_TEN as tenHang,
+	dvt.DMDONVITINH_TEN as donVi,
+	ctx.CTXUATBH_SOLUONG as soLuong,
+	ctx.CTXUATBH_DONGIA as donGia,
+	ctx.CTXUATBH_SOLUONG * ctx.CTXUATBH_DONGIA  as thanhTienCt
+from (PHIEU_XUAT_BH px left join CT_XUAT_BH ctx on px.PHIEUXUATBH_MA = ctx.PHIEUXUATBH_MA)
+  left join DM_THUOC dmt on ctx.DMTHUOC_MASO=dmt.DMTHUOC_MASO
+  left join DM_DON_VI_TINH dvt on dmt.DMDONVITINH_MASO=dvt.DMDONVITINH_MASO
+where ($P{maPhieuXuat} is null or px.PHIEUXUATBH_MA like $P{maPhieuXuat})]]></queryString>
+
+	<field name="stt" class="java.lang.String"/>
+	<field name="tenHang" class="java.lang.String"/>
+	<field name="donVi" class="java.lang.String"/>
+	<field name="soLuong" class="java.lang.String"/>
+	<field name="donGia" class="java.lang.String"/>
+	<field name="thanhTienCt" class="java.lang.String"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="62"  isSplitAllowed="false" >
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="0"
+						y="0"
+						width="595"
+						height="15"
+						key="subreport-1"
+						positionType="Float"/>
+					<subreportParameter  name="maPhieuXuat">
+						<subreportParameterExpression><![CDATA[$P{maPhieuXuat}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="ngayXuat">
+						<subreportParameterExpression><![CDATA[$P{ngayXuat}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="tenBenhNhan">
+						<subreportParameterExpression><![CDATA[$P{tenBenhNhan}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="diaChiBenhNhan">
+						<subreportParameterExpression><![CDATA[$P{diaChiBenhNhan}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="chanDoan">
+						<subreportParameterExpression><![CDATA[$P{chanDoan}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="nguoiLapPhieu">
+						<subreportParameterExpression><![CDATA[$P{nguoiLapPhieu}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="namSinh">
+						<subreportParameterExpression><![CDATA[$P{namSinh}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="soTheBH">
+						<subreportParameterExpression><![CDATA[$P{soTheBH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="kyHieuBS">
+						<subreportParameterExpression><![CDATA[$P{kyHieuBS}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="xuatTaiKho">
+						<subreportParameterExpression><![CDATA[$P{xuatTaiKho}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="tongCong">
+						<subreportParameterExpression><![CDATA[$P{tongCong}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="tienKham">
+						<subreportParameterExpression><![CDATA[$P{tienKham}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="tienThuoc">
+						<subreportParameterExpression><![CDATA[$P{tienThuoc}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="ngay">
+						<subreportParameterExpression><![CDATA[$P{ngay}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="thang">
+						<subreportParameterExpression><![CDATA[$P{thang}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="nam">
+						<subreportParameterExpression><![CDATA[$P{nam}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="nguoiPhat">
+						<subreportParameterExpression><![CDATA[$P{nguoiPhat}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="nguoiNhan">
+						<subreportParameterExpression><![CDATA[$P{nguoiNhan}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="gioiTinh">
+						<subreportParameterExpression><![CDATA[$P{gioiTinh}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="gioXuat">
+						<subreportParameterExpression><![CDATA[$P{gioXuat}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="diaPhuong">
+						<subreportParameterExpression><![CDATA[$P{diaPhuong}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SOYTE">
+						<subreportParameterExpression><![CDATA[$P{SOYTE}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="BENHVIEN">
+						<subreportParameterExpression><![CDATA[$P{BENHVIEN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="DIENTHOAI">
+						<subreportParameterExpression><![CDATA[$P{DIENTHOAI}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SubPhieuXuatBHYT">
+						<subreportParameterExpression><![CDATA[$P{SubPhieuXuatBHYT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="TIENBANGCHU">
+						<subreportParameterExpression><![CDATA[$P{TIENBANGCHU}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="HOTEN">
+						<subreportParameterExpression><![CDATA[$P{HOTEN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NOIDUNG">
+						<subreportParameterExpression><![CDATA[$P{NOIDUNG}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="DIACHI">
+						<subreportParameterExpression><![CDATA[$P{DIACHI}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="UBNDTINH">
+						<subreportParameterExpression><![CDATA[$P{UBNDTINH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="DONVI">
+						<subreportParameterExpression><![CDATA[$P{DONVI}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="MASODONVI">
+						<subreportParameterExpression><![CDATA[$P{MASODONVI}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SOTIEN">
+						<subreportParameterExpression><![CDATA[$P{SOTIEN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SUBREPORT_DIR">
+						<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="sub1">
+						<subreportParameterExpression><![CDATA[$P{sub1}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="sub2">
+						<subreportParameterExpression><![CDATA[$P{sub2}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="net.sf.jasperreports.engine.JasperReport"><![CDATA[$P{SubPhieuXuatBHYT}]]></subreportExpression>
+				</subreport>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="0"
+						y="15"
+						width="595"
+						height="15"
+						key="subreport-2"
+						positionType="Float"/>
+					<subreportParameter  name="maPhieuXuat">
+						<subreportParameterExpression><![CDATA[$P{maPhieuXuat}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="ngayXuat">
+						<subreportParameterExpression><![CDATA[$P{ngayXuat}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="tenBenhNhan">
+						<subreportParameterExpression><![CDATA[$P{tenBenhNhan}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="diaChiBenhNhan">
+						<subreportParameterExpression><![CDATA[$P{diaChiBenhNhan}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="chanDoan">
+						<subreportParameterExpression><![CDATA[$P{chanDoan}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="nguoiLapPhieu">
+						<subreportParameterExpression><![CDATA[$P{nguoiLapPhieu}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="namSinh">
+						<subreportParameterExpression><![CDATA[$P{namSinh}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="soTheBH">
+						<subreportParameterExpression><![CDATA[$P{soTheBH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="kyHieuBS">
+						<subreportParameterExpression><![CDATA[$P{kyHieuBS}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="xuatTaiKho">
+						<subreportParameterExpression><![CDATA[$P{xuatTaiKho}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="tongCong">
+						<subreportParameterExpression><![CDATA[$P{tongCong}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="tienKham">
+						<subreportParameterExpression><![CDATA[$P{tienKham}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="tienThuoc">
+						<subreportParameterExpression><![CDATA[$P{tienThuoc}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="ngay">
+						<subreportParameterExpression><![CDATA[$P{ngay}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="thang">
+						<subreportParameterExpression><![CDATA[$P{thang}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="nam">
+						<subreportParameterExpression><![CDATA[$P{nam}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="nguoiPhat">
+						<subreportParameterExpression><![CDATA[$P{nguoiPhat}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="nguoiNhan">
+						<subreportParameterExpression><![CDATA[$P{nguoiNhan}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="gioiTinh">
+						<subreportParameterExpression><![CDATA[$P{gioiTinh}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="gioXuat">
+						<subreportParameterExpression><![CDATA[$P{gioXuat}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="diaPhuong">
+						<subreportParameterExpression><![CDATA[$P{diaPhuong}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SOYTE">
+						<subreportParameterExpression><![CDATA[$P{SOYTE}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="BENHVIEN">
+						<subreportParameterExpression><![CDATA[$P{BENHVIEN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="DIENTHOAI">
+						<subreportParameterExpression><![CDATA[$P{DIENTHOAI}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SubPhieuXuatBHYT">
+						<subreportParameterExpression><![CDATA[$P{SubPhieuXuatBHYT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="TIENBANGCHU">
+						<subreportParameterExpression><![CDATA[$P{TIENBANGCHU}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="HOTEN">
+						<subreportParameterExpression><![CDATA[$P{HOTEN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NOIDUNG">
+						<subreportParameterExpression><![CDATA[$P{NOIDUNG}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="DIACHI">
+						<subreportParameterExpression><![CDATA[$P{DIACHI}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="UBNDTINH">
+						<subreportParameterExpression><![CDATA[$P{UBNDTINH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="DONVI">
+						<subreportParameterExpression><![CDATA[$P{DONVI}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="MASODONVI">
+						<subreportParameterExpression><![CDATA[$P{MASODONVI}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SOTIEN">
+						<subreportParameterExpression><![CDATA[$P{SOTIEN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SUBREPORT_DIR">
+						<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="sub1">
+						<subreportParameterExpression><![CDATA[$P{sub1}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="sub2">
+						<subreportParameterExpression><![CDATA[$P{sub2}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="net.sf.jasperreports.engine.JasperReport"><![CDATA[$P{sub1}]]></subreportExpression>
+				</subreport>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="0"
+						y="30"
+						width="595"
+						height="15"
+						key="subreport-3"
+						positionType="Float"/>
+					<subreportParameter  name="maPhieuXuat">
+						<subreportParameterExpression><![CDATA[$P{maPhieuXuat}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="ngayXuat">
+						<subreportParameterExpression><![CDATA[$P{ngayXuat}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="tenBenhNhan">
+						<subreportParameterExpression><![CDATA[$P{tenBenhNhan}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="diaChiBenhNhan">
+						<subreportParameterExpression><![CDATA[$P{diaChiBenhNhan}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="chanDoan">
+						<subreportParameterExpression><![CDATA[$P{chanDoan}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="nguoiLapPhieu">
+						<subreportParameterExpression><![CDATA[$P{nguoiLapPhieu}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="namSinh">
+						<subreportParameterExpression><![CDATA[$P{namSinh}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="soTheBH">
+						<subreportParameterExpression><![CDATA[$P{soTheBH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="kyHieuBS">
+						<subreportParameterExpression><![CDATA[$P{kyHieuBS}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="xuatTaiKho">
+						<subreportParameterExpression><![CDATA[$P{xuatTaiKho}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="tongCong">
+						<subreportParameterExpression><![CDATA[$P{tongCong}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="tienKham">
+						<subreportParameterExpression><![CDATA[$P{tienKham}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="tienThuoc">
+						<subreportParameterExpression><![CDATA[$P{tienThuoc}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="ngay">
+						<subreportParameterExpression><![CDATA[$P{ngay}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="thang">
+						<subreportParameterExpression><![CDATA[$P{thang}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="nam">
+						<subreportParameterExpression><![CDATA[$P{nam}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="nguoiPhat">
+						<subreportParameterExpression><![CDATA[$P{nguoiPhat}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="nguoiNhan">
+						<subreportParameterExpression><![CDATA[$P{nguoiNhan}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="gioiTinh">
+						<subreportParameterExpression><![CDATA[$P{gioiTinh}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="gioXuat">
+						<subreportParameterExpression><![CDATA[$P{gioXuat}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="diaPhuong">
+						<subreportParameterExpression><![CDATA[$P{diaPhuong}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SOYTE">
+						<subreportParameterExpression><![CDATA[$P{SOYTE}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="BENHVIEN">
+						<subreportParameterExpression><![CDATA[$P{BENHVIEN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="DIENTHOAI">
+						<subreportParameterExpression><![CDATA[$P{DIENTHOAI}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SubPhieuXuatBHYT">
+						<subreportParameterExpression><![CDATA[$P{SubPhieuXuatBHYT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="TIENBANGCHU">
+						<subreportParameterExpression><![CDATA[$P{TIENBANGCHU}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="HOTEN">
+						<subreportParameterExpression><![CDATA[$P{HOTEN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NOIDUNG">
+						<subreportParameterExpression><![CDATA[$P{NOIDUNG}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="DIACHI">
+						<subreportParameterExpression><![CDATA[$P{DIACHI}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="UBNDTINH">
+						<subreportParameterExpression><![CDATA[$P{UBNDTINH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="DONVI">
+						<subreportParameterExpression><![CDATA[$P{DONVI}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="MASODONVI">
+						<subreportParameterExpression><![CDATA[$P{MASODONVI}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SOTIEN">
+						<subreportParameterExpression><![CDATA[$P{SOTIEN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SUBREPORT_DIR">
+						<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="sub1">
+						<subreportParameterExpression><![CDATA[$P{sub1}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="sub2">
+						<subreportParameterExpression><![CDATA[$P{sub2}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="net.sf.jasperreports.engine.JasperReport"><![CDATA[$P{sub2}]]></subreportExpression>
+				</subreport>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

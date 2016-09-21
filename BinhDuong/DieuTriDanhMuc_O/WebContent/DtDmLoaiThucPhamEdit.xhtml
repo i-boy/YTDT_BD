@@ -1,0 +1,164 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmLoaiThucPham" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmLoaiThucPhamHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Loại thực phẩm</f:facet>
+
+
+
+
+            <s:decorate id="dtdmltpChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dtdmltpChon"
+                                      value="#{dtDmLoaiThucPhamHome.instance.dtdmltpChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmltpMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dtdmltpMa"
+                       required="true"
+                           size="50"
+                      maxlength="50"
+                          value="#{dtDmLoaiThucPhamHome.instance.dtdmltpMa}">
+                    <a:support event="onblur" reRender="dtdmltpMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmltpNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dtdmltpNgaygiocn"
+                          value="#{dtDmLoaiThucPhamHome.instance.dtdmltpNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmltpNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmltpTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dtdmltpTen"
+                           size="100"
+                      maxlength="100"
+                          value="#{dtDmLoaiThucPhamHome.instance.dtdmltpTen}">
+                    <a:support event="onblur" reRender="dtdmltpTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmLoaiThucPhamHome.persist}"
+                       disabled="#{!dtDmLoaiThucPhamHome.wired}"
+                       rendered="#{!dtDmLoaiThucPhamHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmLoaiThucPhamHome.update}"
+                       rendered="#{dtDmLoaiThucPhamHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmLoaiThucPhamHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmLoaiThucPhamHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmLoaiThucPham.xhtml"
+                rendered="#{dtDmLoaiThucPhamHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmLoaiThucPhamFrom ? 'DtDmLoaiThucPhamList' : dtDmLoaiThucPhamFrom}.xhtml"
+                rendered="#{!dtDmLoaiThucPhamHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Đơn vị tính">
+    <div class="association" id="dmDonViTinhParent">
+
+        <h:outputText value="Không tìm thấy dmDonViTinh phù hợp với dtDmLoaiThucPham."
+                   rendered="#{dtDmLoaiThucPhamHome.instance.dmDonViTinh == null}"/>
+
+        <rich:dataTable var="_dmDonViTinh"
+                   value="#{dtDmLoaiThucPhamHome.instance.dmDonViTinh}"
+                rendered="#{dtDmLoaiThucPhamHome.instance.dmDonViTinh != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dmDonViTinhTable">
+            <h:column>
+                <f:facet name="header">Mã số đơn vị tính</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Đặc điểm</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhDacdiem}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc dự phòng</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhDp}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc điều trị</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhDt}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Dung tích</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhDtich}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã đơn vị tính</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Thuộc quản lý</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhQl}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên đơn vị tính</f:facet>
+                <h:outputText value="#{_dmDonViTinh.dmdonvitinhTen}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{dtDmLoaiThucPhamHome.instance.dmDonViTinh != null ? 'Thay đổi' : 'Chọn'} dmDonViTinh"
+                       view="/DmDonViTinhList.xhtml">
+                <f:param name="from" value="DtDmLoaiThucPhamEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

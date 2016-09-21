@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="sotxuathuyet_sub4"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="820"
+		 columnSpacing="0"
+		 leftMargin="11"
+		 rightMargin="11"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<reportFont name="Times New Roman (times.ttf)" isDefault="true" fontName="Times New Roman" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<parameter name="soyte" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="benhvien" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="sodt" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="TuNgay" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="DenNgay" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="diadiem" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="tenSo" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="tenDonVi" isForPrompting="false" class="java.lang.String"/>
+	<queryString><![CDATA[select benh_ma, benh_ten, huyen, price, danhsach from 
+(
+select dm_benh_icd.DMBENHICD_MA as benh_ma, dm_benh_icd.DMBENHICD_TEN as benh_ten, NVL2(dm_huyen.DMHUYEN_TEN,' ' || dm_huyen.DMHUYEN_TEN,'  Không xác định huyện') as huyen, 1 as price, 3 as danhsach
+from hsba_chuyen_mon hcm left join hsba ON hcm.HSBA_SOVAOVIEN=hsba.HSBA_SOVAOVIEN AND hcm.KHOA_MA = hsba.HSBA_KHOADANGDT_CM
+left join benh_nhan ON hsba.BENHNHAN_MA=benh_nhan.BENHNHAN_MA
+left join dm_benh_icd ON hsba.HSBA_MACHDRAVIEN = dm_benh_icd.DMBENHICD_MASO
+left join dm_huyen on benh_nhan.HUYEN_MA=dm_huyen.DMHUYEN_MASO
+where(hsba.HSBA_NGAYGIORAV is not null)
+AND(TO_DATE(hsba.HSBA_NGAYGIORAV) BETWEEN $P{TuNgay} AND $P{DenNgay})
+and(dm_benh_icd.DMBENHICD_MA = 'A90' or dm_benh_icd.DMBENHICD_MA = 'A91')
+and benh_nhan.TINH_MA=46
+and( benh_nhan.BENHNHAN_DONVITUOI=2 or benh_nhan.BENHNHAN_DONVITUOI=3 or (benh_nhan.BENHNHAN_DONVITUOI=1 and benh_nhan.BENHNHAN_TUOI<15) )
+union all
+select dm_benh_icd.DMBENHICD_MA as benh_ma, dm_benh_icd.DMBENHICD_TEN as benh_ten,'TS  TRONG TỈNH' as huyen, sum(1) as price, 1 as danhsach
+from hsba_chuyen_mon hcm left join hsba ON hcm.HSBA_SOVAOVIEN=hsba.HSBA_SOVAOVIEN AND hcm.KHOA_MA = hsba.HSBA_KHOADANGDT_CM
+left join benh_nhan ON hsba.BENHNHAN_MA=benh_nhan.BENHNHAN_MA
+left join dm_benh_icd ON hsba.HSBA_MACHDRAVIEN = dm_benh_icd.DMBENHICD_MASO
+left join dm_huyen on benh_nhan.HUYEN_MA=dm_huyen.DMHUYEN_MASO
+where(hsba.HSBA_NGAYGIORAV is not null)
+AND(TO_DATE(hsba.HSBA_NGAYGIORAV) BETWEEN $P{TuNgay} AND $P{DenNgay})
+and(dm_benh_icd.DMBENHICD_MA = 'A90' or dm_benh_icd.DMBENHICD_MA = 'A91')
+and benh_nhan.TINH_MA=46
+and( benh_nhan.BENHNHAN_DONVITUOI=2 or benh_nhan.BENHNHAN_DONVITUOI=3 or (benh_nhan.BENHNHAN_DONVITUOI=1 and benh_nhan.BENHNHAN_TUOI<15) )
+group by dm_benh_icd.DMBENHICD_MA,dm_benh_icd.DMBENHICD_TEN
+union all
+select dm_benh_icd.DMBENHICD_MA as benh_ma, dm_benh_icd.DMBENHICD_TEN as benh_ten,'TS NGOÀI TỈNH' as huyen, sum(1) as price, 2 as danhsach
+from hsba_chuyen_mon hcm left join hsba ON hcm.HSBA_SOVAOVIEN=hsba.HSBA_SOVAOVIEN AND hcm.KHOA_MA = hsba.HSBA_KHOADANGDT_CM
+left join benh_nhan ON hsba.BENHNHAN_MA=benh_nhan.BENHNHAN_MA
+left join dm_benh_icd ON hsba.HSBA_MACHDRAVIEN = dm_benh_icd.DMBENHICD_MASO
+left join dm_huyen on benh_nhan.HUYEN_MA=dm_huyen.DMHUYEN_MASO
+where(hsba.HSBA_NGAYGIORAV is not null)
+AND(TO_DATE(hsba.HSBA_NGAYGIORAV) BETWEEN $P{TuNgay} AND $P{DenNgay})
+and(dm_benh_icd.DMBENHICD_MA = 'A90' or dm_benh_icd.DMBENHICD_MA = 'A91')
+and (benh_nhan.TINH_MA is null or benh_nhan.TINH_MA <> 46)
+and( benh_nhan.BENHNHAN_DONVITUOI=2 or benh_nhan.BENHNHAN_DONVITUOI=3 or (benh_nhan.BENHNHAN_DONVITUOI=1 and benh_nhan.BENHNHAN_TUOI<15) )
+group by dm_benh_icd.DMBENHICD_MA,dm_benh_icd.DMBENHICD_TEN
+union all
+select dm_benh_icd.DMBENHICD_MA as benh_ma, dm_benh_icd.DMBENHICD_TEN as benh_ten,'TỔNG CỘNG' as huyen, sum(1) as price, 0 as danhsach
+from hsba_chuyen_mon hcm left join hsba ON hcm.HSBA_SOVAOVIEN=hsba.HSBA_SOVAOVIEN AND hcm.KHOA_MA = hsba.HSBA_KHOADANGDT_CM
+left join benh_nhan ON hsba.BENHNHAN_MA=benh_nhan.BENHNHAN_MA
+left join dm_benh_icd ON hsba.HSBA_MACHDRAVIEN = dm_benh_icd.DMBENHICD_MASO
+left join dm_huyen on benh_nhan.HUYEN_MA=dm_huyen.DMHUYEN_MASO
+where(hsba.HSBA_NGAYGIORAV is not null)
+AND(TO_DATE(hsba.HSBA_NGAYGIORAV) BETWEEN $P{TuNgay} AND $P{DenNgay})
+and(dm_benh_icd.DMBENHICD_MA = 'A90' or dm_benh_icd.DMBENHICD_MA = 'A91')
+and( benh_nhan.BENHNHAN_DONVITUOI=2 or benh_nhan.BENHNHAN_DONVITUOI=3 or (benh_nhan.BENHNHAN_DONVITUOI=1 and benh_nhan.BENHNHAN_TUOI<15) )
+group by dm_benh_icd.DMBENHICD_MA,dm_benh_icd.DMBENHICD_TEN
+)fulltable order by danhsach, benh_ma asc]]></queryString>
+
+	<field name="benh_ma" class="java.lang.String"/>
+	<field name="benh_ten" class="java.lang.String"/>
+	<field name="huyen" class="java.lang.String"/>
+	<field name="price" class="java.math.BigDecimal"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="85"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="226"
+						y="9"
+						width="412"
+						height="20"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)" pdfFontName="timesbd.ttf" size="14" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TỔNG HỢP BỆNH SỐT XUẤT HUYẾT (<15 tuổi)]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="388"
+						y="30"
+						width="79"
+						height="14"
+						key="textField-41"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{TuNgay}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="467"
+						y="30"
+						width="28"
+						height="14"
+						key="staticText-47"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[đến]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="300"
+						y="30"
+						width="85"
+						height="14"
+						key="staticText-48"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[Xuất viện từ ngày ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="498"
+						y="30"
+						width="79"
+						height="14"
+						key="textField-43"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{DenNgay}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="3"
+						y="3"
+						width="202"
+						height="15"
+						key="textField-44"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{tenSo}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="3"
+						y="18"
+						width="202"
+						height="15"
+						key="textField-45"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{tenDonVi}]]></textFieldExpression>
+				</textField>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="470"  isSplitAllowed="true" >
+				<elementGroup><!--  Start: 1 !-->
+				<crosstab >
+					<reportElement
+						x="18"
+						y="10"
+						width="789"
+						height="422"
+						key="crosstab-1"/>
+					<crosstabHeaderCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<staticText>
+					<reportElement
+						x="0"
+						y="0"
+						width="75"
+						height="131"
+						key="staticText-49"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[MÃ ICD]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="75"
+						y="0"
+						width="150"
+						height="131"
+						key="staticText-49"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<text><![CDATA[TÊN BỆNH]]></text>
+				</staticText>
+						</cellContents>
+					</crosstabHeaderCell>					<rowGroup name="benh_ma" width="75">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{benh_ma}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="75"
+						height="30"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{benh_ma}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<rowGroup name="benh_ten" width="150">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{benh_ten}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="150"
+						height="30"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{benh_ten}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="huyen" height="131" headerPosition="Center">
+						<bucket order="Descending">
+							<bucketExpression class="java.lang.String"><![CDATA[$F{huyen}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="19"
+						height="131"
+						key="textField"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000" bottomPadding="3"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{huyen}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabColumnHeader>
+					</columnGroup>
+
+					<measure name="price_Sum" class="java.math.BigDecimal" calculation="Sum">
+						<measureExpression><![CDATA[$F{price}]]></measureExpression>
+					</measure>
+					<crosstabCell width="19" height="30">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="19"
+						height="30"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{price_Sum}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="0" height="30" columnTotalGroup="huyen">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="19" height="30" rowTotalGroup="benh_ten">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="19"
+						height="30"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{price_Sum}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="0" height="30" rowTotalGroup="benh_ten" columnTotalGroup="huyen">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="19" height="30" rowTotalGroup="benh_ma">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="19"
+						height="30"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman (times.ttf)"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{price_Sum}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="0" height="30" rowTotalGroup="benh_ma" columnTotalGroup="huyen">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<whenNoDataCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</whenNoDataCell>					</crosstab>
+				</elementGroup><!-- End 1 !-->
+			</band>
+		</summary>
+</jasperReport>

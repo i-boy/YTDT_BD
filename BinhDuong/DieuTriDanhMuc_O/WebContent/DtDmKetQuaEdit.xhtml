@@ -1,0 +1,101 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmKetQua" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmKetQuaHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Dt dm ket qua</f:facet>
+
+
+
+            <s:decorate id="dtdmketquaChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Dtdmketqua chon</ui:define>
+                <h:selectBooleanCheckbox id="dtdmketquaChon"
+                                      value="#{dtDmKetQuaHome.instance.dtdmketquaChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmketquaDiengiaiField" template="layout/edit.xhtml">
+                <ui:define name="label">Dtdmketqua diengiai</ui:define>
+                <h:inputTextarea id="dtdmketquaDiengiai"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dtDmKetQuaHome.instance.dtdmketquaDiengiai}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmketquaMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Dtdmketqua ma</ui:define>
+                <h:inputText id="dtdmketquaMa"
+                       required="true"
+                           size="1"
+                      maxlength="1"
+                          value="#{dtDmKetQuaHome.instance.dtdmketquaMa}">
+                    <a:support event="onblur" reRender="dtdmketquaMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmketquaNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Dtdmketqua ngaygiocn</ui:define>
+                <h:inputText id="dtdmketquaNgaygiocn"
+                          value="#{dtDmKetQuaHome.instance.dtdmketquaNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmketquaNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmKetQuaHome.persist}"
+                       disabled="#{!dtDmKetQuaHome.wired}"
+                       rendered="#{!dtDmKetQuaHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmKetQuaHome.update}"
+                       rendered="#{dtDmKetQuaHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmKetQuaHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmKetQuaHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmKetQua.xhtml"
+                rendered="#{dtDmKetQuaHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmKetQuaFrom ? 'DtDmKetQuaList' : dtDmKetQuaFrom}.xhtml"
+                rendered="#{!dtDmKetQuaHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,268 @@
+﻿<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmBenhVnSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Bệnh VN tìm kiếm" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Bao gồm</ui:define>
+                <h:inputText id="dmbenhvnBaogom" value="#{dmBenhVnList.dmBenhVn.dmbenhvnBaogom}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Mã bệnh VN</ui:define>
+                <h:inputText id="dmbenhvnMa" value="#{dmBenhVnList.dmBenhVn.dmbenhvnMa}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Mã chung</ui:define>
+                <h:inputText id="dmbenhvnMachung" value="#{dmBenhVnList.dmBenhVn.dmbenhvnMachung}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Mã ICD 10</ui:define>
+                <h:inputText id="dmbenhvnMaicd10" value="#{dmBenhVnList.dmBenhVn.dmbenhvnMaicd10}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Mã ICD 10b</ui:define>
+                <h:inputText id="dmbenhvnMaicd10b" value="#{dmBenhVnList.dmBenhVn.dmbenhvnMaicd10b}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Tên bệnh VN</ui:define>
+                <h:inputText id="dmbenhvnTen" value="#{dmBenhVnList.dmBenhVn.dmbenhvnTen}"/>
+            </s:decorate>
+
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Tìm kiếm" action="/DmBenhVnList.xhtml"/>
+            <s:button id="reset" value="Nhập lại" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Bệnh VN Kết quả</f:facet>
+    <div class="results" id="dmBenhVnList">
+
+    <h:outputText value="Không tìm thấy kết quả nào."
+               rendered="#{empty dmBenhVnList.resultList}"/>
+
+    <rich:dataTable id="dmBenhVnList"
+                var="_dmBenhVn"
+              value="#{dmBenhVnList.resultList}"
+           rendered="#{not empty dmBenhVnList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmBenhVnList}"/>
+                    <ui:param name="propertyLabel" value="Mã số"/>
+                    <ui:param name="propertyPath" value="dmBenhVn.dmbenhvnMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmBenhVn.dmbenhvnMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmBenhVnList}"/>
+                    <ui:param name="propertyLabel" value="Mã chương"/>
+                    <ui:param name="propertyPath" value="dmBenhVn.dmChuongBenh.dmchuongbenhMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmBenhVn.dmChuongBenh.dmchuongbenhMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmBenhVnList}"/>
+                    <ui:param name="propertyLabel" value="Bao gồm"/>
+                    <ui:param name="propertyPath" value="dmBenhVn.dmbenhvnBaogom"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmBenhVn.dmbenhvnBaogom}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmBenhVnList}"/>
+                    <ui:param name="propertyLabel" value="Thuộc dự phòng"/>
+                    <ui:param name="propertyPath" value="dmBenhVn.dmbenhvnDp"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmBenhVn.dmbenhvnDp}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmBenhVnList}"/>
+                    <ui:param name="propertyLabel" value="Thuộc điều trị"/>
+                    <ui:param name="propertyPath" value="dmBenhVn.dmbenhvnDt"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmBenhVn.dmbenhvnDt}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmBenhVnList}"/>
+                    <ui:param name="propertyLabel" value="Mã bệnh VN"/>
+                    <ui:param name="propertyPath" value="dmBenhVn.dmbenhvnMa"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmBenhVn.dmbenhvnMa}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmBenhVnList}"/>
+                    <ui:param name="propertyLabel" value="Mã BHYT"/>
+                    <ui:param name="propertyPath" value="dmBenhVn.dmbenhvnMabyt"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmBenhVn.dmbenhvnMabyt}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmBenhVnList}"/>
+                    <ui:param name="propertyLabel" value="Mã chung"/>
+                    <ui:param name="propertyPath" value="dmBenhVn.dmbenhvnMachung"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmBenhVn.dmbenhvnMachung}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmBenhVnList}"/>
+                    <ui:param name="propertyLabel" value="Mã ICD 10"/>
+                    <ui:param name="propertyPath" value="dmBenhVn.dmbenhvnMaicd10"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmBenhVn.dmbenhvnMaicd10}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmBenhVnList}"/>
+                    <ui:param name="propertyLabel" value="Mã ICD 10b"/>
+                    <ui:param name="propertyPath" value="dmBenhVn.dmbenhvnMaicd10b"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmBenhVn.dmbenhvnMaicd10b}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmBenhVnList}"/>
+                    <ui:param name="propertyLabel" value="Ngày giờ cập nhật"/>
+                    <ui:param name="propertyPath" value="dmBenhVn.dmbenhvnNgaygiocn"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmBenhVn.dmbenhvnNgaygiocn}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmBenhVnList}"/>
+                    <ui:param name="propertyLabel" value="Thuộc quản lý"/>
+                    <ui:param name="propertyPath" value="dmBenhVn.dmbenhvnQl"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmBenhVn.dmbenhvnQl}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmBenhVnList}"/>
+                    <ui:param name="propertyLabel" value="Tên bệnh VN"/>
+                    <ui:param name="propertyPath" value="dmBenhVn.dmbenhvnTen"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmBenhVn.dmbenhvnTen}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Thao tác</f:facet>
+            <s:link view="/#{empty from ? 'DmBenhVn' : from}.xhtml"
+                   value="#{empty from ? 'Xem' : 'Chọn'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="dmBenhVn">
+                <f:param name="dmBenhVnDmbenhvnMaso"
+                        value="#{_dmBenhVn.dmbenhvnMaso}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/DmBenhVnEdit.xhtml"
+                   value="Sửa"
+             propagation="none"
+                      id="dmBenhVnEdit"
+                rendered="#{empty from}">
+                <f:param name="dmBenhVnDmbenhvnMaso"
+                        value="#{_dmBenhVn.dmbenhvnMaso}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/DmBenhVnList.xhtml"
+            rendered="#{dmBenhVnList.previousExists}"
+               value="#{messages.left}#{messages.left} Trang đầu"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/DmBenhVnList.xhtml"
+            rendered="#{dmBenhVnList.previousExists}"
+               value="#{messages.left} Trang trước"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{dmBenhVnList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DmBenhVnList.xhtml"
+            rendered="#{dmBenhVnList.nextExists}"
+               value="Trang sau #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{dmBenhVnList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DmBenhVnList.xhtml"
+            rendered="#{dmBenhVnList.nextExists}"
+               value="Trang cuối #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{dmBenhVnList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/DmBenhVnEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Thêm mới Bệnh VN">
+            <f:param name="dmBenhVnDmbenhvnMaso"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

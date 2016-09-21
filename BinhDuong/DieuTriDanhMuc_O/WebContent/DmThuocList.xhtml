@@ -1,0 +1,825 @@
+﻿<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmThuocSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Thuốc tìm kiếm" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Cấp phát</ui:define>
+                <h:inputText id="dmthuocCapphat" value="#{dmThuocList.dmThuoc.dmthuocCapphat}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Đặc biệt</ui:define>
+                <h:inputText id="dmthuocDacbiet" value="#{dmThuocList.dmThuoc.dmthuocDacbiet}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Ghi chú</ui:define>
+                <h:inputText id="dmthuocGchu" value="#{dmThuocList.dmThuoc.dmthuocGchu}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Hàm lượng</ui:define>
+                <h:inputText id="dmthuocHamluong" value="#{dmThuocList.dmThuoc.dmthuocHamluong}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Mã thuốc</ui:define>
+                <h:inputText id="dmthuocMa" value="#{dmThuocList.dmThuoc.dmthuocMa}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Mã thuốc 2</ui:define>
+                <h:inputText id="dmthuocMahang2" value="#{dmThuocList.dmThuoc.dmthuocMahang2}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Mã phụ</ui:define>
+                <h:inputText id="dmthuocMaphu" value="#{dmThuocList.dmThuoc.dmthuocMaphu}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Quốc gia</ui:define>
+                <h:inputText id="dmthuocNuoc" value="#{dmThuocList.dmThuoc.dmthuocNuoc}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Vị trí tại kho BHYT</ui:define>
+                <h:inputText id="dmthuocPhankhob" value="#{dmThuocList.dmThuoc.dmthuocPhankhob}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Vị trí tại kho chính</ui:define>
+                <h:inputText id="dmthuocPhankhoc" value="#{dmThuocList.dmThuoc.dmthuocPhankhoc}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Vị trí tại kho lẻ</ui:define>
+                <h:inputText id="dmthuocPhankhol" value="#{dmThuocList.dmThuoc.dmthuocPhankhol}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Gom nhóm</ui:define>
+                <h:inputText id="dmthuocSets" value="#{dmThuocList.dmThuoc.dmthuocSets}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Số đăng ký</ui:define>
+                <h:inputText id="dmthuocSodk" value="#{dmThuocList.dmThuoc.dmthuocSodk}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Tên thuốc</ui:define>
+                <h:inputText id="dmthuocTen" value="#{dmThuocList.dmThuoc.dmthuocTen}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Tên khách hàng</ui:define>
+                <h:inputText id="dmthuocTenkh" value="#{dmThuocList.dmThuoc.dmthuocTenkh}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Thứ tự</ui:define>
+                <h:inputText id="dmthuocThutu" value="#{dmThuocList.dmThuoc.dmthuocThutu}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Người cập nhật</ui:define>
+                <h:inputText id="dtdmnhanvienCn" value="#{dmThuocList.dmThuoc.dtdmnhanvienCn}"/>
+            </s:decorate>
+
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Tìm kiếm" action="/DmThuocList.xhtml"/>
+            <s:button id="reset" value="Nhập lại" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Thuốc Kết quả</f:facet>
+    <div class="results" id="dmThuocList">
+
+    <h:outputText value="Không tìm thấy kết quả nào."
+               rendered="#{empty dmThuocList.resultList}"/>
+
+    <rich:dataTable id="dmThuocList"
+                var="_dmThuoc"
+              value="#{dmThuocList.resultList}"
+           rendered="#{not empty dmThuocList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Mã số thuốc"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Bảo quản"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmBaoQuanThuoc.dmbaoquanthuocMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmBaoQuanThuoc.dmbaoquanthuocMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Cách dùng"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmCachDungThuoc.dmcachdungthuocMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmCachDungThuoc.dmcachdungthuocMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Đơn vị tính"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmDonViTinh.dmdonvitinhMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmDonViTinh.dmdonvitinhMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Hoạt chất"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmHoatChat.dmhoatchatMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmHoatChat.dmhoatchatMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Nhà sản xuất"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmNhaSanXuat.dmnhasanxuatMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmNhaSanXuat.dmnhasanxuatMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Phân loại thuốc cấp"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmPhanLoaiThuocByDmphanloaithuocMaso.dmphanloaithuocMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmPhanLoaiThuocByDmphanloaithuocMaso.dmphanloaithuocMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Phân loại thuốc cấp 2"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmPhanLoaiThuocByDmphanloaithuocMaso2.dmphanloaithuocMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmPhanLoaiThuocByDmphanloaithuocMaso2.dmphanloaithuocMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Phân nhóm thuốc cấp"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmPhanNhomThuocByDmphannhomthuocMaso.dmphannhomthuocMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmPhanNhomThuocByDmphannhomthuocMaso.dmphannhomthuocMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Phân nhóm thuốc cấp 2"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmPhanNhomThuocByDmphannhomthuocMaso2.dmphannhomthuocMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmPhanNhomThuocByDmphannhomthuocMaso2.dmphannhomthuocMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Quốc gia"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmQuocGia.dmquocgiaMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmQuocGia.dmquocgiaMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Cấp phát"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocCapphat"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocCapphat}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Có Corticoid"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocCorti"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocCorti}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Đặc biệt"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocDacbiet"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocDacbiet}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Có đạm"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocDam"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocDam}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Đơn giá đấu thầu"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocDonggiaDauthau"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocDonggiaDauthau}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Lượng đóng gói"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocDonggoi"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocDonggoi}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Đơn giá BH"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocDongiabh"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocDongiabh}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Thuộc Dự phòng"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocDp"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocDp}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Thuộc Điều trị"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocDt"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocDt}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Dung tích"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocDungtich"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocDungtich}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Cần dự trữ"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocDutru"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocDutru}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Ghi chú"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocGchu"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocGchu}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Hàm lượng"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocHamluong"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocHamluong}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Buộc hội chẩn"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocHoichan"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocHoichan}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Được in danh mục"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocIndanhmuc"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocIndanhmuc}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Được in phiếu lĩnh"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocInplinh"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocInplinh}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Được in y lệnh"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocInylenh"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocInylenh}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Được kê toa"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocKetoa"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocKetoa}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Không thu phí"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocKhongthu"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocKhongthu}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Không xuất"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocKhongxuat"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocKhongxuat}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Số liều"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocLieu"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocLieu}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Được lĩnh gộp"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocLinhgop"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocLinhgop}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Mã thuốc"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocMa"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocMa}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Mã thuốc 2"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocMahang2"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocMahang2}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Mã phụ"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocMaphu"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocMaphu}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Được miễn"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocMien"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocMien}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Có in chữ SL"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocNchu"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocNchu}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Ngày bổ sung"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocNgaybosung"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocNgaybosung}">
+                <s:convertDateTime type="date" dateStyle="short"/>
+            </h:outputText>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Ngày giờ cập nhật"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocNgaygiocn"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocNgaygiocn}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Điều trị ngoại trú"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocNgoaitru"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocNgoaitru}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Điều trị nội trú"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocNoitru"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocNoitru}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Quốc gia"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocNuoc"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocNuoc}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Vị trí tại kho BHYT"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocPhankhob"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocPhankhob}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Vị trí tại kho chính"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocPhankhoc"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocPhankhoc}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Vị trí tại kho lẻ"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocPhankhol"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocPhankhol}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Được phát trực tiếp"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocPhatbn"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocPhatbn}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Phân loại BHYT"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocPlbhyt"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocPlbhyt}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Thuộc Quản lý"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocQl"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocQl}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Gom nhóm"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocSets"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocSets}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Số đăng ký"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocSodk"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocSodk}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Tên thuốc"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocTen"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocTen}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Tên khách hàng"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocTenkh"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocTenkh}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Thứ tự"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocThutu"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocThutu}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Có thu vỏ"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocThuvo"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocThuvo}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Lượng tồn tối đa"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocTonmax"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocTonmax}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Lượng tồn tối thiểu"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocTonmin"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocTonmin}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Điều trị trẻ em"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocTreem"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocTreem}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Trưởng khoa duyệt"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocTruongkhoa"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocTruongkhoa}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Tỷ lệ BH thanh toán"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocTylebh"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocTylebh}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Thuộc y cụ"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocYcu"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocYcu}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Yêu cầu"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dmthuocYeucau"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dmthuocYeucau}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmThuocList}"/>
+                    <ui:param name="propertyLabel" value="Người cập nhật"/>
+                    <ui:param name="propertyPath" value="dmThuoc.dtdmnhanvienCn"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmThuoc.dtdmnhanvienCn}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Thao tác</f:facet>
+            <s:link view="/#{empty from ? 'DmThuoc' : from}.xhtml"
+                   value="#{empty from ? 'Xem' : 'Chọn'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="dmThuoc">
+                <f:param name="dmThuocDmthuocMaso"
+                        value="#{_dmThuoc.dmthuocMaso}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/DmThuocEdit.xhtml"
+                   value="Sửa"
+             propagation="none"
+                      id="dmThuocEdit"
+                rendered="#{empty from}">
+                <f:param name="dmThuocDmthuocMaso"
+                        value="#{_dmThuoc.dmthuocMaso}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/DmThuocList.xhtml"
+            rendered="#{dmThuocList.previousExists}"
+               value="#{messages.left}#{messages.left} Trang đầu"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/DmThuocList.xhtml"
+            rendered="#{dmThuocList.previousExists}"
+               value="#{messages.left} Trang trước"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{dmThuocList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DmThuocList.xhtml"
+            rendered="#{dmThuocList.nextExists}"
+               value="Trang sau #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{dmThuocList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DmThuocList.xhtml"
+            rendered="#{dmThuocList.nextExists}"
+               value="Trang cuối #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{dmThuocList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/DmThuocEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Thêm mới Thuốc">
+            <f:param name="dmThuocDmthuocMaso"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

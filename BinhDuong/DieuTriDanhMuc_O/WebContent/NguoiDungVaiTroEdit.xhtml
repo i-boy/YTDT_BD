@@ -1,0 +1,137 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="nguoiDungVaiTro" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{nguoiDungVaiTroHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Người dùng vai tro</f:facet>
+
+
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{nguoiDungVaiTroHome.persist}"
+                       disabled="#{!nguoiDungVaiTroHome.wired}"
+                       rendered="#{!nguoiDungVaiTroHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{nguoiDungVaiTroHome.update}"
+                       rendered="#{nguoiDungVaiTroHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{nguoiDungVaiTroHome.remove}"
+                      immediate="true"
+                       rendered="#{nguoiDungVaiTroHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/NguoiDungVaiTro.xhtml"
+                rendered="#{nguoiDungVaiTroHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty nguoiDungVaiTroFrom ? 'NguoiDungVaiTroList' : nguoiDungVaiTroFrom}.xhtml"
+                rendered="#{!nguoiDungVaiTroHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Người dùng *" labelClass="required">
+    <div class="association" id="nguoiDungParent">
+
+        <h:outputText value="Không tìm thấy nguoiDung phù hợp với nguoiDungVaiTro."
+                   rendered="#{nguoiDungVaiTroHome.instance.nguoiDung == null}"/>
+
+        <rich:dataTable var="_nguoiDung"
+                   value="#{nguoiDungVaiTroHome.instance.nguoiDung}"
+                rendered="#{nguoiDungVaiTroHome.instance.nguoiDung != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="nguoiDungTable">
+            <h:column>
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_nguoiDung.ndMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã đăng nhập</f:facet>
+                <h:outputText value="#{_nguoiDung.ndMadangnhap}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên đăng nhập</f:facet>
+                <h:outputText value="#{_nguoiDung.ndTendangnhap}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{nguoiDungVaiTroHome.instance.nguoiDung != null ? 'Thay đổi' : 'Chọn'} nguoiDung"
+                       view="/NguoiDungList.xhtml">
+                <f:param name="from" value="NguoiDungVaiTroEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Vai tro *" labelClass="required">
+    <div class="association" id="vaiTroParent">
+
+        <h:outputText value="Không tìm thấy vaiTro phù hợp với nguoiDungVaiTro."
+                   rendered="#{nguoiDungVaiTroHome.instance.vaiTro == null}"/>
+
+        <rich:dataTable var="_vaiTro"
+                   value="#{nguoiDungVaiTroHome.instance.vaiTro}"
+                rendered="#{nguoiDungVaiTroHome.instance.vaiTro != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="vaiTroTable">
+            <h:column>
+                <f:facet name="header">Vaitro maso</f:facet>
+                <h:outputText value="#{_vaiTro.vaitroMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Vaitro ma</f:facet>
+                <h:outputText value="#{_vaiTro.vaitroMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Vaitro ten</f:facet>
+                <h:outputText value="#{_vaiTro.vaitroTen}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{nguoiDungVaiTroHome.instance.vaiTro != null ? 'Thay đổi' : 'Chọn'} vaiTro"
+                       view="/VaiTroList.xhtml">
+                <f:param name="from" value="NguoiDungVaiTroEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

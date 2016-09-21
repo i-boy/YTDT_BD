@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="BA02_BaoCaoBenhTruyenNhiem_Huyen_subreport3"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="842"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="0"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<reportFont name="Times New Roman" isDefault="true" fontName="Times New Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<parameter name="TUNGAY" isForPrompting="false" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DENNGAY" isForPrompting="false" class="java.util.Date">
+		<defaultValueExpression ><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" isForPrompting="true" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["F:\\tmp\\iReport\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="MATINH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["711"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="MAHUYEN" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["711.01"]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[Select *
+FROM
+(Select v_btn.MAICD,
+       v_btn.BENHTN,
+       (case when(v_btn.MATINH NOT LIKE $P{MATINH} OR v_btn.MAHUYEN NOT LIKE $P{MAHUYEN} OR v_btn.XA_TEN Is Null) then ' Không xác định' else TRIM(v_btn.XA_TEN) end) AS XA_TEN,
+       COUNT(v_btn.MA_BN) AS SOBN
+ FROM
+(SELECT
+       icd.DMBENHICD_MA AS MAICD,
+       hsba.BENHNHAN_MA AS MA_BN,
+       dmtinh.DMTINH_MA AS MATINH,	
+       dmhuyen.DMHUYEN_MA AS MAHUYEN,
+       dmxa.DMXA_TEN AS XA_TEN,
+       (case when(icd.DMBENHICD_MA LIKE 'A00%') then 'Tả' else
+	    (case when(icd.DMBENHICD_MA LIKE 'A01%') then 'Thương hàn' else
+		 (case when(icd.DMBENHICD_MA LIKE 'A03%') then 'Lỵ trực trùng' else
+		  (case when(icd.DMBENHICD_MA LIKE 'A06%') then 'Lỵ amíp' else
+		   (case when(icd.DMBENHICD_MA LIKE 'A09%') then 'Tiêu chảy' else
+		    (case when(icd.DMBENHICD_MA LIKE 'A83%') then 'Viêm não vi rút' else
+			 (case when(icd.DMBENHICD_MA LIKE 'A90%' OR icd.DMBENHICD_MA LIKE 'A91%') then 'Sốt xuất huyết' else
+			  (case when(icd.DMBENHICD_MA LIKE 'B50%' OR icd.DMBENHICD_MA LIKE 'B51%' OR icd.DMBENHICD_MA LIKE 'B54%') then 'Sốt rét' else
+			   (case when(icd.DMBENHICD_MA LIKE 'B15%' OR icd.DMBENHICD_MA LIKE 'B16%' OR icd.DMBENHICD_MA LIKE 'B17%' OR icd.DMBENHICD_MA LIKE 'B18%' OR icd.DMBENHICD_MA LIKE 'B19%') then 'Viêm gan vi rút' else
+			    (case when(icd.DMBENHICD_MA LIKE 'A82%') then 'Bệnh Dại' else
+				 (case when(icd.DMBENHICD_MA LIKE 'A39%') then 'Viêm màng não do não mô cầu' else
+				  (case when(icd.DMBENHICD_MA LIKE 'B01%') then 'Thủy đậu' else
+					(case when(icd.DMBENHICD_MA LIKE 'A36%') then 'Bạch hầu' else
+          (case when(icd.DMBENHICD_MA LIKE 'A37%') then 'Ho gà' else
+          (case when(icd.DMBENHICD_MA LIKE 'A33%') then 'Uốn ván sơ sinh' else
+          (case when(icd.DMBENHICD_MA LIKE 'A35%') then 'Uốn ván (không phải uốn ván sơ sinh)' else
+          (case when(icd.DMBENHICD_MA LIKE 'A80%') then 'Liệt mềm cấp nghi bại liệt' else
+          (case when(icd.DMBENHICD_MA LIKE 'B05%') then 'Sởi' else
+          (case when(icd.DMBENHICD_MA LIKE 'B26%') then 'Quai bị' else
+          (case when(icd.DMBENHICD_MA LIKE 'B06%') then 'Rubella(Rubeon)' else
+          (case when(icd.DMBENHICD_MA LIKE 'J10%' OR icd.DMBENHICD_MA LIKE 'J11%') then 'Cúm' else
+          (case when(icd.DMBENHICD_MA LIKE 'J09%') then 'Cúm A(H5N1)' else
+          (case when(icd.DMBENHICD_MA LIKE 'B30%') then 'Bệnh do vi rút Adeno' else
+          (case when(icd.DMBENHICD_MA LIKE 'A20%') then 'Dịch hạch' else
+          (case when(icd.DMBENHICD_MA LIKE 'A22%') then 'Than' else
+          (case when(icd.DMBENHICD_MA LIKE 'A27%') then 'Xoắn khuẩn vàng da (Leptospira)' else
+          (case when(icd.DMBENHICD_MA LIKE 'B08.8') then 'Tay - chân - miệng' else
+          (case when(icd.DMBENHICD_MA LIKE 'B95%') then 'Bệnh do liên cầu lợn ở người' else ''
+		  end)end)end)end)end)end)end)end)end)end)end)end)end)end)end)end)end)end)end)end)end)end)end)end)end)end)end)end)  BENHTN
+
+FROM hsba
+     LEFT JOIN dm_benh_icd icd ON hsba.HSBA_MACHDOANBD = icd.DMBENHICD_MASO
+     LEFT JOIN benh_nhan bn ON hsba.BENHNHAN_MA = bn.BENHNHAN_MA
+     LEFT JOIN dm_tinh dmtinh ON bn.TINH_MA = dmtinh.DMTINH_MASO
+     LEFT JOIN dm_huyen dmhuyen ON bn.HUYEN_MA = dmhuyen.DMHUYEN_MASO
+     LEFT JOIN dm_xa dmxa ON bn.XA_MA = dmxa.DMXA_MASO
+WHERE -- hsba.HSBA_NGAYGIORAV Is Not Null AND
+      TO_DATE(hsba.HSBA_NGAYGIORAV) >= $P{TUNGAY} AND
+      TO_DATE(hsba.HSBA_NGAYGIORAV) <= $P{DENNGAY} AND      
+      (icd.DMBENHICD_MA LIKE 'A00%'  -- Ta
+      OR icd.DMBENHICD_MA LIKE 'A01%'  -- Thuong han
+      OR icd.DMBENHICD_MA LIKE 'A03%'  -- Ly TT
+      OR icd.DMBENHICD_MA LIKE 'A06%'  -- Ly amip
+      OR icd.DMBENHICD_MA LIKE 'A09%'    -- Tieu chay
+      OR icd.DMBENHICD_MA LIKE 'A83%'    -- Vnao virus
+      OR icd.DMBENHICD_MA LIKE 'A90%'    -- Sot Dengue
+      OR icd.DMBENHICD_MA LIKE 'A91%'    -- Sot XH Dengue
+      OR icd.DMBENHICD_MA LIKE 'B50%'    -- Sot ret
+      OR icd.DMBENHICD_MA LIKE 'B51%'    -- Sot ret
+      OR icd.DMBENHICD_MA LIKE 'B54%'    -- Sot ret
+      OR icd.DMBENHICD_MA LIKE 'B15%'    -- Vgan virus
+      OR icd.DMBENHICD_MA LIKE 'B16%'    -- Vgan virus
+      OR icd.DMBENHICD_MA LIKE 'B17%'    -- Vgan virus
+      OR icd.DMBENHICD_MA LIKE 'B18%'    -- Vgan virus
+      OR icd.DMBENHICD_MA LIKE 'B19%'    -- Vgan virus
+      OR icd.DMBENHICD_MA LIKE 'A82%'    -- Benh dai
+      OR icd.DMBENHICD_MA LIKE 'A39%'    -- VMN mo cau
+      OR icd.DMBENHICD_MA LIKE 'B01%'    -- Thuy dau
+      OR icd.DMBENHICD_MA LIKE 'A36%'    -- Bach hau
+      OR icd.DMBENHICD_MA LIKE 'A37%'    -- Ho ga
+      OR icd.DMBENHICD_MA LIKE 'A33%'    -- Uon van SS
+      OR icd.DMBENHICD_MA LIKE 'A35%'    -- Uon van khac
+      OR icd.DMBENHICD_MA LIKE 'A80%'    -- Liet mem cap va nghi bai liet
+      OR icd.DMBENHICD_MA LIKE 'B05%'    -- Soi
+      OR icd.DMBENHICD_MA LIKE 'B26%'    -- Quai bi
+      OR icd.DMBENHICD_MA LIKE 'B06%'    -- Rubella(Rubeon)
+      OR icd.DMBENHICD_MA LIKE 'J10%'    -- Cum
+      OR icd.DMBENHICD_MA LIKE 'J11%'    -- Cum
+      OR icd.DMBENHICD_MA LIKE 'J09%'    -- Cum A(H5N1)
+      OR icd.DMBENHICD_MA LIKE 'B30%'    -- APC (benh do virus Adeno)
+      OR icd.DMBENHICD_MA LIKE 'A20%'    -- Dich hach
+      OR icd.DMBENHICD_MA LIKE 'A22%'    -- Than
+      OR icd.DMBENHICD_MA LIKE 'A27%'    -- Leptospira
+      OR icd.DMBENHICD_MA LIKE 'B08.8'  -- Tay chan mieng
+      OR icd.DMBENHICD_MA LIKE 'B95%'    -- Benh do lien cau lon o nguoi
+      )
+ORDER BY icd.DMBENHICD_MA
+) v_btn
+GROUP BY v_btn.MAICD, v_btn.MATINH,v_btn.MAHUYEN,v_btn.BENHTN,v_btn.XA_TEN) v2 
+ORDER BY v2.XA_TEN]]></queryString>
+
+	<field name="MAICD" class="java.lang.String"/>
+	<field name="BENHTN" class="java.lang.String"/>
+	<field name="XA_TEN" class="java.lang.String"/>
+	<field name="SOBN" class="java.lang.Long"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="50"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="8"
+						y="12"
+						width="447"
+						height="20"
+						key="textField-2"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman" pdfFontName="timesbd.ttf" size="14" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["TÌNH  HÌNH MẮC BỆNH THEO ĐỊA PHƯƠNG"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="93"
+						y="32"
+						width="24"
+						height="18"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<text><![CDATA[Từ :]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="117"
+						y="32"
+						width="59"
+						height="18"
+						key="textField-3"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{TUNGAY}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="176"
+						y="32"
+						width="24"
+						height="18"
+						key="staticText-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<text><![CDATA[đến]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="200"
+						y="32"
+						width="61"
+						height="18"
+						key="textField-4"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font reportFont="Times New Roman" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{DENNGAY}]]></textFieldExpression>
+				</textField>
+				<break>
+					<reportElement
+						x="0"
+						y="8"
+						width="842"
+						height="0"
+						key="element-1"/>
+				</break>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="50"  isSplitAllowed="true" >
+				<crosstab >
+					<reportElement
+						x="238"
+						y="5"
+						width="598"
+						height="16"
+						key="crosstab-1"/>
+					<crosstabHeaderCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabHeaderCell>					<rowGroup name="BENHTN" width="100" totalPosition="End">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{MAICD}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="XA_TEN" height="100" totalPosition="End" headerPosition="Center">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{XA_TEN}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="17"
+						height="100"
+						key="textField"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000" bottomPadding="2"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left">
+						<font reportFont="Times New Roman" size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{XA_TEN}.trim()]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+
+					<measure name="SOBN_Sum" class="java.lang.Long" calculation="Sum">
+						<measureExpression><![CDATA[$F{SOBN}]]></measureExpression>
+					</measure>
+					<crosstabCell width="17" height="15">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="17"
+						height="15"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font reportFont="Times New Roman"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{SOBN_Sum}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="30" height="15" columnTotalGroup="XA_TEN">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="17" height="30" rowTotalGroup="BENHTN">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="30" height="30" rowTotalGroup="BENHTN" columnTotalGroup="XA_TEN">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<whenNoDataCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</whenNoDataCell>					</crosstab>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="10"
+						y="5"
+						width="227"
+						height="16"
+						key="subreport-1"/>
+					<subreportParameter  name="TUNGAY">
+						<subreportParameterExpression><![CDATA[$P{TUNGAY}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="DENNGAY">
+						<subreportParameterExpression><![CDATA[$P{DENNGAY}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="SUBREPORT_DIR">
+						<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="MATINH">
+						<subreportParameterExpression><![CDATA[$P{MATINH}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="MAHUYEN">
+						<subreportParameterExpression><![CDATA[$P{MAHUYEN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "BA02_BaoCaoBenhTruyenNhiem_Huyen_subreport3_subreport0.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</summary>
+</jasperReport>

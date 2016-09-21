@@ -1,0 +1,132 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmKhoaBc" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmKhoaBcHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Khoa BC</f:facet>
+
+
+
+            <s:decorate id="dmkhoabcMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dmkhoabcMa"
+                           size="10"
+                      maxlength="10"
+                          value="#{dmKhoaBcHome.instance.dmkhoabcMa}">
+                    <a:support event="onblur" reRender="dmkhoabcMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmkhoabcMabytField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã BHYT</ui:define>
+                <h:inputText id="dmkhoabcMabyt"
+                       required="true"
+                          value="#{dmKhoaBcHome.instance.dmkhoabcMabyt}">
+                    <a:support event="onblur" reRender="dmkhoabcMabytField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmkhoabcMabyt3Field" template="layout/edit.xhtml">
+                <ui:define name="label">Mã BHYT mới</ui:define>
+                <h:inputText id="dmkhoabcMabyt3"
+                       required="true"
+                          value="#{dmKhoaBcHome.instance.dmkhoabcMabyt3}">
+                    <a:support event="onblur" reRender="dmkhoabcMabyt3Field" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmkhoabcNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmkhoabcNgaygiocn"
+                          value="#{dmKhoaBcHome.instance.dmkhoabcNgaygiocn}">
+                    <a:support event="onblur" reRender="dmkhoabcNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmkhoabcNhomField" template="layout/edit.xhtml">
+                <ui:define name="label">Nhóm</ui:define>
+                <h:inputText id="dmkhoabcNhom"
+                          value="#{dmKhoaBcHome.instance.dmkhoabcNhom}">
+                    <a:support event="onblur" reRender="dmkhoabcNhomField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmkhoabcTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputTextarea id="dmkhoabcTen"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dmKhoaBcHome.instance.dmkhoabcTen}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmkhoabcThutucbcField" template="layout/edit.xhtml">
+                <ui:define name="label">Thứ tự</ui:define>
+                <h:inputText id="dmkhoabcThutucbc"
+                       required="true"
+                          value="#{dmKhoaBcHome.instance.dmkhoabcThutucbc}">
+                    <a:support event="onblur" reRender="dmkhoabcThutucbcField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmKhoaBcHome.persist}"
+                       disabled="#{!dmKhoaBcHome.wired}"
+                       rendered="#{!dmKhoaBcHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmKhoaBcHome.update}"
+                       rendered="#{dmKhoaBcHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmKhoaBcHome.remove}"
+                      immediate="true"
+                       rendered="#{dmKhoaBcHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmKhoaBc.xhtml"
+                rendered="#{dmKhoaBcHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmKhoaBcFrom ? 'DmKhoaBcList' : dmKhoaBcFrom}.xhtml"
+                rendered="#{!dmKhoaBcHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

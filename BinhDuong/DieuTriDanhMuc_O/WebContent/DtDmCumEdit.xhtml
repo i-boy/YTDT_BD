@@ -1,0 +1,112 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmCum" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmCumHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Cụm</f:facet>
+
+
+
+            <s:decorate id="dtdmcumChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dtdmcumChon"
+                                      value="#{dtDmCumHome.instance.dtdmcumChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmcumGhichuField" template="layout/edit.xhtml">
+                <ui:define name="label">Ghi chú</ui:define>
+                <h:inputTextarea id="dtdmcumGhichu"
+                               cols="80"
+                               rows="6"
+                              value="#{dtDmCumHome.instance.dtdmcumGhichu}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmcumMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dtdmcumMa"
+                       required="true"
+                           size="4"
+                      maxlength="4"
+                          value="#{dtDmCumHome.instance.dtdmcumMa}">
+                    <a:support event="onblur" reRender="dtdmcumMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmcumNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dtdmcumNgaygiocn"
+                          value="#{dtDmCumHome.instance.dtdmcumNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmcumNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmcumTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dtdmcumTen"
+                       required="true"
+                           size="45"
+                      maxlength="45"
+                          value="#{dtDmCumHome.instance.dtdmcumTen}">
+                    <a:support event="onblur" reRender="dtdmcumTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmCumHome.persist}"
+                       disabled="#{!dtDmCumHome.wired}"
+                       rendered="#{!dtDmCumHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmCumHome.update}"
+                       rendered="#{dtDmCumHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmCumHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmCumHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmCum.xhtml"
+                rendered="#{dtDmCumHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmCumFrom ? 'DtDmCumList' : dtDmCumFrom}.xhtml"
+                rendered="#{!dtDmCumHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

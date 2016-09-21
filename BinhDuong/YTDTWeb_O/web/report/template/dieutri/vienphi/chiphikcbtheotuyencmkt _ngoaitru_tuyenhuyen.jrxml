@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="chiphikcbtheotuyencmkt _ngoaitru_tuyenhuyen"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="840"
+		 columnSpacing="0"
+		 leftMargin="1"
+		 rightMargin="1"
+		 topMargin="1"
+		 bottomMargin="1"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<import value="com.iesvn.commaseparator.*" />
+	<reportFont name="Times New Roman " isDefault="true" fontName="Times New Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="times.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+
+	<parameter name="soyte" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="benhvien" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="sodt" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="TuNgay" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="DenNgay" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="MaKCBBHYT" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="TenKCBBHYT" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="thang" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="nam" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="NOITRU" isForPrompting="false" class="java.lang.Boolean"/>
+	<queryString><![CDATA[SELECT 'Tuyến huyện' AS DOI_TUONG,
+			SUM( nvl(A.SOCA,0) + nvl(B.SOCA ,0)) AS SOCA,
+            
+            SUM( nvl(A.BNTRA,0) + nvl(B.BNTRA,0)) AS BNTRA,
+            SUM( nvl(A.BHYTCHI,0) + nvl(B.BHYTCHI,0)) AS BHYTCHI,
+            SUM( nvl(A.TONG_CONG ,0) + nvl(B.TONG_CONG,0)) AS TONG_CONG,
+            SUM( nvl(A.TIENKHAM,0) + nvl(B.TIENKHAM,0)) AS TIENKHAM,
+            SUM( nvl(A.THUOC,0) + nvl(B.THUOC,0)) AS THUOC,
+            SUM( nvl(A.MAU,0)+ nvl(B.MAU,0)) AS MAU,
+            SUM( nvl(A.XETNGHIEM,0) + nvl(B.XETNGHIEM ,0)) AS XETNGHIEM,
+            SUM(nvl(A.CHANDOAN_HINH_ANH,0) +nvl(B.CHANDOAN_HINH_ANH,0)) AS CHANDOAN_HINH_ANH,
+            SUM( nvl(A.PTTT,0)+ nvl(B.PTTT ,0)) AS PTTT,
+            SUM( nvl(A.KTC ,0)+ nvl(B.KTC,0) ) AS KTC,
+            SUM( nvl(A.VTTH,0) + nvl(B.VTTH,0) ) AS VTTH,
+            SUM( nvl(A.VANCHUYEN ,0) + nvl(B.VANCHUYEN,0)) AS VANCHUYEN     
+FROM 
+(
+	SELECT 
+	LOPBHYT.DTDMLOPBHYT_TEN LOAIDT,
+	DTDMNHOMBHYT.DTDMNHOMBHYT_TEN DOITUONG, 
+	( SELECT COUNT( DISTINCT TD2.TIEPDON_MA)
+				
+	 FROM(((( TIEP_DON TD2 JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT2 ON TD2.KHOIBHYT_MA LIKE DTDMKHOIBHYT2.DTDMKHOIBHYT_MA)	
+				LEFT JOIN DT_DM_NHOM_BHYT DTDMNHOMBHYT2 ON DTDMKHOIBHYT2.DTDMNHOMBHYT_MASO=DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO)
+				LEFT JOIN DT_DM_KCB_BHYT KCBBHYT on TD2.KCBBHYT_MA like KCBBHYT.DTDMKCBBHYT_MA)
+				LEFT JOIN DT_DM_LOP_BHYT LOPBHYT2 ON LOPBHYT2.DTDMLOPBHYT_MASO=DTDMNHOMBHYT2.DTDMLOPBHYT_MASO)
+	 WHERE DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO=DTDMNHOMBHYT.DTDMNHOMBHYT_MASO
+			AND ($P{DenNgay} is null or (to_date(TD2.TIEPDON_NGAYGIO) <= to_date($P{DenNgay})) )
+		 AND($P{TuNgay} is null or (to_date(TD2.TIEPDON_NGAYGIO) >= to_date($P{TuNgay})))
+		 AND( $P{MaKCBBHYT} is null or KCBBHYT.DTDMKCBBHYT_MA like $P{MaKCBBHYT})		
+		 AND
+	DTDMNHOMBHYT2.DTDMNHOMBHYT_MA LIKE DTDMNHOMBHYT.DTDMNHOMBHYT_MA AND
+	DTDMNHOMBHYT2.DTDMNHOMBHYT_TEN LIKE DTDMNHOMBHYT.DTDMNHOMBHYT_TEN AND
+	LOPBHYT2.DTDMLOPBHYT_TEN LIKE LOPBHYT.DTDMLOPBHYT_TEN
+	)  SOCA, 
+	 
+	
+	( SELECT SUM( nvl(HS.HSTHTOANK_BNTRA ,0) )
+				
+	 FROM(((( TIEP_DON TD2 JOIN HS_THTOANK HS ON HS.TIEPDON_MA LIKE TD2.TIEPDON_MA)
+				JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT2 ON TD2.KHOIBHYT_MA LIKE DTDMKHOIBHYT2.DTDMKHOIBHYT_MA)	
+				LEFT JOIN DT_DM_NHOM_BHYT DTDMNHOMBHYT2 ON DTDMKHOIBHYT2.DTDMNHOMBHYT_MASO=DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO)
+				LEFT JOIN DT_DM_KCB_BHYT KCBBHYT on TD2.KCBBHYT_MA like KCBBHYT.DTDMKCBBHYT_MA)
+				LEFT JOIN DT_DM_LOP_BHYT LOPBHYT2 ON LOPBHYT2.DTDMLOPBHYT_MASO=DTDMNHOMBHYT2.DTDMLOPBHYT_MASO
+	 WHERE DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO=DTDMNHOMBHYT.DTDMNHOMBHYT_MASO
+			AND 		($P{DenNgay} is null or (to_date(TD2.TIEPDON_NGAYGIO) <= to_date($P{DenNgay})) )
+		 AND($P{TuNgay} is null or (to_date(TD2.TIEPDON_NGAYGIO)>= to_date($P{TuNgay})) )
+		 AND( $P{MaKCBBHYT} is null or KCBBHYT.DTDMKCBBHYT_MA like $P{MaKCBBHYT})		
+		 AND
+	DTDMNHOMBHYT2.DTDMNHOMBHYT_MA LIKE DTDMNHOMBHYT.DTDMNHOMBHYT_MA AND
+	DTDMNHOMBHYT2.DTDMNHOMBHYT_TEN LIKE DTDMNHOMBHYT.DTDMNHOMBHYT_TEN AND
+	LOPBHYT2.DTDMLOPBHYT_TEN LIKE LOPBHYT.DTDMLOPBHYT_TEN
+	) BNTRA,
+	( SELECT SUM( nvl(HS.HSTHTOANK_BHYT,0))
+				
+	 FROM(((( TIEP_DON TD2 JOIN HS_THTOANK HS ON HS.TIEPDON_MA LIKE TD2.TIEPDON_MA)
+				JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT2 ON TD2.KHOIBHYT_MA LIKE DTDMKHOIBHYT2.DTDMKHOIBHYT_MA)	
+				LEFT JOIN DT_DM_NHOM_BHYT DTDMNHOMBHYT2 ON DTDMKHOIBHYT2.DTDMNHOMBHYT_MASO=DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO)
+				LEFT JOIN DT_DM_KCB_BHYT KCBBHYT on TD2.KCBBHYT_MA like KCBBHYT.DTDMKCBBHYT_MA)
+				LEFT JOIN DT_DM_LOP_BHYT LOPBHYT2 ON LOPBHYT2.DTDMLOPBHYT_MASO=DTDMNHOMBHYT2.DTDMLOPBHYT_MASO
+	 WHERE DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO=DTDMNHOMBHYT.DTDMNHOMBHYT_MASO
+			AND 		($P{DenNgay} is null or (to_date(TD2.TIEPDON_NGAYGIO) <= to_date($P{DenNgay})) )
+		 AND($P{TuNgay} is null or (to_date(TD2.TIEPDON_NGAYGIO) >= to_date($P{TuNgay})) )
+		 AND( $P{MaKCBBHYT} is null or KCBBHYT.DTDMKCBBHYT_MA like $P{MaKCBBHYT})		
+		 AND
+	DTDMNHOMBHYT2.DTDMNHOMBHYT_MA LIKE DTDMNHOMBHYT.DTDMNHOMBHYT_MA AND
+	DTDMNHOMBHYT2.DTDMNHOMBHYT_TEN LIKE DTDMNHOMBHYT.DTDMNHOMBHYT_TEN AND
+	LOPBHYT2.DTDMLOPBHYT_TEN LIKE LOPBHYT.DTDMLOPBHYT_TEN
+	) BHYTCHI,
+	 
+	( SELECT SUM( nvl(HS.HSTHTOANK_TONGCHI ,0) )
+				
+	 FROM(((( TIEP_DON TD2 JOIN HS_THTOANK HS ON HS.TIEPDON_MA LIKE TD2.TIEPDON_MA)
+				JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT2 ON TD2.KHOIBHYT_MA LIKE DTDMKHOIBHYT2.DTDMKHOIBHYT_MA)	
+				LEFT JOIN DT_DM_NHOM_BHYT DTDMNHOMBHYT2 ON DTDMKHOIBHYT2.DTDMNHOMBHYT_MASO=DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO)
+				LEFT JOIN DT_DM_KCB_BHYT KCBBHYT on TD2.KCBBHYT_MA like KCBBHYT.DTDMKCBBHYT_MA)
+				LEFT JOIN DT_DM_LOP_BHYT LOPBHYT2 ON LOPBHYT2.DTDMLOPBHYT_MASO=DTDMNHOMBHYT2.DTDMLOPBHYT_MASO
+	 WHERE DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO=DTDMNHOMBHYT.DTDMNHOMBHYT_MASO
+			AND 		($P{DenNgay} is null or (to_date(TD2.TIEPDON_NGAYGIO) <= to_date($P{DenNgay})))
+		 AND($P{TuNgay} is null or (to_date(TD2.TIEPDON_NGAYGIO) >= to_date($P{TuNgay})) )
+		 AND( $P{MaKCBBHYT} is null or KCBBHYT.DTDMKCBBHYT_MA like $P{MaKCBBHYT})		
+		 AND
+	DTDMNHOMBHYT2.DTDMNHOMBHYT_MA LIKE DTDMNHOMBHYT.DTDMNHOMBHYT_MA AND
+	DTDMNHOMBHYT2.DTDMNHOMBHYT_TEN LIKE DTDMNHOMBHYT.DTDMNHOMBHYT_TEN AND
+	LOPBHYT2.DTDMLOPBHYT_TEN LIKE LOPBHYT.DTDMLOPBHYT_TEN
+	) TONG_CONG,
+
+	 
+	0 AS TIENKHAM
+	,
+	 
+	( SELECT SUM(THUOCPK.THUOCPHONGKHAM_DONGIA * 
+									 nvl(THUOCPK.THUOCPHONGKHAM_SOLUONG ,0)									
+				)
+	 FROM(((((((( TIEP_DON TD2 LEFT JOIN THAM_KHAM TK ON TK.TIEPDON_MA LIKE TD2.TIEPDON_MA)
+				JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT2 ON TD2.KHOIBHYT_MA LIKE DTDMKHOIBHYT2.DTDMKHOIBHYT_MA	)
+				LEFT JOIN THUOC_PHONG_KHAM THUOCPK ON THUOCPK.THUOCPHONGKHAM_THAMKHAM=TK.THAMKHAM_MA)
+				LEFT JOIN DM_THUOC DMTHUOC ON DMTHUOC.DMTHUOC_MASO=THUOCPK.THUOCPHONGKHAM_MATHUOC)
+				LEFT JOIN DM_PHAN_LOAI_THUOC PLTHUOC ON PLTHUOC.DMPHANLOAITHUOC_MASO=DMTHUOC.DMPHANLOAITHUOC_MASO)
+				LEFT JOIN DM_LOAI_THUOC LOAITHUOC ON LOAITHUOC.DMLOAITHUOC_MASO=PLTHUOC.DMLOAITHUOC_MASO)	
+				LEFT JOIN DT_DM_NHOM_BHYT DTDMNHOMBHYT2 ON DTDMKHOIBHYT2.DTDMNHOMBHYT_MASO=DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO)
+	 LEFT JOIN DT_DM_KCB_BHYT KCBBHYT on TD2.KCBBHYT_MA like KCBBHYT.DTDMKCBBHYT_MA)
+	LEFT JOIN DT_DM_LOP_BHYT LOPBHYT2 ON LOPBHYT2.DTDMLOPBHYT_MASO=DTDMNHOMBHYT2.DTDMLOPBHYT_MASO
+	 WHERE DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO=DTDMNHOMBHYT.DTDMNHOMBHYT_MASO AND LOAITHUOC.DMLOAITHUOC_MA NOT LIKE 'YC' 
+		AND THUOCPK.THUOCPHONGKHAM_LOAI NOT LIKE '2'
+		AND 		($P{DenNgay} is null or (to_date(TD2.TIEPDON_NGAYGIO) <= to_date($P{DenNgay})) )
+		AND($P{TuNgay} is null or (to_date(TD2.TIEPDON_NGAYGIO) >= to_date($P{TuNgay})) )
+		AND( $P{MaKCBBHYT} is null or KCBBHYT.DTDMKCBBHYT_MA like $P{MaKCBBHYT})			
+		AND
+	DTDMNHOMBHYT2.DTDMNHOMBHYT_MA LIKE DTDMNHOMBHYT.DTDMNHOMBHYT_MA AND
+	DTDMNHOMBHYT2.DTDMNHOMBHYT_TEN LIKE DTDMNHOMBHYT.DTDMNHOMBHYT_TEN AND
+	LOPBHYT2.DTDMLOPBHYT_TEN LIKE LOPBHYT.DTDMLOPBHYT_TEN
+	)  THUOC
+
+	,
+	0 AS MAU,
+	
+	0 AS XETNGHIEM,
+
+	0 AS CHANDOAN_HINH_ANH,
+
+	0 AS PTTT,
+
+	0 AS KTC,
+
+	( SELECT SUM(THUOCPK.THUOCPHONGKHAM_DONGIA * nvl(THUOCPK.THUOCPHONGKHAM_SOLUONG ,0))
+	 FROM(((((((( TIEP_DON TD2 LEFT JOIN THAM_KHAM TK ON TK.TIEPDON_MA LIKE TD2.TIEPDON_MA)
+				JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT2 ON TD2.KHOIBHYT_MA LIKE DTDMKHOIBHYT2.DTDMKHOIBHYT_MA	)				
+				LEFT JOIN THUOC_PHONG_KHAM THUOCPK ON THUOCPK.THUOCPHONGKHAM_THAMKHAM=TK.THAMKHAM_MA)
+				LEFT JOIN DM_THUOC DMTHUOC ON DMTHUOC.DMTHUOC_MASO=THUOCPK.THUOCPHONGKHAM_MATHUOC)
+				LEFT JOIN DM_PHAN_LOAI_THUOC PLTHUOC ON PLTHUOC.DMPHANLOAITHUOC_MASO=DMTHUOC.DMPHANLOAITHUOC_MASO)
+				LEFT JOIN DM_LOAI_THUOC LOAITHUOC ON LOAITHUOC.DMLOAITHUOC_MASO=PLTHUOC.DMLOAITHUOC_MASO)	
+	 LEFT JOIN DT_DM_NHOM_BHYT DTDMNHOMBHYT2 ON DTDMKHOIBHYT2.DTDMNHOMBHYT_MASO=DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO)
+	 LEFT JOIN DT_DM_KCB_BHYT KCBBHYT on TD2.KCBBHYT_MA like KCBBHYT.DTDMKCBBHYT_MA)
+	 LEFT JOIN DT_DM_LOP_BHYT LOPBHYT2 ON LOPBHYT2.DTDMLOPBHYT_MASO=DTDMNHOMBHYT2.DTDMLOPBHYT_MASO
+	 
+	 WHERE DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO=DTDMNHOMBHYT.DTDMNHOMBHYT_MASO AND LOAITHUOC.DMLOAITHUOC_MA LIKE 'YC' 
+		 AND
+	DTDMNHOMBHYT2.DTDMNHOMBHYT_MA LIKE DTDMNHOMBHYT.DTDMNHOMBHYT_MA AND
+	DTDMNHOMBHYT2.DTDMNHOMBHYT_TEN LIKE DTDMNHOMBHYT.DTDMNHOMBHYT_TEN AND
+	LOPBHYT2.DTDMLOPBHYT_TEN LIKE LOPBHYT.DTDMLOPBHYT_TEN
+		AND THUOCPK.THUOCPHONGKHAM_LOAI NOT LIKE '2'
+		AND 		($P{DenNgay} is null or (to_date(TD2.TIEPDON_NGAYGIO) <= to_date($P{DenNgay})))
+		AND($P{TuNgay} is null or (to_date(TD2.TIEPDON_NGAYGIO) >= to_date($P{TuNgay})))
+		AND( $P{MaKCBBHYT} is null or KCBBHYT.DTDMKCBBHYT_MA like $P{MaKCBBHYT})		
+	)  VTTH
+	,
+	0 AS VANCHUYEN
+
+	FROM 
+		((DT_DM_LOP_BHYT LOPBHYT JOIN DT_DM_NHOM_BHYT DTDMNHOMBHYT ON LOPBHYT.DTDMLOPBHYT_MASO=DTDMNHOMBHYT.DTDMLOPBHYT_MASO)
+		 JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT ON DTDMKHOIBHYT.DTDMNHOMBHYT_MASO=DTDMNHOMBHYT.DTDMNHOMBHYT_MASO) 
+		
+	GROUP BY LOPBHYT.DTDMLOPBHYT_TEN, DTDMNHOMBHYT.DTDMNHOMBHYT_MA , DTDMNHOMBHYT.DTDMNHOMBHYT_MASO,DTDMNHOMBHYT.DTDMNHOMBHYT_TEN
+	ORDER BY DTDMNHOMBHYT.DTDMNHOMBHYT_MASO
+
+)  A
+
+left join
+
+(
+
+ 
+	 SELECT LOPBHYT2.DTDMLOPBHYT_TEN LOAIDT,
+	 DTDMNHOMBHYT2.DTDMNHOMBHYT_TEN DOITUONG, 
+			 0 AS SOCA,			 
+			 0 AS BNTRA,
+			 0 AS BHYTCHI,
+			 0 AS TONG_CONG,			
+			 
+			SUM( decode(DTDMCLS_MA , 'KH', CLSKHAM_DONGIA *( nvl(CLSKHAM_LAN,0) - nvl(CLSKHAM_TRA ,0)) ,0)) AS TIENKHAM, 
+			
+			0 AS THUOC,
+			
+			SUM(decode(DTDMCLS_MA , 'MA', CLSKHAM_DONGIA *(nvl(CLSKHAM_LAN ,0) - nvl(CLSKHAM_TRA ,0)),0)) AS MAU ,
+		
+			SUM(decode(DTDMCLS_MA , 'XN', CLSKHAM_DONGIA *(nvl(CLSKHAM_LAN ,0) - nvl(CLSKHAM_TRA ,0)),0)) AS XETNGHIEM,		
+			
+			SUM(decode(DTDMCLS_MA , 'CD',CLSKHAM_DONGIA *(nvl(CLSKHAM_LAN,0) - nvl(CLSKHAM_TRA,0)),0)) AS CHANDOAN_HINH_ANH,
+			
+			SUM(decode(DTDMCLS_MA , 'TT' , CLSKHAM_DONGIA *(nvl(CLSKHAM_LAN,0) - nvl(CLSKHAM_TRA,0)), 
+									'PT',CLSKHAM_DONGIA *(nvl(CLSKHAM_LAN,0) - nvl(CLSKHAM_TRA,0)),0)) AS PTTT,
+			
+			SUM(decode(DTDMCLS_MA ,'KT', CLSKHAM_DONGIA *(nvl(CLSKHAM_LAN,0) - nvl(CLSKHAM_TRA,0)),0)) AS KTC,		
+				
+			0 AS VTTH		,	
+			
+			SUM(decode(DTDMCLS_MA , 'VC', CLSKHAM_DONGIA *(nvl(CLSKHAM_LAN ,0) - nvl(CLSKHAM_TRA ,0)),0)) AS VANCHUYEN
+			
+			
+	 FROM((((((( TIEP_DON TD2 LEFT JOIN THAM_KHAM TK ON TK.TIEPDON_MA LIKE TD2.TIEPDON_MA)
+				 JOIN DT_DM_KHOI_BHYT DTDMKHOIBHYT2 ON TD2.KHOIBHYT_MA LIKE DTDMKHOIBHYT2.DTDMKHOIBHYT_MA	)
+				
+				 LEFT JOIN CLS_KHAM CLSKHAM ON CLSKHAM.CLSKHAM_THAMKHAM=TK.THAMKHAM_MA)
+				 LEFT JOIN DT_DM_CLS_BANG_GIA BANGGIA ON BANGGIA.DTDMCLSBG_MASO=CLSKHAM_MAHANG)
+				 LEFT JOIN DT_DM_CLS CLS ON CLS.DTDMCLS_MASO=BANGGIA.DTDMCLSBG_MALOAI)
+				 LEFT JOIN DT_DM_NHOM_BHYT DTDMNHOMBHYT2 ON DTDMKHOIBHYT2.DTDMNHOMBHYT_MASO=DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO)
+				 LEFT JOIN DT_DM_KCB_BHYT KCBBHYT on TD2.KCBBHYT_MA like KCBBHYT.DTDMKCBBHYT_MA)
+				 LEFT JOIN DT_DM_LOP_BHYT LOPBHYT2 ON LOPBHYT2.DTDMLOPBHYT_MASO=DTDMNHOMBHYT2.DTDMLOPBHYT_MASO
+	 WHERE 
+		($P{DenNgay} is null or (to_date(TD2.TIEPDON_NGAYGIO) <= to_date($P{DenNgay})))
+		 AND($P{TuNgay} is null or (to_date(TD2.TIEPDON_NGAYGIO) >= to_date($P{TuNgay})) )
+		 AND( $P{MaKCBBHYT} is null or KCBBHYT.DTDMKCBBHYT_MA like $P{MaKCBBHYT})			
+	
+	
+	GROUP BY LOPBHYT2.DTDMLOPBHYT_TEN, DTDMNHOMBHYT2.DTDMNHOMBHYT_MA , DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO,DTDMNHOMBHYT2.DTDMNHOMBHYT_TEN
+	 
+	ORDER BY DTDMNHOMBHYT2.DTDMNHOMBHYT_MASO
+
+)  B
+
+on A.LOAIDT LIKE B.LOAIDT AND
+ A.DOITUONG LIKE B.DOITUONG]]></queryString>
+
+	<field name="DOI_TUONG" class="java.lang.String"/>
+	<field name="SOCA" class="java.math.BigDecimal"/>
+	<field name="BNTRA" class="java.lang.Double"/>
+	<field name="BHYTCHI" class="java.lang.Double"/>
+	<field name="TONG_CONG" class="java.lang.Double"/>
+	<field name="TIENKHAM" class="java.lang.Double"/>
+	<field name="THUOC" class="java.lang.Double"/>
+	<field name="MAU" class="java.lang.Double"/>
+	<field name="XETNGHIEM" class="java.lang.Double"/>
+	<field name="CHANDOAN_HINH_ANH" class="java.lang.Double"/>
+	<field name="PTTT" class="java.lang.Double"/>
+	<field name="KTC" class="java.lang.Double"/>
+	<field name="VTTH" class="java.lang.Double"/>
+	<field name="VANCHUYEN" class="java.lang.Double"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="15"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="237"
+						height="15"
+						key="textField-51"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman " size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[new String("Chi phí KCB theo tuyến CMKT")]]></textFieldExpression>
+				</textField>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="15"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="20"
+						height="15"
+						key="textField-10"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman " size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="20"
+						y="0"
+						width="134"
+						height="15"
+						key="textField-11"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="3" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font reportFont="Times New Roman " size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DOI_TUONG}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="154"
+						y="0"
+						width="29"
+						height="15"
+						key="textField-12"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman "/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SOCA}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="293"
+						y="0"
+						width="52"
+						height="15"
+						key="textField-14"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman "/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $F{TIENKHAM} == null ? CommaSeparator.formatDoubleWithSepratorHavingDecimal(new Double(0.0)) : CommaSeparator.formatDoubleWithSepratorHavingDecimal($F{TIENKHAM}) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="345"
+						y="0"
+						width="60"
+						height="15"
+						key="textField-15"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman "/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $F{THUOC} == null ? CommaSeparator.formatDoubleWithSepratorHavingDecimal(new Double(0.0)) : CommaSeparator.formatDoubleWithSepratorHavingDecimal($F{THUOC}) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="405"
+						y="0"
+						width="56"
+						height="15"
+						key="textField-16"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman "/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $F{MAU} == null ? CommaSeparator.formatDoubleWithSepratorHavingDecimal(new Double(0.0)) : CommaSeparator.formatDoubleWithSepratorHavingDecimal($F{MAU}) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="461"
+						y="0"
+						width="57"
+						height="15"
+						key="textField-18"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman "/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $F{XETNGHIEM} == null ? CommaSeparator.formatDoubleWithSepratorHavingDecimal(new Double(0.0)) : CommaSeparator.formatDoubleWithSepratorHavingDecimal($F{XETNGHIEM}) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="518"
+						y="0"
+						width="56"
+						height="15"
+						key="textField-19"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman "/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $F{CHANDOAN_HINH_ANH} == null ? CommaSeparator.formatDoubleWithSepratorHavingDecimal(new Double(0.0)) : CommaSeparator.formatDoubleWithSepratorHavingDecimal($F{CHANDOAN_HINH_ANH}) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="574"
+						y="0"
+						width="58"
+						height="15"
+						key="textField-20"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman "/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $F{PTTT} == null ? CommaSeparator.formatDoubleWithSepratorHavingDecimal(new Double(0.0)) : CommaSeparator.formatDoubleWithSepratorHavingDecimal($F{PTTT}) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="632"
+						y="0"
+						width="46"
+						height="15"
+						key="textField-21"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman "/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $F{KTC} == null ? CommaSeparator.formatDoubleWithSepratorHavingDecimal(new Double(0.0)) : CommaSeparator.formatDoubleWithSepratorHavingDecimal($F{KTC}) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="678"
+						y="0"
+						width="54"
+						height="15"
+						key="textField-22"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman "/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $F{VTTH} == null ? CommaSeparator.formatDoubleWithSepratorHavingDecimal(new Double(0.0)) : CommaSeparator.formatDoubleWithSepratorHavingDecimal($F{VTTH}) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="732"
+						y="0"
+						width="42"
+						height="15"
+						key="textField-23"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman "/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $F{VANCHUYEN} == null ? CommaSeparator.formatDoubleWithSepratorHavingDecimal(new Double(0.0)) : CommaSeparator.formatDoubleWithSepratorHavingDecimal($F{VANCHUYEN}) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="774"
+						y="0"
+						width="58"
+						height="15"
+						key="textField-37"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman "/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $F{BNTRA} == null ? CommaSeparator.formatDoubleWithSepratorHavingDecimal(new Double(0.0)) : CommaSeparator.formatDoubleWithSepratorHavingDecimal($F{BNTRA}) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="183"
+						y="0"
+						width="55"
+						height="15"
+						key="textField-38"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman "/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $F{BHYTCHI} == null ? CommaSeparator.formatDoubleWithSepratorHavingDecimal(new Double(0.0)) : CommaSeparator.formatDoubleWithSepratorHavingDecimal($F{BHYTCHI}) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="238"
+						y="0"
+						width="55"
+						height="15"
+						key="textField-49"/>
+					<box topBorder="Thin" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" rightPadding="3" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font reportFont="Times New Roman "/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[( $F{TONG_CONG} == null ? CommaSeparator.formatDoubleWithSepratorHavingDecimal(new Double(0.0)) : CommaSeparator.formatDoubleWithSepratorHavingDecimal($F{TONG_CONG}) )]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

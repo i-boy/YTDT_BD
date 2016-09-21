@@ -1,0 +1,9 @@
+DROP VIEW IF EXISTS `v_benhnhan_ngt_datt`;
+CREATE VIEW `v_benhnhan_ngt_datt` AS
+select A.TIEPDON_MA, HSTHTOANK_NGAYGIOTT as NGAYGIOTT
+from hs_thtoank A, tiep_don B
+where A.TIEPDON_MA = B.TIEPDON_MA
+AND A.HSTHTOANK_DATT = 1 AND B.TIEPDON_DACHUYENBHYT = 0
+AND B.DOITUONG_MA = 2
+group by A.TIEPDON_MA order by A.TIEPDON_MA asc
+;

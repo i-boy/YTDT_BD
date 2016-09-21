@@ -1,0 +1,156 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="vaiTro" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{vaiTroHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Vai tro</f:facet>
+
+
+
+
+
+            <s:decorate id="vaitroMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Vaitro ma</ui:define>
+                <h:inputText id="vaitroMa"
+                       required="true"
+                           size="100"
+                      maxlength="128"
+                          value="#{vaiTroHome.instance.vaitroMa}">
+                    <a:support event="onblur" reRender="vaitroMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="vaitroTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Vaitro ten</ui:define>
+                <h:inputText id="vaitroTen"
+                           size="100"
+                      maxlength="128"
+                          value="#{vaiTroHome.instance.vaitroTen}">
+                    <a:support event="onblur" reRender="vaitroTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{vaiTroHome.persist}"
+                       disabled="#{!vaiTroHome.wired}"
+                       rendered="#{!vaiTroHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{vaiTroHome.update}"
+                       rendered="#{vaiTroHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{vaiTroHome.remove}"
+                      immediate="true"
+                       rendered="#{vaiTroHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/VaiTro.xhtml"
+                rendered="#{vaiTroHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty vaiTroFrom ? 'VaiTroList' : vaiTroFrom}.xhtml"
+                rendered="#{!vaiTroHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+<ui:remove>
+    <rich:tab label="Người dùng vai tros">
+        <h:form styleClass="association" id="nguoiDungVaiTrosChildren">
+
+            <h:outputText value="Không có  nguoiDungVaiTros phù hợp với vaiTro."
+                       rendered="#{empty vaiTroHome.nguoiDungVaiTros}"/>
+
+            <rich:dataTable value="#{vaiTroHome.nguoiDungVaiTros}"
+                           var="_nguoiDungVaiTro"
+                      rendered="#{not empty vaiTroHome.nguoiDungVaiTros}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="nguoiDungVaiTrosTable">
+                <rich:column sortBy="#{_nguoiDungVaiTro.ndvaitroMaso}">
+                    <f:facet name="header">Ndvaitro maso</f:facet>
+                    <h:outputText value="#{_nguoiDungVaiTro.ndvaitroMaso}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{vaiTroHome.managed}" id="nguoiDungVaiTros">
+        <div class="actionButtons">
+            <s:button id="addnguoiDungVaiTro"
+                   value="Thêm nguoiDungVaiTro"
+                    view="/NguoiDungVaiTroEdit.xhtml"
+             propagation="none">
+                 <f:param name="vaiTroVaitroMaso"
+                         value="#{vaiTroHome.instance.vaitroMaso}"/>
+                 <f:param name="nguoiDungVaiTroFrom" value="VaiTro"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Người dùng vai tros_1">
+        <h:form styleClass="association" id="nguoiDungVaiTros_1Children">
+
+            <h:outputText value="Không có  nguoiDungVaiTros_1 phù hợp với vaiTro."
+                       rendered="#{empty vaiTroHome.nguoiDungVaiTros_1}"/>
+
+            <rich:dataTable value="#{vaiTroHome.nguoiDungVaiTros_1}"
+                           var="_nguoiDungVaiTro"
+                      rendered="#{not empty vaiTroHome.nguoiDungVaiTros_1}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="nguoiDungVaiTros_1Table">
+                <rich:column sortBy="#{_nguoiDungVaiTro.ndvaitroMaso}">
+                    <f:facet name="header">Ndvaitro maso</f:facet>
+                    <h:outputText value="#{_nguoiDungVaiTro.ndvaitroMaso}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{vaiTroHome.managed}" id="nguoiDungVaiTros_1">
+        <div class="actionButtons">
+            <s:button id="addnguoiDungVaiTro"
+                   value="Thêm nguoiDungVaiTro"
+                    view="/NguoiDungVaiTroEdit.xhtml"
+             propagation="none">
+                 <f:param name="vaiTroVaitroMaso"
+                         value="#{vaiTroHome.instance.vaitroMaso}"/>
+                 <f:param name="nguoiDungVaiTroFrom" value="VaiTro"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab></ui:remove>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

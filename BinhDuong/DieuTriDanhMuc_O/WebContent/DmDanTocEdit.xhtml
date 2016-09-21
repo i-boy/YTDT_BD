@@ -1,0 +1,115 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmDanToc" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmDanTocHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Dân tộc</f:facet>
+
+
+
+            <s:decorate id="dmdantocChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dmdantocChon"
+                                      value="#{dmDanTocHome.instance.dmdantocChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmdantocDefaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mặc định</ui:define>
+                <h:selectBooleanCheckbox id="dmdantocDefa"
+                                      value="#{dmDanTocHome.instance.dmdantocDefa}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmdantocMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã dân tộc</ui:define>
+                <h:inputText id="dmdantocMa"
+                       required="true"
+                           size="10"
+                      maxlength="10"
+                          value="#{dmDanTocHome.instance.dmdantocMa}">
+                    <a:support event="onblur" reRender="dmdantocMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmdantocMienphiField" template="layout/edit.xhtml">
+                <ui:define name="label">Miễn phí</ui:define>
+                <h:selectBooleanCheckbox id="dmdantocMienphi"
+                                      value="#{dmDanTocHome.instance.dmdantocMienphi}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmdantocNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmdantocNgaygiocn"
+                          value="#{dmDanTocHome.instance.dmdantocNgaygiocn}">
+                    <a:support event="onblur" reRender="dmdantocNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmdantocTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên dân tộc</ui:define>
+                <h:inputTextarea id="dmdantocTen"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dmDanTocHome.instance.dmdantocTen}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmDanTocHome.persist}"
+                       disabled="#{!dmDanTocHome.wired}"
+                       rendered="#{!dmDanTocHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmDanTocHome.update}"
+                       rendered="#{dmDanTocHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmDanTocHome.remove}"
+                      immediate="true"
+                       rendered="#{dmDanTocHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmDanToc.xhtml"
+                rendered="#{dmDanTocHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmDanTocFrom ? 'DmDanTocList' : dmDanTocFrom}.xhtml"
+                rendered="#{!dmDanTocHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

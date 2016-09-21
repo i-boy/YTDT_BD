@@ -1,0 +1,188 @@
+﻿<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmHuyenSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Huyện tìm kiếm" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Mã huyện</ui:define>
+                <h:inputText id="dmhuyenMa" value="#{dmHuyenList.dmHuyen.dmhuyenMa}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Tên Huyện</ui:define>
+                <h:inputText id="dmhuyenTen" value="#{dmHuyenList.dmHuyen.dmhuyenTen}"/>
+            </s:decorate>
+
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Tìm kiếm" action="/DmHuyenList.xhtml"/>
+            <s:button id="reset" value="Nhập lại" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Huyện Kết quả</f:facet>
+    <div class="results" id="dmHuyenList">
+
+    <h:outputText value="Không tìm thấy kết quả nào."
+               rendered="#{empty dmHuyenList.resultList}"/>
+
+    <rich:dataTable id="dmHuyenList"
+                var="_dmHuyen"
+              value="#{dmHuyenList.resultList}"
+           rendered="#{not empty dmHuyenList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmHuyenList}"/>
+                    <ui:param name="propertyLabel" value="Mã số"/>
+                    <ui:param name="propertyPath" value="dmHuyen.dmhuyenMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmHuyen.dmhuyenMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmHuyenList}"/>
+                    <ui:param name="propertyLabel" value="Mã tỉnh"/>
+                    <ui:param name="propertyPath" value="dmHuyen.dmTinh.dmtinhMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmHuyen.dmTinh.dmtinhMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmHuyenList}"/>
+                    <ui:param name="propertyLabel" value="Chọn"/>
+                    <ui:param name="propertyPath" value="dmHuyen.dmhuyenChon"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmHuyen.dmhuyenChon}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmHuyenList}"/>
+                    <ui:param name="propertyLabel" value="Mặc định"/>
+                    <ui:param name="propertyPath" value="dmHuyen.dmhuyenDefa"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmHuyen.dmhuyenDefa}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmHuyenList}"/>
+                    <ui:param name="propertyLabel" value="Mã huyện"/>
+                    <ui:param name="propertyPath" value="dmHuyen.dmhuyenMa"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmHuyen.dmhuyenMa}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmHuyenList}"/>
+                    <ui:param name="propertyLabel" value="Ngày giờ cập nhật"/>
+                    <ui:param name="propertyPath" value="dmHuyen.dmhuyenNgaygiocn"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmHuyen.dmhuyenNgaygiocn}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dmHuyenList}"/>
+                    <ui:param name="propertyLabel" value="Tên Huyện"/>
+                    <ui:param name="propertyPath" value="dmHuyen.dmhuyenTen"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dmHuyen.dmhuyenTen}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Thao tác</f:facet>
+            <s:link view="/#{empty from ? 'DmHuyen' : from}.xhtml"
+                   value="#{empty from ? 'Xem' : 'Chọn'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="dmHuyen">
+                <f:param name="dmHuyenDmhuyenMaso"
+                        value="#{_dmHuyen.dmhuyenMaso}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/DmHuyenEdit.xhtml"
+                   value="Sửa"
+             propagation="none"
+                      id="dmHuyenEdit"
+                rendered="#{empty from}">
+                <f:param name="dmHuyenDmhuyenMaso"
+                        value="#{_dmHuyen.dmhuyenMaso}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/DmHuyenList.xhtml"
+            rendered="#{dmHuyenList.previousExists}"
+               value="#{messages.left}#{messages.left} Trang đầu"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/DmHuyenList.xhtml"
+            rendered="#{dmHuyenList.previousExists}"
+               value="#{messages.left} Trang trước"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{dmHuyenList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DmHuyenList.xhtml"
+            rendered="#{dmHuyenList.nextExists}"
+               value="Trang sau #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{dmHuyenList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DmHuyenList.xhtml"
+            rendered="#{dmHuyenList.nextExists}"
+               value="Trang cuối #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{dmHuyenList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/DmHuyenEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Thêm mới Huyện">
+            <f:param name="dmHuyenDmhuyenMaso"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

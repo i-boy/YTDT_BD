@@ -1,0 +1,105 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <rich:panel>
+        <f:facet name="header">Loại ăn cấp 2 Chi tiết</f:facet>
+
+
+        <s:decorate id="dtdmla2Chon" template="layout/display.xhtml">
+            <ui:define name="label">Chọn</ui:define>
+            <h:outputText value="#{dtDmLoaiAn2Home.instance.dtdmla2Chon}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmla2Ma" template="layout/display.xhtml">
+            <ui:define name="label">Mã</ui:define>
+            <h:outputText value="#{dtDmLoaiAn2Home.instance.dtdmla2Ma}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmla2Ngaygiocn" template="layout/display.xhtml">
+            <ui:define name="label">Ngày giờ cập nhật</ui:define>
+            <h:outputText value="#{dtDmLoaiAn2Home.instance.dtdmla2Ngaygiocn}"/>
+        </s:decorate>
+
+        <s:decorate id="dtdmla2Ten" template="layout/display.xhtml">
+            <ui:define name="label">Tên</ui:define>
+            <h:outputText value="#{dtDmLoaiAn2Home.instance.dtdmla2Ten}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/DtDmLoaiAn2Edit.xhtml"
+                    id="edit"
+                 value="Sửa"/>
+
+        <s:button view="/#{empty dtDmLoaiAn2From ? 'DtDmLoaiAn2List' : dtDmLoaiAn2From}.xhtml"
+                    id="done"
+                 value="Hoàn thành"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Loại ăn</h:panelGroup>
+        </f:facet>
+    <div class="association" id="dtDmLoaiAnParent">
+
+        <h:outputText value="Không tìm thấy dtDmLoaiAn phù hợp với dtDmLoaiAn2."
+                   rendered="#{dtDmLoaiAn2Home.instance.dtDmLoaiAn == null}"/>
+
+        <rich:dataTable var="_dtDmLoaiAn"
+                   value="#{dtDmLoaiAn2Home.instance.dtDmLoaiAn}"
+                rendered="#{dtDmLoaiAn2Home.instance.dtDmLoaiAn != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="dtDmLoaiAnTable">
+            <h:column>
+                <f:facet name="header">Mã số</f:facet>
+                <h:outputText value="#{_dtDmLoaiAn.dtdmlaMaso}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Chọn</f:facet>
+                <h:outputText value="#{_dtDmLoaiAn.dtdmlaChon}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Mã</f:facet>
+                <h:outputText value="#{_dtDmLoaiAn.dtdmlaMa}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                <h:outputText value="#{_dtDmLoaiAn.dtdmlaNgaygiocn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tên</f:facet>
+                <h:outputText value="#{_dtDmLoaiAn.dtdmlaTen}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Thao tác</f:facet>
+                <s:link id="viewdtDmLoaiAn"
+                     value="Xem"
+                      view="/DtDmLoaiAn.xhtml">
+                    <f:param name="dtDmLoaiAnDtdmlaMaso"
+                           value="#{_dtDmLoaiAn.dtdmlaMaso}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,323 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmLoaiBhyt" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmLoaiBhytHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Loại BHYT</f:facet>
+
+
+
+
+
+            <s:decorate id="dtdmloaibhytChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dtdmloaibhytChon"
+                                      value="#{dtDmLoaiBhytHome.instance.dtdmloaibhytChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmloaibhytGhichuField" template="layout/edit.xhtml">
+                <ui:define name="label">Ghi chú</ui:define>
+                <h:inputTextarea id="dtdmloaibhytGhichu"
+                               cols="80"
+                               rows="3"
+                              value="#{dtDmLoaiBhytHome.instance.dtdmloaibhytGhichu}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmloaibhytMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dtdmloaibhytMa"
+                       required="true"
+                           size="1"
+                      maxlength="1"
+                          value="#{dtDmLoaiBhytHome.instance.dtdmloaibhytMa}">
+                    <a:support event="onblur" reRender="dtdmloaibhytMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmloaibhytNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dtdmloaibhytNgaygiocn"
+                          value="#{dtDmLoaiBhytHome.instance.dtdmloaibhytNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmloaibhytNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmloaibhytTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputTextarea id="dtdmloaibhytTen"
+                               cols="80"
+                               rows="3"
+                              value="#{dtDmLoaiBhytHome.instance.dtdmloaibhytTen}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmLoaiBhytHome.persist}"
+                       disabled="#{!dtDmLoaiBhytHome.wired}"
+                       rendered="#{!dtDmLoaiBhytHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmLoaiBhytHome.update}"
+                       rendered="#{dtDmLoaiBhytHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmLoaiBhytHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmLoaiBhytHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmLoaiBhyt.xhtml"
+                rendered="#{dtDmLoaiBhytHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmLoaiBhytFrom ? 'DtDmLoaiBhytList' : dtDmLoaiBhytFrom}.xhtml"
+                rendered="#{!dtDmLoaiBhytHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+<ui:remove>
+    <rich:tab label="Khối BHYTs">
+        <h:form styleClass="association" id="dtDmKhoiBhytsChildren">
+
+            <h:outputText value="Không có  dtDmKhoiBhyts phù hợp với dtDmLoaiBhyt."
+                       rendered="#{empty dtDmLoaiBhytHome.dtDmKhoiBhyts}"/>
+
+            <rich:dataTable value="#{dtDmLoaiBhytHome.dtDmKhoiBhyts}"
+                           var="_dtDmKhoiBhyt"
+                      rendered="#{not empty dtDmLoaiBhytHome.dtDmKhoiBhyts}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dtDmKhoiBhytsTable">
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytMaso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytChon}">
+                    <f:facet name="header">Chọn</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytChon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytGhichu}">
+                    <f:facet name="header">Ghi chú</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytGhichu}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytGhtyle}">
+                    <f:facet name="header">Giới hạn tỷ lệ BHYT</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytGhtyle}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytGhtyleNoiTru}">
+                    <f:facet name="header">Giới hạn tỷ lệ BHYT nội trú</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytGhtyleNoiTru}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytGomyc}">
+                    <f:facet name="header">Bao gồm y cụ</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytGomyc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytLimitktc}">
+                    <f:facet name="header">Giới hạn KTC</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytLimitktc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytMa}">
+                    <f:facet name="header">Mã</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytMaxktc}">
+                    <f:facet name="header">Giới hạn trên KTC</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytMaxktc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytMinktc}">
+                    <f:facet name="header">Giới hạn dưới KTC</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytMinktc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTen}">
+                    <f:facet name="header">Tên</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTen}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTlmaxktc}">
+                    <f:facet name="header">Tỷ lệ giới hạn trên KTC</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTlmaxktc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTlminktc}">
+                    <f:facet name="header">Tỷ lệ giới hạn dưới KTC</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTlminktc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt1}">
+                    <f:facet name="header">Tỷ lệ BHYT 1</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt1}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt1NoiTru}">
+                    <f:facet name="header">Tỷ lệ BHYT nội trú 1</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt1NoiTru}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt2}">
+                    <f:facet name="header">Tỷ lệ BHYT 2</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt2}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt2NoiTru}">
+                    <f:facet name="header">Tỷ lệ BHYT nội trú 2</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt2NoiTru}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTylektc}">
+                    <f:facet name="header">Tỷ lệ KTC</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTylektc}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dtDmLoaiBhytHome.managed}" id="dtDmKhoiBhyts">
+        <div class="actionButtons">
+            <s:button id="adddtDmKhoiBhyt"
+                   value="Thêm dtDmKhoiBhyt"
+                    view="/DtDmKhoiBhytEdit.xhtml"
+             propagation="none">
+                 <f:param name="dtDmLoaiBhytDtdmloaibhytMaso"
+                         value="#{dtDmLoaiBhytHome.instance.dtdmloaibhytMaso}"/>
+                 <f:param name="dtDmKhoiBhytFrom" value="DtDmLoaiBhyt"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Khối BHYTs_1">
+        <h:form styleClass="association" id="dtDmKhoiBhyts_1Children">
+
+            <h:outputText value="Không có  dtDmKhoiBhyts_1 phù hợp với dtDmLoaiBhyt."
+                       rendered="#{empty dtDmLoaiBhytHome.dtDmKhoiBhyts_1}"/>
+
+            <rich:dataTable value="#{dtDmLoaiBhytHome.dtDmKhoiBhyts_1}"
+                           var="_dtDmKhoiBhyt"
+                      rendered="#{not empty dtDmLoaiBhytHome.dtDmKhoiBhyts_1}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dtDmKhoiBhyts_1Table">
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytMaso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytChon}">
+                    <f:facet name="header">Chọn</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytChon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytGhichu}">
+                    <f:facet name="header">Ghi chú</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytGhichu}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytGhtyle}">
+                    <f:facet name="header">Giới hạn tỷ lệ BHYT</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytGhtyle}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytGhtyleNoiTru}">
+                    <f:facet name="header">Giới hạn tỷ lệ BHYT nội trú</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytGhtyleNoiTru}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytGomyc}">
+                    <f:facet name="header">Bao gồm y cụ</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytGomyc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytLimitktc}">
+                    <f:facet name="header">Giới hạn KTC</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytLimitktc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytMa}">
+                    <f:facet name="header">Mã</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytMaxktc}">
+                    <f:facet name="header">Giới hạn trên KTC</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytMaxktc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytMinktc}">
+                    <f:facet name="header">Giới hạn dưới KTC</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytMinktc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTen}">
+                    <f:facet name="header">Tên</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTen}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTlmaxktc}">
+                    <f:facet name="header">Tỷ lệ giới hạn trên KTC</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTlmaxktc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTlminktc}">
+                    <f:facet name="header">Tỷ lệ giới hạn dưới KTC</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTlminktc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt1}">
+                    <f:facet name="header">Tỷ lệ BHYT 1</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt1}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt1NoiTru}">
+                    <f:facet name="header">Tỷ lệ BHYT nội trú 1</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt1NoiTru}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt2}">
+                    <f:facet name="header">Tỷ lệ BHYT 2</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt2}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt2NoiTru}">
+                    <f:facet name="header">Tỷ lệ BHYT nội trú 2</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTylebhyt2NoiTru}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKhoiBhyt.dtdmkhoibhytTylektc}">
+                    <f:facet name="header">Tỷ lệ KTC</f:facet>
+                    <h:outputText value="#{_dtDmKhoiBhyt.dtdmkhoibhytTylektc}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dtDmLoaiBhytHome.managed}" id="dtDmKhoiBhyts_1">
+        <div class="actionButtons">
+            <s:button id="adddtDmKhoiBhyt"
+                   value="Thêm dtDmKhoiBhyt"
+                    view="/DtDmKhoiBhytEdit.xhtml"
+             propagation="none">
+                 <f:param name="dtDmLoaiBhytDtdmloaibhytMaso"
+                         value="#{dtDmLoaiBhytHome.instance.dtdmloaibhytMaso}"/>
+                 <f:param name="dtDmKhoiBhytFrom" value="DtDmLoaiBhyt"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab></ui:remove>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

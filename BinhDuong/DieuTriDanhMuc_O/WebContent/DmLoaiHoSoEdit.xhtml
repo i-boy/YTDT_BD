@@ -1,0 +1,136 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmLoaiHoSo" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmLoaiHoSoHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Loại hồ sơ</f:facet>
+
+
+            <s:decorate id="dmloaihosoMasoField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã số</ui:define>
+                <h:inputText id="dmloaihosoMaso"
+                       required="true"
+                       disabled="#{dmLoaiHoSoHome.managed}"
+                          value="#{dmLoaiHoSoHome.instance.dmloaihosoMaso}">
+                    <a:support event="onblur" reRender="dmloaihosoMasoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmloaihosoDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc DP</ui:define>
+                <h:selectBooleanCheckbox id="dmloaihosoDp"
+                                      value="#{dmLoaiHoSoHome.instance.dmloaihosoDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmloaihosoDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc ĐT</ui:define>
+                <h:selectBooleanCheckbox id="dmloaihosoDt"
+                                      value="#{dmLoaiHoSoHome.instance.dmloaihosoDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmloaihosoGhichuField" template="layout/edit.xhtml">
+                <ui:define name="label">Ghi chú</ui:define>
+                <h:inputText id="dmloaihosoGhichu"
+                           size="100"
+                      maxlength="100"
+                          value="#{dmLoaiHoSoHome.instance.dmloaihosoGhichu}">
+                    <a:support event="onblur" reRender="dmloaihosoGhichuField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmloaihosoMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dmloaihosoMa"
+                           size="15"
+                      maxlength="15"
+                          value="#{dmLoaiHoSoHome.instance.dmloaihosoMa}">
+                    <a:support event="onblur" reRender="dmloaihosoMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmloaihosoNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmloaihosoNgaygiocn"
+                          value="#{dmLoaiHoSoHome.instance.dmloaihosoNgaygiocn}">
+                    <a:support event="onblur" reRender="dmloaihosoNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmloaihosoQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc QL</ui:define>
+                <h:selectBooleanCheckbox id="dmloaihosoQl"
+                                      value="#{dmLoaiHoSoHome.instance.dmloaihosoQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmloaihosoTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dmloaihosoTen"
+                           size="100"
+                      maxlength="100"
+                          value="#{dmLoaiHoSoHome.instance.dmloaihosoTen}">
+                    <a:support event="onblur" reRender="dmloaihosoTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmLoaiHoSoHome.persist}"
+                       disabled="#{!dmLoaiHoSoHome.wired}"
+                       rendered="#{!dmLoaiHoSoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmLoaiHoSoHome.update}"
+                       rendered="#{dmLoaiHoSoHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmLoaiHoSoHome.remove}"
+                      immediate="true"
+                       rendered="#{dmLoaiHoSoHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmLoaiHoSo.xhtml"
+                rendered="#{dmLoaiHoSoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmLoaiHoSoFrom ? 'DmLoaiHoSoList' : dmLoaiHoSoFrom}.xhtml"
+                rendered="#{!dmLoaiHoSoHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

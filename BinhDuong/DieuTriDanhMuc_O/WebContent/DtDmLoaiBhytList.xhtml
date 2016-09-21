@@ -1,0 +1,183 @@
+﻿<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmLoaiBhytSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Loại BHYT tìm kiếm" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Ghi chú</ui:define>
+                <h:inputText id="dtdmloaibhytGhichu" value="#{dtDmLoaiBhytList.dtDmLoaiBhyt.dtdmloaibhytGhichu}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dtdmloaibhytMa" value="#{dtDmLoaiBhytList.dtDmLoaiBhyt.dtdmloaibhytMa}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputText id="dtdmloaibhytTen" value="#{dtDmLoaiBhytList.dtDmLoaiBhyt.dtdmloaibhytTen}"/>
+            </s:decorate>
+
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Tìm kiếm" action="/DtDmLoaiBhytList.xhtml"/>
+            <s:button id="reset" value="Nhập lại" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Loại BHYT Kết quả</f:facet>
+    <div class="results" id="dtDmLoaiBhytList">
+
+    <h:outputText value="Không tìm thấy kết quả nào."
+               rendered="#{empty dtDmLoaiBhytList.resultList}"/>
+
+    <rich:dataTable id="dtDmLoaiBhytList"
+                var="_dtDmLoaiBhyt"
+              value="#{dtDmLoaiBhytList.resultList}"
+           rendered="#{not empty dtDmLoaiBhytList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmLoaiBhytList}"/>
+                    <ui:param name="propertyLabel" value="Mã số"/>
+                    <ui:param name="propertyPath" value="dtDmLoaiBhyt.dtdmloaibhytMaso"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmLoaiBhyt.dtdmloaibhytMaso}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmLoaiBhytList}"/>
+                    <ui:param name="propertyLabel" value="Chọn"/>
+                    <ui:param name="propertyPath" value="dtDmLoaiBhyt.dtdmloaibhytChon"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmLoaiBhyt.dtdmloaibhytChon}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmLoaiBhytList}"/>
+                    <ui:param name="propertyLabel" value="Ghi chú"/>
+                    <ui:param name="propertyPath" value="dtDmLoaiBhyt.dtdmloaibhytGhichu"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmLoaiBhyt.dtdmloaibhytGhichu}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmLoaiBhytList}"/>
+                    <ui:param name="propertyLabel" value="Mã"/>
+                    <ui:param name="propertyPath" value="dtDmLoaiBhyt.dtdmloaibhytMa"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmLoaiBhyt.dtdmloaibhytMa}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmLoaiBhytList}"/>
+                    <ui:param name="propertyLabel" value="Ngày giờ cập nhật"/>
+                    <ui:param name="propertyPath" value="dtDmLoaiBhyt.dtdmloaibhytNgaygiocn"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmLoaiBhyt.dtdmloaibhytNgaygiocn}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{dtDmLoaiBhytList}"/>
+                    <ui:param name="propertyLabel" value="Tên"/>
+                    <ui:param name="propertyPath" value="dtDmLoaiBhyt.dtdmloaibhytTen"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_dtDmLoaiBhyt.dtdmloaibhytTen}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Thao tác</f:facet>
+            <s:link view="/#{empty from ? 'DtDmLoaiBhyt' : from}.xhtml"
+                   value="#{empty from ? 'Xem' : 'Chọn'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="dtDmLoaiBhyt">
+                <f:param name="dtDmLoaiBhytDtdmloaibhytMaso"
+                        value="#{_dtDmLoaiBhyt.dtdmloaibhytMaso}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/DtDmLoaiBhytEdit.xhtml"
+                   value="Sửa"
+             propagation="none"
+                      id="dtDmLoaiBhytEdit"
+                rendered="#{empty from}">
+                <f:param name="dtDmLoaiBhytDtdmloaibhytMaso"
+                        value="#{_dtDmLoaiBhyt.dtdmloaibhytMaso}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/DtDmLoaiBhytList.xhtml"
+            rendered="#{dtDmLoaiBhytList.previousExists}"
+               value="#{messages.left}#{messages.left} Trang đầu"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/DtDmLoaiBhytList.xhtml"
+            rendered="#{dtDmLoaiBhytList.previousExists}"
+               value="#{messages.left} Trang trước"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{dtDmLoaiBhytList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DtDmLoaiBhytList.xhtml"
+            rendered="#{dtDmLoaiBhytList.nextExists}"
+               value="Trang sau #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{dtDmLoaiBhytList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/DtDmLoaiBhytList.xhtml"
+            rendered="#{dtDmLoaiBhytList.nextExists}"
+               value="Trang cuối #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{dtDmLoaiBhytList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/DtDmLoaiBhytEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Thêm mới Loại BHYT">
+            <f:param name="dtDmLoaiBhytDtdmloaibhytMaso"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,235 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmTuyenKcb" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmTuyenKcbHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Tuyến KCB</f:facet>
+
+
+
+
+
+            <s:decorate id="dtdmtuyenkcbChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dtdmtuyenkcbChon"
+                                      value="#{dtDmTuyenKcbHome.instance.dtdmtuyenkcbChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmtuyenkcbMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã</ui:define>
+                <h:inputText id="dtdmtuyenkcbMa"
+                       required="true"
+                           size="10"
+                      maxlength="10"
+                          value="#{dtDmTuyenKcbHome.instance.dtdmtuyenkcbMa}">
+                    <a:support event="onblur" reRender="dtdmtuyenkcbMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmtuyenkcbNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dtdmtuyenkcbNgaygiocn"
+                          value="#{dtDmTuyenKcbHome.instance.dtdmtuyenkcbNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmtuyenkcbNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmtuyenkcbTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên</ui:define>
+                <h:inputTextarea id="dtdmtuyenkcbTen"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dtDmTuyenKcbHome.instance.dtdmtuyenkcbTen}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmTuyenKcbHome.persist}"
+                       disabled="#{!dtDmTuyenKcbHome.wired}"
+                       rendered="#{!dtDmTuyenKcbHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmTuyenKcbHome.update}"
+                       rendered="#{dtDmTuyenKcbHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmTuyenKcbHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmTuyenKcbHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmTuyenKcb.xhtml"
+                rendered="#{dtDmTuyenKcbHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmTuyenKcbFrom ? 'DtDmTuyenKcbList' : dtDmTuyenKcbFrom}.xhtml"
+                rendered="#{!dtDmTuyenKcbHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+<ui:remove>
+    <rich:tab label="KCB BHYTs">
+        <h:form styleClass="association" id="dtDmKcbBhytsChildren">
+
+            <h:outputText value="Không có  dtDmKcbBhyts phù hợp với dtDmTuyenKcb."
+                       rendered="#{empty dtDmTuyenKcbHome.dtDmKcbBhyts}"/>
+
+            <rich:dataTable value="#{dtDmTuyenKcbHome.dtDmKcbBhyts}"
+                           var="_dtDmKcbBhyt"
+                      rendered="#{not empty dtDmTuyenKcbHome.dtDmKcbBhyts}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dtDmKcbBhytsTable">
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytMaso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmhuyenbhytMa}">
+                    <f:facet name="header">Mã huyện BHYT</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmhuyenbhytMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytChon}">
+                    <f:facet name="header">Chọn</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytChon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytDefa}">
+                    <f:facet name="header">Mặc định</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytDefa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytGhichu}">
+                    <f:facet name="header">Ghi chú</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytGhichu}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytMa}">
+                    <f:facet name="header">Mã</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytMauthe}">
+                    <f:facet name="header">Mẫu thẻ</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytMauthe}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytTen}">
+                    <f:facet name="header">Tên</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytTen}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dtDmTuyenKcbHome.managed}" id="dtDmKcbBhyts">
+        <div class="actionButtons">
+            <s:button id="adddtDmKcbBhyt"
+                   value="Thêm dtDmKcbBhyt"
+                    view="/DtDmKcbBhytEdit.xhtml"
+             propagation="none">
+                 <f:param name="dtDmTuyenKcbDtdmtuyenkcbMaso"
+                         value="#{dtDmTuyenKcbHome.instance.dtdmtuyenkcbMaso}"/>
+                 <f:param name="dtDmKcbBhytFrom" value="DtDmTuyenKcb"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="KCB BHYTs_1">
+        <h:form styleClass="association" id="dtDmKcbBhyts_1Children">
+
+            <h:outputText value="Không có  dtDmKcbBhyts_1 phù hợp với dtDmTuyenKcb."
+                       rendered="#{empty dtDmTuyenKcbHome.dtDmKcbBhyts_1}"/>
+
+            <rich:dataTable value="#{dtDmTuyenKcbHome.dtDmKcbBhyts_1}"
+                           var="_dtDmKcbBhyt"
+                      rendered="#{not empty dtDmTuyenKcbHome.dtDmKcbBhyts_1}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dtDmKcbBhyts_1Table">
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytMaso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmhuyenbhytMa}">
+                    <f:facet name="header">Mã huyện BHYT</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmhuyenbhytMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytChon}">
+                    <f:facet name="header">Chọn</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytChon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytDefa}">
+                    <f:facet name="header">Mặc định</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytDefa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytGhichu}">
+                    <f:facet name="header">Ghi chú</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytGhichu}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytMa}">
+                    <f:facet name="header">Mã</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytMauthe}">
+                    <f:facet name="header">Mẫu thẻ</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytMauthe}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmKcbBhyt.dtdmkcbbhytTen}">
+                    <f:facet name="header">Tên</f:facet>
+                    <h:outputText value="#{_dtDmKcbBhyt.dtdmkcbbhytTen}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dtDmTuyenKcbHome.managed}" id="dtDmKcbBhyts_1">
+        <div class="actionButtons">
+            <s:button id="adddtDmKcbBhyt"
+                   value="Thêm dtDmKcbBhyt"
+                    view="/DtDmKcbBhytEdit.xhtml"
+             propagation="none">
+                 <f:param name="dtDmTuyenKcbDtdmtuyenkcbMaso"
+                         value="#{dtDmTuyenKcbHome.instance.dtdmtuyenkcbMaso}"/>
+                 <f:param name="dtDmKcbBhytFrom" value="DtDmTuyenKcb"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab></ui:remove>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

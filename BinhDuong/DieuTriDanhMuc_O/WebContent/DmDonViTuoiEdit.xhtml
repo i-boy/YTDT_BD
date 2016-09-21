@@ -1,0 +1,87 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmDonViTuoi" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmDonViTuoiHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Đơn vị tuổi</f:facet>
+
+
+
+            <s:decorate id="dmdonvituoiMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã đơn vị tuổi</ui:define>
+                <h:inputText id="dmdonvituoiMa"
+                       required="true"
+                           size="1"
+                      maxlength="1"
+                          value="#{dmDonViTuoiHome.instance.dmdonvituoiMa}">
+                    <a:support event="onblur" reRender="dmdonvituoiMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmdonvituoiTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên đơn vị tuổi</ui:define>
+                <h:inputText id="dmdonvituoiTen"
+                       required="true"
+                           size="45"
+                      maxlength="45"
+                          value="#{dmDonViTuoiHome.instance.dmdonvituoiTen}">
+                    <a:support event="onblur" reRender="dmdonvituoiTenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmDonViTuoiHome.persist}"
+                       disabled="#{!dmDonViTuoiHome.wired}"
+                       rendered="#{!dmDonViTuoiHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmDonViTuoiHome.update}"
+                       rendered="#{dmDonViTuoiHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmDonViTuoiHome.remove}"
+                      immediate="true"
+                       rendered="#{dmDonViTuoiHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmDonViTuoi.xhtml"
+                rendered="#{dmDonViTuoiHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmDonViTuoiFrom ? 'DmDonViTuoiList' : dmDonViTuoiFrom}.xhtml"
+                rendered="#{!dmDonViTuoiHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

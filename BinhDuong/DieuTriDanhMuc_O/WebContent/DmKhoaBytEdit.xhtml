@@ -1,0 +1,495 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dmKhoaByt" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dmKhoaBytHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Khoa BHYT</f:facet>
+
+
+
+
+
+            <s:decorate id="dmkhoabytDpField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc dự phòng</ui:define>
+                <h:selectBooleanCheckbox id="dmkhoabytDp"
+                                      value="#{dmKhoaBytHome.instance.dmkhoabytDp}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmkhoabytDtField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc điều trị</ui:define>
+                <h:selectBooleanCheckbox id="dmkhoabytDt"
+                                      value="#{dmKhoaBytHome.instance.dmkhoabytDt}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmkhoabytMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã khoa BHYT</ui:define>
+                <h:inputText id="dmkhoabytMa"
+                       required="true"
+                           size="15"
+                      maxlength="15"
+                          value="#{dmKhoaBytHome.instance.dmkhoabytMa}">
+                    <a:support event="onblur" reRender="dmkhoabytMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmkhoabytMabyt3Field" template="layout/edit.xhtml">
+                <ui:define name="label">Mã Khoa BHYT mới</ui:define>
+                <h:inputText id="dmkhoabytMabyt3"
+                           size="15"
+                      maxlength="15"
+                          value="#{dmKhoaBytHome.instance.dmkhoabytMabyt3}">
+                    <a:support event="onblur" reRender="dmkhoabytMabyt3Field" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmkhoabytNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dmkhoabytNgaygiocn"
+                          value="#{dmKhoaBytHome.instance.dmkhoabytNgaygiocn}">
+                    <a:support event="onblur" reRender="dmkhoabytNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmkhoabytNhomField" template="layout/edit.xhtml">
+                <ui:define name="label">Nhóm</ui:define>
+                <h:inputText id="dmkhoabytNhom"
+                          value="#{dmKhoaBytHome.instance.dmkhoabytNhom}">
+                    <a:support event="onblur" reRender="dmkhoabytNhomField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dmkhoabytQlField" template="layout/edit.xhtml">
+                <ui:define name="label">Thuộc quản lý</ui:define>
+                <h:selectBooleanCheckbox id="dmkhoabytQl"
+                                      value="#{dmKhoaBytHome.instance.dmkhoabytQl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmkhoabytTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên khoa BHYT</ui:define>
+                <h:inputTextarea id="dmkhoabytTen"
+                               cols="80"
+                               rows="6"
+                           required="true"
+                              value="#{dmKhoaBytHome.instance.dmkhoabytTen}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dmkhoabytThutubcField" template="layout/edit.xhtml">
+                <ui:define name="label">Thứ tự</ui:define>
+                <h:inputText id="dmkhoabytThutubc"
+                          value="#{dmKhoaBytHome.instance.dmkhoabytThutubc}">
+                    <a:support event="onblur" reRender="dmkhoabytThutubcField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmKhoaBytHome.persist}"
+                       disabled="#{!dmKhoaBytHome.wired}"
+                       rendered="#{!dmKhoaBytHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dmKhoaBytHome.update}"
+                       rendered="#{dmKhoaBytHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dmKhoaBytHome.remove}"
+                      immediate="true"
+                       rendered="#{dmKhoaBytHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DmKhoaByt.xhtml"
+                rendered="#{dmKhoaBytHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dmKhoaBytFrom ? 'DmKhoaBytList' : dmKhoaBytFrom}.xhtml"
+                rendered="#{!dmKhoaBytHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+<ui:remove>
+    <rich:tab label="Dm khoas for dmkhoa mabyt">
+        <h:form styleClass="association" id="dmKhoasForDmkhoaMabytChildren">
+
+            <h:outputText value="Không có  dmKhoasForDmkhoaMabyt phù hợp với dmKhoaByt."
+                       rendered="#{empty dmKhoaBytHome.dmKhoasForDmkhoaMabyt}"/>
+
+            <rich:dataTable value="#{dmKhoaBytHome.dmKhoasForDmkhoaMabyt}"
+                           var="_dmKhoa"
+                      rendered="#{not empty dmKhoaBytHome.dmKhoasForDmkhoaMabyt}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dmKhoasForDmkhoaMabytTable">
+                <rich:column sortBy="#{_dmKhoa.dmkhoaMaso}">
+                    <f:facet name="header">Khoa mã số</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaCapmau}">
+                    <f:facet name="header">Cấp máu</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaCapmau}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaCls}">
+                    <f:facet name="header">CLS</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaCls}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaCon}">
+                    <f:facet name="header">Khoa con</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaCon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaCum}">
+                    <f:facet name="header">Cụm thu phí</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaCum}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaDakhoa}">
+                    <f:facet name="header">Đa khoa</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaDakhoa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaDienthoai}">
+                    <f:facet name="header">Điện thoại</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaDienthoai}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaDp}">
+                    <f:facet name="header">Thuộc dự phòng</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaDp}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaDt}">
+                    <f:facet name="header">Thuộc điều trị</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaDt}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaDuoc}">
+                    <f:facet name="header">Liên quan Dược</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaDuoc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaDvvesinh}">
+                    <f:facet name="header">Dịch vụ vệ sinh</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaDvvesinh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaGiatran}">
+                    <f:facet name="header">Giá trần</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaGiatran}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaGiuongkh}">
+                    <f:facet name="header">Số giường kế hoạch</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaGiuongkh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaGiuongtk}">
+                    <f:facet name="header">Số giường thực kê</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaGiuongtk}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaKham}">
+                    <f:facet name="header">Khám</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaKham}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaKhamcc}">
+                    <f:facet name="header">Khám cấp cứu</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaKhamcc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaKhamicd}">
+                    <f:facet name="header">Khám ICD</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaKhamicd}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaKho}">
+                    <f:facet name="header">Kho</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaKho}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaKyhieu}">
+                    <f:facet name="header">Ký hiệu</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaKyhieu}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaMa}">
+                    <f:facet name="header">Mã khoa</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaMakhoada}">
+                    <f:facet name="header">Ký hiệu mã khoa</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaMakhoada}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaNgoaitru}">
+                    <f:facet name="header">Điều trị ngoại trú</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaNgoaitru}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaNhappt}">
+                    <f:facet name="header">Nhập dụng cụ phẩu thuật</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaNhappt}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaNoitru}">
+                    <f:facet name="header">Điều trị nội trú</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaNoitru}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaPhthuat}">
+                    <f:facet name="header">Có phẩu thuật</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaPhthuat}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaQl}">
+                    <f:facet name="header">Thuộc quản lý</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaQl}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaSotret}">
+                    <f:facet name="header">Chịu chứng sốt rét</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaSotret}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaTen}">
+                    <f:facet name="header">Tên khoa</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaTen}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaTen2}">
+                    <f:facet name="header">Tên Khoa 02</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaTen2}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaTenbc}">
+                    <f:facet name="header">Tên trên báo cáo</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaTenbc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaThuphi}">
+                    <f:facet name="header">Có thu phí</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaThuphi}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaThutu}">
+                    <f:facet name="header">Thứ tự</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaThutu}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaTienganh}">
+                    <f:facet name="header">Tên tiếng anh</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaTienganh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaTinhchat}">
+                    <f:facet name="header">Tính chất</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaTinhchat}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaYeucau}">
+                    <f:facet name="header">Điều trị theo yêu cầu</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaYeucau}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dmKhoaBytHome.managed}" id="dmKhoasForDmkhoaMabyt">
+        <div class="actionButtons">
+            <s:button id="adddmKhoa"
+                   value="Thêm dmKhoa"
+                    view="/DmKhoaEdit.xhtml"
+             propagation="none">
+                 <f:param name="dmKhoaBytDmkhoabytMaso"
+                         value="#{dmKhoaBytHome.instance.dmkhoabytMaso}"/>
+                 <f:param name="dmKhoaFrom" value="DmKhoaByt"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Dm khoas for dmkhoa mabyt3">
+        <h:form styleClass="association" id="dmKhoasForDmkhoaMabyt3Children">
+
+            <h:outputText value="Không có  dmKhoasForDmkhoaMabyt3 phù hợp với dmKhoaByt."
+                       rendered="#{empty dmKhoaBytHome.dmKhoasForDmkhoaMabyt3}"/>
+
+            <rich:dataTable value="#{dmKhoaBytHome.dmKhoasForDmkhoaMabyt3}"
+                           var="_dmKhoa"
+                      rendered="#{not empty dmKhoaBytHome.dmKhoasForDmkhoaMabyt3}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dmKhoasForDmkhoaMabyt3Table">
+                <rich:column sortBy="#{_dmKhoa.dmkhoaMaso}">
+                    <f:facet name="header">Khoa mã số</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaCapmau}">
+                    <f:facet name="header">Cấp máu</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaCapmau}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaCls}">
+                    <f:facet name="header">CLS</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaCls}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaCon}">
+                    <f:facet name="header">Khoa con</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaCon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaCum}">
+                    <f:facet name="header">Cụm thu phí</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaCum}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaDakhoa}">
+                    <f:facet name="header">Đa khoa</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaDakhoa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaDienthoai}">
+                    <f:facet name="header">Điện thoại</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaDienthoai}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaDp}">
+                    <f:facet name="header">Thuộc dự phòng</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaDp}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaDt}">
+                    <f:facet name="header">Thuộc điều trị</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaDt}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaDuoc}">
+                    <f:facet name="header">Liên quan Dược</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaDuoc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaDvvesinh}">
+                    <f:facet name="header">Dịch vụ vệ sinh</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaDvvesinh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaGiatran}">
+                    <f:facet name="header">Giá trần</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaGiatran}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaGiuongkh}">
+                    <f:facet name="header">Số giường kế hoạch</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaGiuongkh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaGiuongtk}">
+                    <f:facet name="header">Số giường thực kê</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaGiuongtk}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaKham}">
+                    <f:facet name="header">Khám</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaKham}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaKhamcc}">
+                    <f:facet name="header">Khám cấp cứu</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaKhamcc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaKhamicd}">
+                    <f:facet name="header">Khám ICD</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaKhamicd}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaKho}">
+                    <f:facet name="header">Kho</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaKho}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaKyhieu}">
+                    <f:facet name="header">Ký hiệu</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaKyhieu}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaMa}">
+                    <f:facet name="header">Mã khoa</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaMakhoada}">
+                    <f:facet name="header">Ký hiệu mã khoa</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaMakhoada}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaNgoaitru}">
+                    <f:facet name="header">Điều trị ngoại trú</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaNgoaitru}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaNhappt}">
+                    <f:facet name="header">Nhập dụng cụ phẩu thuật</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaNhappt}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaNoitru}">
+                    <f:facet name="header">Điều trị nội trú</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaNoitru}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaPhthuat}">
+                    <f:facet name="header">Có phẩu thuật</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaPhthuat}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaQl}">
+                    <f:facet name="header">Thuộc quản lý</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaQl}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaSotret}">
+                    <f:facet name="header">Chịu chứng sốt rét</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaSotret}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaTen}">
+                    <f:facet name="header">Tên khoa</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaTen}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaTen2}">
+                    <f:facet name="header">Tên Khoa 02</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaTen2}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaTenbc}">
+                    <f:facet name="header">Tên trên báo cáo</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaTenbc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaThuphi}">
+                    <f:facet name="header">Có thu phí</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaThuphi}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaThutu}">
+                    <f:facet name="header">Thứ tự</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaThutu}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaTienganh}">
+                    <f:facet name="header">Tên tiếng anh</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaTienganh}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaTinhchat}">
+                    <f:facet name="header">Tính chất</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaTinhchat}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dmKhoa.dmkhoaYeucau}">
+                    <f:facet name="header">Điều trị theo yêu cầu</f:facet>
+                    <h:outputText value="#{_dmKhoa.dmkhoaYeucau}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dmKhoaBytHome.managed}" id="dmKhoasForDmkhoaMabyt3">
+        <div class="actionButtons">
+            <s:button id="adddmKhoa"
+                   value="Thêm dmKhoa"
+                    view="/DmKhoaEdit.xhtml"
+             propagation="none">
+                 <f:param name="dmKhoaBytDmkhoabytMaso"
+                         value="#{dmKhoaBytHome.instance.dmkhoabytMaso}"/>
+                 <f:param name="dmKhoaFrom" value="DmKhoaByt"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+    </ui:remove>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

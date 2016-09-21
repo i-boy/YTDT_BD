@@ -1,0 +1,245 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body"><script language="javascript" src="js/DanhMuc.js"/>
+
+    <h:form id="dtDmPbCls" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{dtDmPbClsHome.managed ? 'Chỉnh sửa' : 'Thêm mới'} Phân biệt CLS</f:facet>
+
+
+            <s:decorate id="dtdmpbclsMasoField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã số </ui:define>
+                <h:inputText id="dtdmpbclsMaso"
+                       required="true"
+                       disabled="#{dtDmPbClsHome.managed}"
+                          value="#{dtDmPbClsHome.instance.dtdmpbclsMaso}">
+                    <a:support event="onblur" reRender="dtdmpbclsMasoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+
+            <s:decorate id="dtdmpbclsChonField" template="layout/edit.xhtml">
+                <ui:define name="label">Chọn</ui:define>
+                <h:selectBooleanCheckbox id="dtdmpbclsChon"
+                                      value="#{dtDmPbClsHome.instance.dtdmpbclsChon}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmpbclsMaField" template="layout/edit.xhtml">
+                <ui:define name="label">Mã Phân biệt CLS</ui:define>
+                <h:inputText id="dtdmpbclsMa"
+                       required="true"
+                           size="3"
+                      maxlength="3"
+                          value="#{dtDmPbClsHome.instance.dtdmpbclsMa}">
+                    <a:support event="onblur" reRender="dtdmpbclsMaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmpbclsNgaygiocnField" template="layout/edit.xhtml">
+                <ui:define name="label">Ngày giờ cập nhật</ui:define>
+                <h:inputText id="dtdmpbclsNgaygiocn"
+                          value="#{dtDmPbClsHome.instance.dtdmpbclsNgaygiocn}">
+                    <a:support event="onblur" reRender="dtdmpbclsNgaygiocnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="dtdmpbclsTenField" template="layout/edit.xhtml">
+                <ui:define name="label">Tên phân biệt CLS</ui:define>
+                <h:inputTextarea id="dtdmpbclsTen"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{dtDmPbClsHome.instance.dtdmpbclsTen}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Trường bắt buộc nhập
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmPbClsHome.persist}"
+                       disabled="#{!dtDmPbClsHome.wired}"
+                       rendered="#{!dtDmPbClsHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Lưu" onclick="setNgayGioCapNhat()"
+                         action="#{dtDmPbClsHome.update}"
+                       rendered="#{dtDmPbClsHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Xóa"
+                         action="#{dtDmPbClsHome.remove}"
+                      immediate="true"
+                       rendered="#{dtDmPbClsHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/DtDmPbCls.xhtml"
+                rendered="#{dtDmPbClsHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Hủy bỏ"
+             propagation="end"
+                    view="/#{empty dtDmPbClsFrom ? 'DtDmPbClsList' : dtDmPbClsFrom}.xhtml"
+                rendered="#{!dtDmPbClsHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+<ui:remove>
+    <rich:tab label="CLSes">
+        <h:form styleClass="association" id="dtDmClsesChildren">
+
+            <h:outputText value="Không có  dtDmClses phù hợp với dtDmPbCls."
+                       rendered="#{empty dtDmPbClsHome.dtDmClses}"/>
+
+            <rich:dataTable value="#{dtDmPbClsHome.dtDmClses}"
+                           var="_dtDmCls"
+                      rendered="#{not empty dtDmPbClsHome.dtDmClses}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dtDmClsesTable">
+                <rich:column sortBy="#{_dtDmCls.dtdmclsMaso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmclsChon}">
+                    <f:facet name="header">Chọn</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsChon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmclsChudau}">
+                    <f:facet name="header">Chữ đầu</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsChudau}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmclsMa}">
+                    <f:facet name="header">Mã CLS</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmclsNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmclsTen}">
+                    <f:facet name="header">Tên CLS</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsTen}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmclsTendbf}">
+                    <f:facet name="header">Tên DBF</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsTendbf}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmclsThutubc}">
+                    <f:facet name="header">Thứ tự</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsThutubc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmpbclsMa}">
+                    <f:facet name="header">Mã Phân biệt CLS</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmpbclsMa}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dtDmPbClsHome.managed}" id="dtDmClses">
+        <div class="actionButtons">
+            <s:button id="adddtDmCls"
+                   value="Thêm dtDmCls"
+                    view="/DtDmClsEdit.xhtml"
+             propagation="none">
+                 <f:param name="dtDmPbClsDtdmpbclsMaso"
+                         value="#{dtDmPbClsHome.instance.dtdmpbclsMaso}"/>
+                 <f:param name="dtDmClsFrom" value="DtDmPbCls"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="CLSes_1">
+        <h:form styleClass="association" id="dtDmClses_1Children">
+
+            <h:outputText value="Không có  dtDmClses_1 phù hợp với dtDmPbCls."
+                       rendered="#{empty dtDmPbClsHome.dtDmClses_1}"/>
+
+            <rich:dataTable value="#{dtDmPbClsHome.dtDmClses_1}"
+                           var="_dtDmCls"
+                      rendered="#{not empty dtDmPbClsHome.dtDmClses_1}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="dtDmClses_1Table">
+                <rich:column sortBy="#{_dtDmCls.dtdmclsMaso}">
+                    <f:facet name="header">Mã số</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsMaso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmclsChon}">
+                    <f:facet name="header">Chọn</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsChon}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmclsChudau}">
+                    <f:facet name="header">Chữ đầu</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsChudau}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmclsMa}">
+                    <f:facet name="header">Mã CLS</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsMa}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmclsNgaygiocn}">
+                    <f:facet name="header">Ngày giờ cập nhật</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsNgaygiocn}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmclsTen}">
+                    <f:facet name="header">Tên CLS</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsTen}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmclsTendbf}">
+                    <f:facet name="header">Tên DBF</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsTendbf}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmclsThutubc}">
+                    <f:facet name="header">Thứ tự</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmclsThutubc}"/>
+                </rich:column>
+                <rich:column sortBy="#{_dtDmCls.dtdmpbclsMa}">
+                    <f:facet name="header">Mã Phân biệt CLS</f:facet>
+                    <h:outputText value="#{_dtDmCls.dtdmpbclsMa}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{dtDmPbClsHome.managed}" id="dtDmClses_1">
+        <div class="actionButtons">
+            <s:button id="adddtDmCls"
+                   value="Thêm dtDmCls"
+                    view="/DtDmClsEdit.xhtml"
+             propagation="none">
+                 <f:param name="dtDmPbClsDtdmpbclsMaso"
+                         value="#{dtDmPbClsHome.instance.dtdmpbclsMaso}"/>
+                 <f:param name="dtDmClsFrom" value="DtDmPbCls"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab></ui:remove>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>
