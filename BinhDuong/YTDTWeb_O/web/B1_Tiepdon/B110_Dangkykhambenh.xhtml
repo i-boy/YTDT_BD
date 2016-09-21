@@ -519,8 +519,7 @@
     				
     				<tr style="height: 25px;">
     					<td align="right" style="width: 14%; padding-right: 5px" >
-    					<h:outputText value="Thời gian" styleClass="mytext"/>
-    					
+    						<h:outputText value="Thời gian" styleClass="mytext"/>
     					</td>
     					<td align="left" style=" padding-left: 0px">
     						<h:inputText   maxlength="5"  onkeypress="iesvn_InputInKeys('1234567890:');" value="#{B110_Dangkykhambenh.gioTD}" id="GIO" name="_GIO" style="width: 33px;" styleClass="myinput" 
@@ -530,11 +529,30 @@
     						<h:inputText onchange="temp();" onkeypress="return being_wellformed_Date(this, event)" value="#{B110_Dangkykhambenh.ngayTD}" 
     						onblur='if(this.className.match(/focus/gi))    this.className = this.className.replace(/focus/gi,""); return is_wellformed_Date(this)' type="text" id="NGAYTG" 
     						name="_NGAYTG" maxlength="10" style=" width : 70px;" class="myinput"/><a hideFocus="true" href="javascript:void(0)" onclick="if(self.gfPop)gfPop.fPopCalendar(document.getElementById(prefix_component + 'NGAYTG'));document.getElementById(prefix_component + 'TIEPDON_MA').focus();return false;" ><h:graphicImage value="/resources/calendar/cal.gif" style="margin:0 0 -3px 0" border="0" name="popcal"/></a>	
-							<h:outputText value="*" styleClass="mynull"
-								style="margin-right: 5px; margin-left: 2px;" />
+							<h:outputText value="*" styleClass="mynull" style="margin-right: 5px; margin-left: 2px;" />
+								
+							<h:outputText value="Quét ngày sinh" styleClass="mytext" style="margin-left: 125px;"/>										
+							<h:selectBooleanCheckbox  title="Có quét thông tin ngày sinh" label="Quét ngày sinh" value="#{B110_Dangkykhambenh.quetNgaySinh}"
+								id="TIEPDON_QUET_NGAY_SINH" style="margin-left: 5px;" >
+							</h:selectBooleanCheckbox> 
+    					</td>
+    				</tr>
+    				<tr style="height: 25px;">
+    					<td align="right" style="width: 14%; padding-right: 5px" >
+    						<h:outputText value="Quét mã vạch" styleClass="mytext_b"/>
+    					</td>
+    					<td align="left" style=" padding-left: 0px">
+    						<!-- 20150109 bao.ttc: Quet ma vach -->
+    					    <h:inputText value="#{B110_Dangkykhambenh.qrCode_Input}" id="QR_CODE" name="_QR_CODE" style="width:148px;" styleClass="myinput" >
+	    					    <a4j:support event="onchange"	focus="BENHNHAN_HOTEN" 
+			    					action="#{B110_Dangkykhambenh.checkQrCode}" 
+			    					oncomplete='loadTiepdonComplete();lockBanKham();lockDoituong();khambenhtrongngay();setTienKham();loadQrCode();showInfo();'
+		    						reRender="__message,GIO,NGAYTG,QR_CODE,ONLINE_MA,TG_DK_KHAM,TIEPDON_SOTHEBH,TIEPDON_MA,BENHNHAN_MA,BENHNHAN_HOTEN,BENHNHAN_GIOI_TEMP,BENHNHAN_NGAYSINH,BENHNHAN_NAMSINH,BENHNHAN_TUOI,BENHNHAN_DONVITUOI_TEMP,DANTOC_MA,DOITUONG_MA,TINH_MA,HUYEN_MA,XA_MA,BENHNHAN_DIACHI,TIEPDON_LOAIKHAM,TIEPDON_BNTRA,TIEPDON_BANKHAM,TIEPDON_KYHIEU,TIEPDON_QUYEN,TIEPDON_BIENLAI,KHOIBHYT_MA,TINHBHYT_MA,KCBBHYT_MA,TIEPDON_GIATRI1,TIEPDON_GIATRI2,TIEPDON_GIATRI3,TIEPDON_GIATRI4,TIEPDON_MOC1,TIEPDON_MOC2,TIEPDON_MOC3,TIEPDON_MACOQUAN,TIEPDON_SOTHETE,TIEPDON_KHAISINH,TIEPDON_KHAM_DA_LIEU_TEMP,TIEPDON_CHUNGSINH,TIEPDON_THENGHEO,TIEPDON_CO_GIAY_GIOI_THIEU_TEMP,__bacsiThamkham,__hosoDaTT,__listBN,showListBn,lockDoituong,doituongHientai,hid_maTD,hid_maBN,__checkbhmessage"
+	    						/>
+    					    </h:inputText>
 							
 							<!-- 20101124 bao.ttc: Tiep don online -->
-							<h:outputText value="Mã TĐ online" styleClass="mytext" style="margin-left: 18px; margin-right: 5px;"/>
+							<h:outputText value="Mã TĐ online" styleClass="mytext" style="margin-left: 45px; margin-right: 5px;"/>
     					    <h:inputText value="#{B110_Dangkykhambenh.maTD_online}" id="ONLINE_MA" name="_ONLINE_MA"  
     					    style=" width : 130px;" maxlength="20" styleClass="myinput" >
     					    
@@ -976,14 +994,14 @@
     				<tr style="height: 40px;background-color: #ffffff;">    					
     					<td  align="left" style="padding-left:270px;" colspan="2">    	
     			<div  id="div_ghinhan">
-    			<a4j:commandButton id="__ghinhan" name="_ghinhan" focus="TIEPDON_SOTHEBH"
+    			<a4j:commandButton id="__ghinhan" name="_ghinhan" focus="QR_CODE"
     			type="button" value="Ghi nhận" style="width: 70px; float:left;margin-right: 3px;" styleClass="mybton_b" 
     			onclick="luuTruGiaTriClientDefaultForBanKham();luuTruGiaTriClientDefaultForLoaiKham();setSave();if (! onSubmit()) { return false; } disableButton(prefix_component + '__ghinhan');" 
     			action="#{B110_Dangkykhambenh.ghinhan}" oncomplete="enableButton(prefix_component + '__ghinhan');loadTiepdonComplete();showInfo();lockBanKham();lockDoituong();readOnlyTienKham(); this.alt = 0;"
     			reRender="__message,GIO,NGAYTG,ONLINE_MA,TG_DK_KHAM,TIEPDON_SOTHEBH,TIEPDON_MA,BENHNHAN_MA,BENHNHAN_HOTEN,BENHNHAN_GIOI_TEMP,BENHNHAN_NGAYSINH,BENHNHAN_NAMSINH,BENHNHAN_TUOI,BENHNHAN_DONVITUOI_TEMP,DANTOC_MA,DOITUONG_MA,TINH_MA,HUYEN_MA,XA_MA,BENHNHAN_DIACHI,TIEPDON_LOAIKHAM,TIEPDON_BNTRA,TIEPDON_BANKHAM,TIEPDON_KYHIEU,TIEPDON_QUYEN,TIEPDON_BIENLAI,KHOIBHYT_MA,TINHBHYT_MA,KCBBHYT_MA,TIEPDON_GIATRI1,TIEPDON_GIATRI2,TIEPDON_GIATRI3,TIEPDON_GIATRI4,TIEPDON_MOC1,TIEPDON_MOC2,TIEPDON_MOC3,TIEPDON_MACOQUAN,TIEPDON_SOTHETE,TIEPDON_KHAISINH,TIEPDON_KHAM_DA_LIEU_TEMP,TIEPDON_CHUNGSINH,TIEPDON_THENGHEO,TIEPDON_CO_GIAY_GIOI_THIEU_TEMP,__bacsiThamkham,__hosoDaTT,__listBN,showListBn,lockDoituong,doituongHientai,hid_maTD,hid_maBN,__checkbhmessage"/>
     			</div>
     			<a4j:commandButton id="nhapmoi" 
-    			name="_nhapmoi" action="#{B110_Dangkykhambenh.resetValue}" value="Nhập mới" focus="TIEPDON_SOTHEBH"
+    			name="_nhapmoi" action="#{B110_Dangkykhambenh.resetValue}" value="Nhập mới" focus="QR_CODE"
     			reRender="__message,ONLINE_MA,TG_DK_KHAM,GIO,NGAYTG,TIEPDON_SOTHEBH,TIEPDON_MA,BENHNHAN_MA,BENHNHAN_HOTEN,BENHNHAN_GIOI_TEMP,BENHNHAN_NGAYSINH,BENHNHAN_NAMSINH,BENHNHAN_TUOI,BENHNHAN_DONVITUOI_TEMP,DANTOC_MA,DOITUONG_MA,TINH_MA,HUYEN_MA,XA_MA,BENHNHAN_DIACHI,TIEPDON_LOAIKHAM,TIEPDON_BNTRA,TIEPDON_BANKHAM,TIEPDON_KYHIEU,TIEPDON_QUYEN,TIEPDON_BIENLAI,KHOIBHYT_MA,TINHBHYT_MA,KCBBHYT_MA,TIEPDON_GIATRI1,TIEPDON_GIATRI2,TIEPDON_GIATRI3,TIEPDON_GIATRI4,TIEPDON_MOC1,TIEPDON_MOC2,TIEPDON_MOC3,TIEPDON_MACOQUAN,TIEPDON_SOTHETE,TIEPDON_KHAISINH,TIEPDON_KHAM_DA_LIEU_TEMP,TIEPDON_CHUNGSINH,TIEPDON_THENGHEO,TIEPDON_CO_GIAY_GIOI_THIEU_TEMP,__bacsiThamkham,__hosoDaTT,__listBN,showListBn,lockDoituong,doituongHientai,BENHNHAN_HOTENCHAME,hid_maTD,hid_maBN,__checkbhmessage"    			
     			onclick="setCancel();" style="width: 70px; float:left;margin-right: 3px;" styleClass="mybton_b" oncomplete="loadTiepdonComplete();lockBanKham();lockDoituong();checkHosoDaTT();showInfo();setTienKham();displayParentInfo()"/>
     			<div  id="div_huykham">

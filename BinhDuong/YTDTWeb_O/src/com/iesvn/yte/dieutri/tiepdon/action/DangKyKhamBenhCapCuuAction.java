@@ -3,11 +3,14 @@ package com.iesvn.yte.dieutri.tiepdon.action;
 import static org.jboss.seam.ScopeType.SESSION;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
@@ -73,6 +76,7 @@ public class DangKyKhamBenhCapCuuAction implements Serializable {
 	private String bhytMoc1;
 	private String bhytMoc2;
 	private String bhytMoc3;
+	private String qrCode_Input = "";
 	
 	private String donvituoi;
 	private String nofound;
@@ -80,6 +84,7 @@ public class DangKyKhamBenhCapCuuAction implements Serializable {
 	private boolean showListBn;
 	private boolean lockDoituong;
 	private boolean lockBanKham;
+	private boolean quetNgaySinh;
 	private String doituongHientai;
 	private String ngayhientai = "";
 	private String listMaTinhBhyt;
@@ -92,6 +97,7 @@ public class DangKyKhamBenhCapCuuAction implements Serializable {
 	@Factory("strDKyCapCuu")
 	public void init() {
 		resetValue();
+		quetNgaySinh = false;
 	}
 
 	public void resetValue() {
@@ -115,6 +121,7 @@ public class DangKyKhamBenhCapCuuAction implements Serializable {
 		bhytMoc1 = "";
 		bhytMoc2 = "";
 		bhytMoc3 = "";
+		qrCode_Input = "";
 		
 		gioi = "true";
 		
@@ -589,9 +596,9 @@ public class DangKyKhamBenhCapCuuAction implements Serializable {
 		
 					
 		// --- 20110119 bao.ttc: set Tiepdon tuyen ---
-		// 1: Cùng tuyến - nơi DK KCB trùng với mã bệnh viện khám.
-		// 2: Khác tuyến - BH cùng tỉnh khác nơi DK KCB.
-		// 3: Tuyến khác - BH khác tỉnh với nhau (default: tương tự form ĐK khám B111)
+		// 1: CÃ¹ng tuyáº¿n - nÆ¡i DK KCB trÃ¹ng vá»›i mÃ£ bá»‡nh viá»‡n khÃ¡m.
+		// 2: KhÃ¡c tuyáº¿n - BH cÃ¹ng tá»‰nh khÃ¡c nÆ¡i DK KCB.
+		// 3: Tuyáº¿n khÃ¡c - BH khÃ¡c tá»‰nh vá»›i nhau (default: tÆ°Æ¡ng tá»± form Ä�K khÃ¡m B111)
 		if (tiepdon.getDoituongMa(true).getDmdoituongMa().equals("BH")){
 			
 			Short tiepdonTuyen = 1;
@@ -648,6 +655,166 @@ public class DangKyKhamBenhCapCuuAction implements Serializable {
 		showListBn = false;
 		log.info("End ghinhan");
 		//resetValue();
+	}
+	
+	public void checkQrCode() {
+		
+//		HC7720001500072|4DE1BAA163204CE1BB87205468E1BAA36F|17/10/1983|2|42E1BAA36F206869E1BB836D2078C3A32068E1BB99692054C3A279204E696E68|72 - 010|01/01/2014|31/12/2014|24/12/2013|720000043383|21cf7b711c12daa3-1301|$
+//		====================================
+//		1:  HC7720001500072
+//		2:  4DE1BAA163204CE1BB87205468E1BAA36F  ==  4D E1 BA A1 63 20 4C E1 BB 87 20 54 68 E1 BA A3 6F  ==  Mac Le Thao
+//		3:  17/10/1983
+//		4:  2 == Gioi tinh: Nam - 1, Nu - 0
+//		5:  42E1BAA36F206869E1BB836D2078C3A32068E1BB99692054C3A279204E696E68  ==  42 E1 BA A3 6F 20 68 69 E1 BB 83 6D 20 78 C3 A3 20 68 E1 BB 99 69 20 54 C3 A2 79 20 4E 69 6E 68  ==  Bao hiem xa hoi Tay Ninh
+//		6:  72 - 010
+//		7:  01/01/2014
+//		8:  31/12/2014
+//		9:  24/12/2013
+//		10: 720000043383 == Ma quan ly cua co quan BHXH
+//		11: 21cf7b711c12daa3-1301 == Chuoi kiem tra cua co quan BHXH
+//		12: $ == Ky tu ket thuc
+//		====================================
+
+		if( qrCode_Input.trim().length() > 50 && qrCode_Input.endsWith("$") ) {
+			String qrCode_Input_temp = qrCode_Input;
+			resetValue();
+			//qrCode_Input = qrCode_Input_temp;
+
+			String[] qrInfoArr;
+
+			qrInfoArr = qrCode_Input_temp.split("\\|");
+			String[] outputArr = new String[qrInfoArr.length];
+
+			if( qrInfoArr.length < 12 ) {
+				System.out.println("===  Not enough INFO  ===");
+				FacesMessages.instance().add("Ma vach khong chinh xac hoac khong du thong tin");
+				return;
+			}
+			else {
+				for( int i = 0 ; i < qrInfoArr.length ; i++ ) {
+					if( i == 1 || i == 4 ) {
+						outputArr[i] = convertUseParseHexBinary(qrInfoArr[i]);
+					}
+					else {
+						outputArr[i] = qrInfoArr[i];
+					}
+				}
+			}
+
+			tiepdon.setTiepdonMa("");
+			
+			DieuTriUtilDelegate delegate = DieuTriUtilDelegate.getInstance();
+			// SO THE BHYT
+			if( outputArr[0] != null && !outputArr[0].equals("") ) {
+				if( outputArr[0].length() == 15 ) {
+					tiepdon.setTiepdonSothebh(outputArr[0].toUpperCase());
+					checkSoTheBHYT();
+					tiepdon.setTiepdonSothebh(outputArr[0].toUpperCase());
+					tiepdon.getDoituongMa(true).setDmdoituongMa("BH");
+					
+					String maKhoiBhyt = "";
+					maKhoiBhyt = outputArr[0].substring(0, 2);
+					// Kiem tra Khoi BHYT
+					DtDmKhoiBhyt khoiBhyt = (DtDmKhoiBhyt) delegate.findByMa(maKhoiBhyt, "DtDmKhoiBhyt", "dtdmkhoibhytMa");
+					if(khoiBhyt == null) {
+						tiepdon.setKhoibhytMa(new DtDmKhoiBhyt());
+					} else {
+						tiepdon.setKhoibhytMa(khoiBhyt);
+					}
+				}
+			}
+
+			// TEN BENH NHAN
+			if( outputArr[1] != null && !outputArr[1].equals("") ) {
+				tiepdon.getBenhnhanMa(true).setBenhnhanHoten(outputArr[1].toUpperCase());
+			}
+
+			// NGAY - NAM SINH - TUOI
+			tiepdon.getBenhnhanMa(true).setBenhnhanDonvituoi(new Short("1"));
+			if (outputArr[2] != null && !outputArr[2].equals("")) {
+				if (outputArr[2].length() == 4) {
+					tiepdon.getBenhnhanMa(true).setBenhnhanNamsinh(outputArr[2]);
+				} else if (outputArr[2].length() == 10) {
+					if (quetNgaySinh)
+						ngaysinh = outputArr[2];
+					else
+						ngaysinh = "";
+
+					tiepdon.getBenhnhanMa(true).setBenhnhanNamsinh(outputArr[2].substring(6));
+				}
+			}
+
+			// GIOI TINH
+			if( outputArr[3] != null && !outputArr[3].equals("") ) {
+				gioi = outputArr[3].equals("1") ? "true" : "false";
+			}
+
+			// DIA CHI
+			if( outputArr[4] != null && !outputArr[4].equals("") ) {
+				//tiepdon.getBenhnhanMa(true).setBenhnhanDiachi(outputArr[4]);
+				tiepdon.setTiepdonMacoquan(outputArr[4]);
+			}
+			
+			// KCBBD
+			if( outputArr[5] != null && !outputArr[5].equals("") ) {
+				String kcbbdStr = outputArr[5];
+				kcbbdStr = kcbbdStr.replace(" - ", ".");
+
+				if( kcbbdStr.length() == 6 && kcbbdStr.contains(".") ) {
+					// Kiem tra noi DK Kham chua benh
+					DmBenhVien noiKCB = (DmBenhVien) delegate.findByMa(kcbbdStr, "DmBenhVien", "dmbenhvienMa");
+					if( noiKCB == null ) {
+						tiepdon.setKcbbhytMa(new DmBenhVien());
+					}
+					else {
+						tiepdon.setKcbbhytMa(noiKCB);
+					}
+					
+					String maTinhBhyt = "";
+					maTinhBhyt = kcbbdStr.substring(0, 2);
+					// Kiem tra Tinh Kham chua benh BD
+					DmTinh tinhBhyt = (DmTinh) delegate.findByMa(maTinhBhyt, "DmTinh", "dmtinhBHYT");
+					if(tinhBhyt == null) {
+						tiepdon.setTinhbhytMa(new DmTinh());
+						//tiepdon.getBenhnhanMa(true).setTinhMa(new DmTinh());
+					} else {
+						tiepdon.setTinhbhytMa(tinhBhyt);
+						tiepdon.getBenhnhanMa(true).setTinhMa(tinhBhyt);
+					}
+				}
+			}
+			
+			// BHYT TU NGAY - DEN NGAY
+			if (outputArr[6] != null && !outputArr[6].equals("")) {
+				if (outputArr[6].length() == 10) {
+					bhytGiatri1 = outputArr[6];
+				}
+			}
+			if (outputArr[7] != null && !outputArr[7].equals("")) {
+				if (outputArr[7].length() == 10) {
+					bhytGiatri2 = outputArr[7];
+				}
+			}
+
+		} else {
+			resetValue();
+			FacesMessages.instance().add("Ma vach khong chinh xac hoac khong du thong tin");
+		}
+
+	}
+	
+	public String convertUseParseHexBinary(String inputStr) {
+		if (inputStr == null || inputStr.length() == 0) {
+			return "";
+		}
+
+		try {
+			return new String(DatatypeConverter.parseHexBinary(inputStr), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return "";
+		} catch (IllegalArgumentException e) {
+			return "";
+		}
 	}
 	
 	private void removeAllNullForBN(BenhNhan bn){
@@ -810,6 +977,14 @@ public class DangKyKhamBenhCapCuuAction implements Serializable {
 		this.bhytMoc3 = bhytMoc3;
 	}
 
+	public String getQrCode_Input() {
+		return qrCode_Input;
+	}
+
+	public void setQrCode_Input(String qrCode_Input) {
+		this.qrCode_Input = qrCode_Input;
+	}
+
 	public List<BenhNhanTrungTheBhytDTO> getListBN() {
 		return listBN;
 	}
@@ -873,7 +1048,14 @@ public class DangKyKhamBenhCapCuuAction implements Serializable {
 	public void setLockBanKham(boolean lockBanKham) {
 		this.lockBanKham = lockBanKham;
 	}
-	
+
+	public boolean isQuetNgaySinh() {
+		return quetNgaySinh;
+	}
+
+	public void setQuetNgaySinh(boolean quetNgaySinh) {
+		this.quetNgaySinh = quetNgaySinh;
+	}
 	
 		
 }

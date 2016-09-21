@@ -1,32 +1,26 @@
 function init() {
     if (window.google && google.gears) {
-        //try {
-            //timer = google.gears.factory.create('beta.timer');
-            
-            //BenhNhan.createTable();
-            //TiepDon.createTable();
-            
-            setAttrForCombobox(prefix_component + "DOITUONG_MA","DM_DOI_TUONG_span","DM_DOI_TUONG", "getDmDoiTuongTP()", 
-            					"", "setTyleBnTra(); checkDoiTuong();setTienKham();", "");
-            setAttrForCombobox(prefix_component + "TINH_MA","DM_TINH_span","DM_TINH","getDmTinh()","resetDMHuyenXa()","","");
-            setAttrForComboboxForHuyen(prefix_component + "HUYEN_MA","DM_HUYEN_span","DM_HUYEN","getDmHuyen(\"" + prefix_component + "TINH_MA\")","resetDMXa()","","");
-            setAttrForComboboxForXa(prefix_component + "XA_MA","DM_XA_span","DM_XA","getDmXa(\"" + prefix_component + "HUYEN_MA\")","","","");
-            setAttrForCombobox(prefix_component + "DANTOC_MA","DM_DAN_TOC_span","DM_DAN_TOC","getDmDanToc()","","","");
-            
-            setAttrForCombobox(prefix_component + 'KCBBHYT_MA','DM_BENH_VIEN_span','DM_BENH_VIEN',"getDmBenhVien()", "", "document.getElementById(prefix_component+'TIEPDON_GIATRI1').focus()", "");
-            
-            //setAttrForComboboxForKCBBHYT(prefix_component + 'KCBBHYT_MA','DM_BENH_VIEN_span','DM_BENH_VIEN',"getDmBenhVien()", "", "document.getElementById(prefix_component+'TIEPDON_GIATRI1').focus()", "");
-            setAttrForCombobox(prefix_component + 'TIEPDON_BANKHAM','DT_DM_BAN_KHAM_span','DT_DM_BAN_KHAM',"getDtDmBanKhamKoCCL()", "", "getStt()", "");
-			setAttrForComboboxForTinhBHYT(prefix_component + 'TINHBHYT_MA','DM_TINH2_span','DM_TINH__2', "getDmTinh()", "myOnblurTextboxDmNoiDKKCBBD(prefix_component + 'KCBBHYT_MA','DM_BENH_VIEN',document.getElementById(prefix_component+'TINHBHYT_MA').value);", "", "");
-	        setAttrForCombobox(prefix_component + 'KHOIBHYT_MA','DT_DM_KHOI_BHYT_span','DT_DM_KHOI_BHYT', "getDtDmKhoiBhyt()", "", "focusToKcbBhyt();", "");
-	        setAttrForCombobox(prefix_component + 'TIEPDON_LOAIKHAM','DT_DM_TIEN_KHAM_span','DT_DM_CLS_BANG_GIA', "getDtDmClsBangGiaKham()", "", 
-	        					"setTienKham()", "");
-	        setTimeout("setValueOnLoad()",500);
-	        document.getElementById(prefix_component + "TIEPDON_SOTHEBH").focus();
-            //alert(222);
-        //} catch (e) {
-        //	alert("init error: " + e.description);
-        //}
+	    //BenhNhan.createTable();
+	    //TiepDon.createTable();
+	    
+	    setAttrForCombobox(prefix_component + "DOITUONG_MA","DM_DOI_TUONG_span","DM_DOI_TUONG", "getDmDoiTuongTP()", 
+	    					"", "setTyleBnTra(); checkDoiTuong();setTienKham();", "");
+	    setAttrForCombobox(prefix_component + "TINH_MA","DM_TINH_span","DM_TINH","getDmTinh()","resetDMHuyenXa()","","");
+	    setAttrForComboboxForHuyen(prefix_component + "HUYEN_MA","DM_HUYEN_span","DM_HUYEN","getDmHuyen(\"" + prefix_component + "TINH_MA\")","resetDMXa()","","");
+	    setAttrForComboboxForXa(prefix_component + "XA_MA","DM_XA_span","DM_XA","getDmXa(\"" + prefix_component + "HUYEN_MA\")","","","");
+	    setAttrForCombobox(prefix_component + "DANTOC_MA","DM_DAN_TOC_span","DM_DAN_TOC","getDmDanToc()","","","");
+	    
+	    setAttrForCombobox(prefix_component + 'KCBBHYT_MA','DM_BENH_VIEN_span','DM_BENH_VIEN',"getDmBenhVien()", "", "document.getElementById(prefix_component+'TIEPDON_GIATRI1').focus()", "");
+	    
+	    //setAttrForComboboxForKCBBHYT(prefix_component + 'KCBBHYT_MA','DM_BENH_VIEN_span','DM_BENH_VIEN',"getDmBenhVien()", "", "document.getElementById(prefix_component+'TIEPDON_GIATRI1').focus()", "");
+	    setAttrForCombobox(prefix_component + 'TIEPDON_BANKHAM','DT_DM_BAN_KHAM_span','DT_DM_BAN_KHAM',"getDtDmBanKhamKoCCL()", "", "getStt()", "");
+		setAttrForComboboxForTinhBHYT(prefix_component + 'TINHBHYT_MA','DM_TINH2_span','DM_TINH__2', "getDmTinh()", "myOnblurTextboxDmNoiDKKCBBD(prefix_component + 'KCBBHYT_MA','DM_BENH_VIEN',document.getElementById(prefix_component+'TINHBHYT_MA').value);", "", "");
+	    setAttrForCombobox(prefix_component + 'KHOIBHYT_MA','DT_DM_KHOI_BHYT_span','DT_DM_KHOI_BHYT', "getDtDmKhoiBhyt()", "", "focusToKcbBhyt();", "");
+	    setAttrForCombobox(prefix_component + 'TIEPDON_LOAIKHAM','DT_DM_TIEN_KHAM_span','DT_DM_CLS_BANG_GIA', "getDtDmClsBangGiaKham()", "", 
+	    					"setTienKham()", "");
+	    setTimeout("setValueOnLoad()",500);
+	    //document.getElementById(prefix_component + "TIEPDON_SOTHEBH").focus();
+	    document.getElementById(prefix_component + "QR_CODE").focus();
 	}
 }
 
@@ -37,7 +31,6 @@ function lostFocusForBHYT(){
 }
 
 function loadDKonline() {
-	//alert("loadDKonline()");
 	if(document.getElementById(prefix_component + "ONLINE_MA").value != "") {
 		timer.setTimeout(function(){
 			set_ngaysinh_namsinh(prefix_component + 'BENHNHAN_TUOI',prefix_component + 'BENHNHAN_NGAYSINH',prefix_component + 'BENHNHAN_NAMSINH');
@@ -49,12 +42,22 @@ function loadDKonline() {
 	}else {
 		showInfo();
 	}
-	
-	//setMaKhoi();
-	//testBHYTTrungTrongNgay(false);
-	
 }
 
+function loadQrCode() {
+	if(document.getElementById(prefix_component + 'BENHNHAN_NAMSINH').value != "") {
+		timer.setTimeout(function(){
+			if(document.getElementById(prefix_component + 'BENHNHAN_NGAYSINH').value != "") {
+				set_tuoi_has_namsinh(prefix_component + 'BENHNHAN_TUOI', prefix_component + 'BENHNHAN_NGAYSINH', prefix_component + 'BENHNHAN_DONVITUOI_TEMP', prefix_component + 'BENHNHAN_NAMSINH');
+			} else {
+				set_tuoi_from_namsinh(prefix_component + 'BENHNHAN_TUOI', prefix_component + 'BENHNHAN_NAMSINH', prefix_component + 'BENHNHAN_DONVITUOI_TEMP');
+			}
+			checkForGiaTri2(document.getElementById(prefix_component + 'TIEPDON_GIATRI2'));
+			displayParentInfo();
+			myOnblurTextbox_DoiTuong(prefix_component + 'DOITUONG_MA','DM_DOI_TUONG',prefix_component + '__tylebntra',prefix_component + 'TIEPDON_TYLEBH');
+		},400);
+	}
+}
 
 /*function checkSoTheBHYT() {
 	var sotehbhyt = document.getElementById(prefix_component + "TIEPDON_SOTHEBH").value;

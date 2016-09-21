@@ -38,6 +38,19 @@ function init() {
     }
 }
 
+function loadQrCode() {
+	if(document.getElementById(prefix_component + 'BENHNHAN_NAMSINH').value != "") {
+		timer.setTimeout(function(){
+			if(document.getElementById(prefix_component + '__namsinh').value != "") {
+				set_tuoi_has_namsinh(prefix_component + "__tuoi", prefix_component + "__namsinh", prefix_component + "BENHNHAN_DONVITUOI_TEMP", prefix_component + "BENHNHAN_NAMSINH");
+			} else {
+				set_tuoi_from_namsinh(prefix_component + "__tuoi", prefix_component + "BENHNHAN_NAMSINH", prefix_component + "BENHNHAN_DONVITUOI_TEMP");
+			}
+			checkForGiaTri2(document.getElementById(prefix_component + 'TIEPDON_GIATRI2'));
+			displayParentInfo();
+		},400);
+	}
+}
 
 function focusToKcbBhyt(){
 	document.getElementById(prefix_component + "KCBBHYT_MA").focus();
@@ -370,7 +383,7 @@ function onInitSetDefault(){
 			}
 		
 			//setDefaultValueForKhoa();
-			document.getElementById(prefix_component + "__hoten").focus();	
+			document.getElementById(prefix_component + "QR_CODE").focus();	
 }
 function onCompleteGetInforNhapMoi(){
 	onInitSetDefault();
